@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DayPalette · 高级版</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f9f8f6;
+      --text-main: #1a1a1a;
+      --text-muted: #8c8c8c;
+      --border-color: rgba(0, 0, 0, 0.08);
+      
+      /* English Fonts */
+      --font-display-en: 'Cormorant Garamond', serif;
+      --font-ui-en: 'DM Sans', sans-serif;
+      
+      /* Chinese Fonts */
+      --font-display-zh: 'Noto Serif SC', serif;
+      --font-ui-zh: 'Noto Sans SC', sans-serif;
+      
+      /* Active Fonts (Dynamic) */
+      --font-display: var(--font-display-en);
+      --font-ui: var(--font-ui-en);
+      
+      /* Active Palette Colors */
+      --c-main: #E8D8D3;
+      --c-sec: #C5B9B6;
+      --c-acc: #5D637A;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #e5e3df;
+      font-family: var(--font-ui);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+      transition: font-family 0.3s ease;
+    }
+
+    /* Language specific overrides */
+    html[lang="zh"] {
+      --font-display: var(--font-display-zh);
+      --font-ui: var(--font-ui-zh);
+    }
+    
+    html[lang="zh"] .mood-title {
+      font-style: normal; /* Chinese fonts usually don't need italics for headings */
+      letter-spacing: 0.05em;
+    }
+
+    .device {
+      width: 390px;
+      height: 844px;
+      background: var(--bg-color);
+      border-radius: 48px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 40px 80px rgba(0,0,0,0.1),
+        0 10px 30px rgba(0,0,0,0.05),
+        inset 0 0 0 8px #111;
+      display: flex;
+      flex-direction: column;
+      /* Ensure the inner content doesn't overlap the inset shadow border */
+      padding: 8px;
+    }
+
+    /* Inner wrapper to handle the background and clipping inside the black border */
+    .device-inner {
+      flex: 1;
+      background: var(--bg-color);
+      border-radius: 40px; /* Slightly smaller than device border-radius */
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      padding: 42px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 30;
+      background: rgba(249, 248, 246, 0.75);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      position: sticky;
+      top: 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+      /* Fix for sticky elements overflowing border-radius in some browsers */
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+    }
+    .date-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .top-bar.scrolled .date-info {
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+    }
+    
+    /* Top Mini Palette (Dynamic Hero) */
+    .top-mini-palette {
+      position: absolute;
+      left: 24px;
+      bottom: 14px;
+      width: 140px;
+      height: 36px;
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.5) inset;
+      pointer-events: none;
+      cursor: pointer;
+    }
+    .top-bar.scrolled .top-mini-palette {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .top-mini-palette div {
+      height: 100%;
+      transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .date {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .location {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .settings-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    .settings-btn:hover {
+      background: rgba(0,0,0,0.03);
+    }
+
+    /* Scrollable Content Area */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+    }
+    .scroll-content::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hero Palette Display */
+    .hero-display {
+      padding: 10px 24px 0;
+      position: relative;
+    }
+    
+    .mood-title {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-style: italic;
+      line-height: 1.1;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .palette-composition {
+      position: relative;
+      height: 320px;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    .color-swatch {
+      position: absolute;
+      border-radius: 2px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    .color-swatch::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    .swatch-main {
+      width: 75%;
+      height: 260px;
+      background: var(--c-main);
+      top: 0;
+      left: 0;
+      z-index: 1;
+      transform: translateZ(-20px) rotateY(5deg);
+    }
+    .swatch-sec {
+      width: 55%;
+      height: 180px;
+      background: var(--c-sec);
+      bottom: 20px;
+      right: 0;
+      z-index: 2;
+      transform: translateZ(10px) rotateY(-5deg);
+    }
+    .swatch-acc {
+      width: 35%;
+      height: 100px;
+      background: var(--c-acc);
+      bottom: 0;
+      left: 15%;
+      z-index: 3;
+      transform: translateZ(40px);
+    }
+
+    .color-labels {
+      position: absolute;
+      bottom: -40px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+    .color-labels span {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .color-labels strong {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    /* Occasion Selector */
+    .occasion-selector {
+      padding: 0 24px;
+      margin-top: 70px;
+      margin-bottom: 30px;
+    }
+    .section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .occasion-list {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 10px;
+    }
+    .occasion-list::-webkit-scrollbar { display: none; }
+    
+    .occasion-item {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .occasion-item.active {
+      color: var(--text-main);
+    }
+    .occasion-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text-main);
+    }
+
+    /* Palette Options */
+    .palette-selector {
+      padding: 0 0 80px 24px;
+    }
+    .palette-list {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-right: 24px;
+      padding-bottom: 20px;
+    }
+    .palette-list::-webkit-scrollbar { display: none; }
+
+    .palette-card {
+      min-width: 140px;
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+    .palette-card.active {
+      border-color: var(--text-main);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+    }
+    
+    .mini-swatches {
+      display: flex;
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .mini-swatches div { height: 100%; }
+    
+    .palette-name {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .palette-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Bottom Actions - Integrated into the flow */
+    .bottom-actions {
+      padding: 16px 24px 32px;
+      display: flex;
+      gap: 12px;
+      background: rgba(249, 248, 246, 0.75);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      position: sticky;
+      bottom: 0;
+      z-index: 30;
+      border-top: 1px solid rgba(0, 0, 0, 0.03);
+      /* Fix for sticky elements overflowing border-radius in some browsers */
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      margin-top: auto; /* Push to bottom if content is short */
+    }
+    .btn {
+      flex: 1;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+    .btn-save {
+      background: var(--text-main);
+      color: #fff;
+      border: none;
+    }
+    .btn-save:hover {
+      background: #000;
+      transform: translateY(-2px);
+    }
+    .btn-share {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-share:hover {
+      border-color: var(--text-main);
+      background: #fff;
+    }
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Settings Panel */
+    .settings-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-color);
+      z-index: 50;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .settings-panel.open {
+      transform: translateX(0);
+    }
+    .settings-header {
+      padding: 42px 24px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    }
+    .settings-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      color: var(--text-main);
+    }
+    .settings-content {
+      padding: 24px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .settings-group {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .settings-item {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .settings-item:last-child {
+      border-bottom: none;
+    }
+    .lang-toggle {
+      display: flex;
+      background: rgba(0,0,0,0.04);
+      border-radius: 8px;
+      padding: 2px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active {
+      background: #fff;
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .settings-value {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-display { animation: fadeUp 0.8s ease forwards; }
+    .occasion-selector { animation: fadeUp 0.8s ease 0.1s forwards; opacity: 0; }
+    .palette-selector { animation: fadeUp 0.8s ease 0.2s forwards; opacity: 0; }
+
+  </style>
+</head>
+<body>
+
+  <div class="device">
+    <div class="device-inner">
+      
+      <!-- Added Scroll Wrapper -->
+      <div class="scroll-content" id="scrollContent">
+        
+        <div class="top-bar" id="topBar">
+          <div class="date-info">
+            <span class="location" id="locText">Shanghai, CN</span>
+            <span class="date" id="dateText">Apr 01, 2026</span>
+          </div>
+          
+          <!-- Sticky Mini Hero -->
+          <div class="top-mini-palette" onclick="document.getElementById('scrollContent').scrollTo({top: 0, behavior: 'smooth'})" title="Scroll to top">
+            <div style="flex: 3; background-color: var(--c-main);"></div>
+            <div style="flex: 2; background-color: var(--c-sec);"></div>
+            <div style="flex: 1; background-color: var(--c-acc);"></div>
+          </div>
+
+          <button class="settings-btn" aria-label="Settings" onclick="openSettings()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="hero-display">
+        <h1 class="mood-title">Gentle<br>Commute</h1>
+        
+        <div class="palette-composition">
+          <div class="color-swatch swatch-main"></div>
+          <div class="color-swatch swatch-sec"></div>
+          <div class="color-swatch swatch-acc"></div>
+          
+          <div class="color-labels">
+            <span>Main <strong>#E8D8D3</strong></span>
+            <span>Sec <strong>#C5B9B6</strong></span>
+            <span>Acc <strong>#5D637A</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="occasion-selector">
+        <div class="section-title" id="storyTitle">Story of the Day</div>
+        <div class="occasion-list" id="occasionList">
+          <!-- Will be rendered by JS -->
+        </div>
+      </div>
+
+      <div class="palette-selector">
+        <div class="section-title" id="curatedTitle">Curated Palettes</div>
+        <div class="palette-list" id="paletteList">
+          <!-- Will be rendered by JS -->
+        </div>
+      </div>
+      
+      <!-- Bottom Actions -->
+      <div class="bottom-actions">
+        <button class="btn btn-save">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span id="saveBtnText">Save</span>
+        </button>
+        <button class="btn btn-share">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+          <span id="shareBtnText">Share</span>
+        </button>
+      </div>
+
+    </div> <!-- End scroll-content -->
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header">
+        <button class="back-btn" onclick="closeSettings()" aria-label="Back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h2 id="settingsTitle">Settings</h2>
+        <div style="width: 36px;"></div> <!-- Spacer for centering -->
+      </div>
+      <div class="settings-content">
+        <div class="settings-group">
+          <div class="settings-item">
+            <span id="langLabel">Language</span>
+            <div class="lang-toggle">
+              <button class="lang-btn active" id="btnEn" onclick="setLanguage('en')">EN</button>
+              <button class="lang-btn" id="btnZh" onclick="setLanguage('zh')">中</button>
+            </div>
+          </div>
+          <div class="settings-item">
+            <span id="themeLabel">Appearance</span>
+            <span class="settings-value" id="themeValue">System</span>
+          </div>
+          <div class="settings-item">
+            <span id="aboutLabel">About DayPalette</span>
+            <span class="settings-value">v1.0.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div> <!-- End device-inner -->
+  </div>
+
+  <script>
+    // i18n Dictionary
+    const i18n = {
+      en: {
+        loc: 'Shanghai, CN',
+        date: 'Apr 01, 2026',
+        storyTitle: 'Story of the Day',
+        curatedTitle: 'Curated Palettes',
+        save: 'Save',
+        share: 'Share',
+        main: 'Main',
+        sec: 'Sec',
+        acc: 'Acc',
+        settingsTitle: 'Settings',
+        langLabel: 'Language',
+        themeLabel: 'Appearance',
+        themeValue: 'System',
+        aboutLabel: 'About DayPalette',
+        data: {
+          workday: {
+            label: 'Workday',
+            title: 'Gentle<br>Commute',
+            palettes: [
+              { id: 'w1', name: 'Morning Mist', desc: 'Low saturation, versatile', colors: ['#E8D8D3', '#C5B9B6', '#5D637A'] },
+              { id: 'w2', name: 'Coffee Break', desc: 'Warm & grounded', colors: ['#D4C5B9', '#A89F91', '#4A3B32'] },
+              { id: 'w3', name: 'City Slate', desc: 'Professional & sharp', colors: ['#E2E4E9', '#B0B5C0', '#2C363F'] }
+            ]
+          },
+          weekend: {
+            label: 'Weekend Date',
+            title: 'Sweet<br>Escape',
+            palettes: [
+              { id: 'we1', name: 'Peach Weekend', desc: 'Gentle highlights', colors: ['#F2E3E0', '#D9A9A0', '#8C6A5D'] },
+              { id: 'we2', name: 'Picnic Day', desc: 'Sunny & bright', colors: ['#FFF3E0', '#FFB74D', '#5E6AC4'] }
+            ]
+          },
+          outdoor: {
+            label: 'Outdoor',
+            title: 'Breathe<br>Deeply',
+            palettes: [
+              { id: 'o1', name: 'Breeze Outdoor', desc: 'Fresh & breathable', colors: ['#E2EFE9', '#9BBBAA', '#5C6BC0'] },
+              { id: 'o2', name: 'Forest Trail', desc: 'Earthy tones', colors: ['#DDE5B6', '#ADC178', '#6C584C'] }
+            ]
+          },
+          dinner: {
+            label: 'Dinner Party',
+            title: 'Evening<br>Glow',
+            palettes: [
+              { id: 'd1', name: 'Velvet Night', desc: 'Elegant & moody', colors: ['#3D2C2E', '#8B5A5C', '#D4AF37'] },
+              { id: 'd2', name: 'Silver Noir', desc: 'Minimalist chic', colors: ['#2B2D42', '#8D99AE', '#EDF2F4'] }
+            ]
+          }
+        }
+      },
+      zh: {
+        loc: '中国 · 上海',
+        date: '2026年4月1日',
+        storyTitle: '今天的故事',
+        curatedTitle: '精选配色盘',
+        save: '保存图片',
+        share: '分享',
+        main: '主色',
+        sec: '辅色',
+        acc: '点缀',
+        settingsTitle: '设置',
+        langLabel: '语言',
+        themeLabel: '外观',
+        themeValue: '跟随系统',
+        aboutLabel: '关于今日配色',
+        data: {
+          workday: {
+            label: '工作日',
+            title: '温柔<br>通勤日',
+            palettes: [
+              { id: 'w1', name: '晨雾通勤', desc: '低饱和 · 好搭', colors: ['#E8D8D3', '#C5B9B6', '#5D637A'] },
+              { id: 'w2', name: '拿铁时间', desc: '温暖 · 沉稳', colors: ['#D4C5B9', '#A89F91', '#4A3B32'] },
+              { id: 'w3', name: '城市灰调', desc: '专业 · 利落', colors: ['#E2E4E9', '#B0B5C0', '#2C363F'] }
+            ]
+          },
+          weekend: {
+            label: '周末约会',
+            title: '桃汽<br>周末',
+            palettes: [
+              { id: 'we1', name: '桃汽周末', desc: '温柔亮点', colors: ['#F2E3E0', '#D9A9A0', '#8C6A5D'] },
+              { id: 'we2', name: '野餐假日', desc: '明媚阳光', colors: ['#FFF3E0', '#FFB74D', '#5E6AC4'] }
+            ]
+          },
+          outdoor: {
+            label: '户外运动',
+            title: '清风<br>户外',
+            palettes: [
+              { id: 'o1', name: '清风户外', desc: '清爽透气感', colors: ['#E2EFE9', '#9BBBAA', '#5C6BC0'] },
+              { id: 'o2', name: '森林步道', desc: '自然大地色', colors: ['#DDE5B6', '#ADC178', '#6C584C'] }
+            ]
+          },
+          dinner: {
+            label: '晚宴',
+            title: '晚宴<br>流光',
+            palettes: [
+              { id: 'd1', name: '丝绒暗夜', desc: '优雅情绪', colors: ['#3D2C2E', '#8B5A5C', '#D4AF37'] },
+              { id: 'd2', name: '极简黑白', desc: '高级克制', colors: ['#2B2D42', '#8D99AE', '#EDF2F4'] }
+            ]
+          }
+        }
+      }
+    };
+
+    let currentLang = 'en';
+    let activeOccasion = 'workday';
+    let activePaletteId = 'w1';
+
+    // DOM Elements
+    const occasionListEl = document.getElementById('occasionList');
+    const paletteListEl = document.getElementById('paletteList');
+    const moodTitleEl = document.querySelector('.mood-title');
+    const rootStyle = document.documentElement.style;
+    const colorLabels = document.querySelector('.color-labels');
+
+    // Settings Panel Logic
+    window.openSettings = () => {
+      document.getElementById('settingsPanel').classList.add('open');
+    };
+
+    window.closeSettings = () => {
+      document.getElementById('settingsPanel').classList.remove('open');
+    };
+
+    // Set Language
+    window.setLanguage = (lang) => {
+      if (currentLang === lang) return;
+      currentLang = lang;
+      document.documentElement.lang = currentLang;
+      
+      // Update toggle buttons
+      document.getElementById('btnEn').classList.toggle('active', lang === 'en');
+      document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
+      
+      // Update static texts
+      document.getElementById('locText').textContent = i18n[currentLang].loc;
+      document.getElementById('dateText').textContent = i18n[currentLang].date;
+      document.getElementById('storyTitle').textContent = i18n[currentLang].storyTitle;
+      document.getElementById('curatedTitle').textContent = i18n[currentLang].curatedTitle;
+      document.getElementById('saveBtnText').textContent = i18n[currentLang].save;
+      document.getElementById('shareBtnText').textContent = i18n[currentLang].share;
+      
+      // Update settings texts
+      document.getElementById('settingsTitle').textContent = i18n[currentLang].settingsTitle;
+      document.getElementById('langLabel').textContent = i18n[currentLang].langLabel;
+      document.getElementById('themeLabel').textContent = i18n[currentLang].themeLabel;
+      document.getElementById('themeValue').textContent = i18n[currentLang].themeValue;
+      document.getElementById('aboutLabel').textContent = i18n[currentLang].aboutLabel;
+
+      // Re-render dynamic content
+      renderOccasions();
+      renderPalettes();
+      updateHero();
+    };
+
+    // Render Occasions
+    function renderOccasions() {
+      const data = i18n[currentLang].data;
+      occasionListEl.innerHTML = Object.entries(data).map(([key, occ]) => `
+        <div class="occasion-item ${key === activeOccasion ? 'active' : ''}" 
+             onclick="selectOccasion('${key}')">
+          ${occ.label}
+        </div>
+      `).join('');
+    }
+
+    // Render Palettes
+    function renderPalettes() {
+      const palettes = i18n[currentLang].data[activeOccasion].palettes;
+      paletteListEl.innerHTML = palettes.map(p => `
+        <div class="palette-card ${p.id === activePaletteId ? 'active' : ''}" 
+             onclick="selectPalette('${p.id}')">
+          <div class="mini-swatches">
+            <div style="flex: 3; background: ${p.colors[0]};"></div>
+            <div style="flex: 2; background: ${p.colors[1]};"></div>
+            <div style="flex: 1; background: ${p.colors[2]};"></div>
+          </div>
+          <div class="palette-name">${p.name}</div>
+          <div class="palette-desc">${p.desc}</div>
+        </div>
+      `).join('');
+    }
+
+    // Update Hero Area
+    function updateHero() {
+      const occData = i18n[currentLang].data[activeOccasion];
+      const palette = occData.palettes.find(p => p.id === activePaletteId);
+      const t = i18n[currentLang];
+      
+      // Update Title
+      moodTitleEl.innerHTML = occData.title;
+      
+      // Update CSS Variables for smooth transition
+      rootStyle.setProperty('--c-main', palette.colors[0]);
+      rootStyle.setProperty('--c-sec', palette.colors[1]);
+      rootStyle.setProperty('--c-acc', palette.colors[2]);
+
+      // Update Labels
+      colorLabels.innerHTML = `
+        <span>${t.main} <strong>${palette.colors[0]}</strong></span>
+        <span>${t.sec} <strong>${palette.colors[1]}</strong></span>
+        <span>${t.acc} <strong>${palette.colors[2]}</strong></span>
+      `;
+    }
+
+    // Actions
+    window.selectOccasion = (key) => {
+      if (activeOccasion === key) return;
+      activeOccasion = key;
+      activePaletteId = i18n[currentLang].data[key].palettes[0].id; // Auto select first palette
+      renderOccasions();
+      renderPalettes();
+      updateHero();
+      
+      // Scroll palette list back to start
+      paletteListEl.scrollTo({ left: 0, behavior: 'smooth' });
+    };
+
+    window.selectPalette = (id) => {
+      if (activePaletteId === id) return;
+      activePaletteId = id;
+      renderPalettes();
+      updateHero();
+    };
+
+    // Scroll to toggle Mini Hero
+    document.getElementById('scrollContent').addEventListener('scroll', (e) => {
+      if (e.target.scrollTop > 60) {
+        document.getElementById('topBar').classList.add('scrolled');
+      } else {
+        document.getElementById('topBar').classList.remove('scrolled');
+      }
+    });
+
+    // Initialize
+    renderOccasions();
+    renderPalettes();
+    updateHero();
+
+  </script>
+</body>
+</html>

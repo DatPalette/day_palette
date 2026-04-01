@@ -1,0 +1,32 @@
+---
+description: DayPalette 鸿蒙 ArkTS 约定（工作区根为 day-palette 时使用）
+globs: **/*.{ets,ts,json5,json}
+alwaysApply: false
+---
+
+# DayPalette · HarmonyOS 开发规则
+
+当工作区根目录为 **`day-palette/`** 时，编辑 ArkTS 与模块配置遵守本节。
+
+## 文档优先级
+
+1. `docs/product/PRD.md`
+2. `docs/design/design-system.md` — 长期 UI 约束
+3. `docs/architecture/architecture.md`
+4. `docs/architecture/data-model.md`
+5. `docs/mockups/daypalette-premium-mockup.html` — 像素对照
+
+需求确认后：先更新 `docs/` 中对应文件，再改 `entry/`。详见 `docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md` §2。
+
+## 目录
+
+- `entry/src/main/ets/pages/` — 薄页面 `@Entry`
+- `components/` — `@Component`
+- `viewmodel/` — 状态与业务
+- `model/` — 类型与枚举
+- `common/constants/` — 设计令牌与常量
+
+## 入口
+
+- `AGENTS.md`
+- `docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md`
