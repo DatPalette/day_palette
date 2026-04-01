@@ -1,0 +1,158 @@
+import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
+import { DesignTokens } from '../common/constants/DesignTokens';
+import { AppLanguage } from '../model/AppLanguage';
+
+@Component
+export struct SettingsPanelView {
+  @ObjectLink vm: DayPaletteViewModel;
+  @Prop isOpen: boolean = false;
+  onRequestClose: () => void = () => {
+  };
+
+  build() {
+    Column() {
+      Row() {
+        Button({ type: ButtonType.Circle, stateEffect: true }) {
+          Text('‹')
+            .fontSize(28)
+            .fontColor(DesignTokens.TEXT_MAIN)
+            .fontWeight(FontWeight.Lighter)
+        }
+        .width(36)
+        .height(36)
+        .backgroundColor(Color.Transparent)
+        .onClick(() => {
+          this.onRequestClose();
+        })
+
+        Text(this.vm.getUiStrings().settingsTitle)
+          .fontSize(16)
+          .fontWeight(FontWeight.Medium)
+          .fontColor(DesignTokens.TEXT_MAIN)
+          .letterSpacing(0.32)
+          .layoutWeight(1)
+          .textAlign(TextAlign.Center)
+          .animation({ duration: 300, curve: Curve.EaseInOut })
+
+        Row()
+          .width(36)
+          .height(36)
+      }
+      .width('100%')
+      .padding({ top: 42, left: 8, right: 24, bottom: 16 })
+      .alignItems(VerticalAlign.Center)
+      .borderWidth({ bottom: 1 })
+      .borderColor('rgba(0, 0, 0, 0.03)')
+
+      Scroll() {
+        Column() {
+          Column() {
+            Row() {
+              Text(this.vm.getUiStrings().langLabel)
+                .fontSize(15)
+                .fontColor(DesignTokens.TEXT_MAIN)
+                .animation({ duration: 300, curve: Curve.EaseInOut })
+              Blank()
+              Row({ space: 0 }) {
+                Text('EN')
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(this.vm.currentLang === AppLanguage.EN ? DesignTokens.TEXT_MAIN :
+                  DesignTokens.TEXT_MUTED)
+                  .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+                  .borderRadius(6)
+                  .backgroundColor(this.vm.currentLang === AppLanguage.EN ? Color.White : Color.Transparent)
+                  .shadow({
+                    radius: this.vm.currentLang === AppLanguage.EN ? 8 : 0,
+                    color: 'rgba(0, 0, 0, 0.06)',
+                    offsetX: 0,
+                    offsetY: 2
+                  })
+                  .onClick(() => {
+                    this.vm.setLanguage(AppLanguage.EN);
+                  })
+                Text('中')
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(this.vm.currentLang === AppLanguage.ZH ? DesignTokens.TEXT_MAIN :
+                  DesignTokens.TEXT_MUTED)
+                  .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+                  .borderRadius(6)
+                  .backgroundColor(this.vm.currentLang === AppLanguage.ZH ? Color.White : Color.Transparent)
+                  .shadow({
+                    radius: this.vm.currentLang === AppLanguage.ZH ? 8 : 0,
+                    color: 'rgba(0, 0, 0, 0.06)',
+                    offsetX: 0,
+                    offsetY: 2
+                  })
+                  .onClick(() => {
+                    this.vm.setLanguage(AppLanguage.ZH);
+                  })
+              }
+              .padding(2)
+              .backgroundColor('rgba(0, 0, 0, 0.04)')
+              .borderRadius(8)
+            }
+            .width('100%')
+            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .justifyContent(FlexAlign.SpaceBetween)
+            .alignItems(VerticalAlign.Center)
+            .borderWidth({ bottom: 1 })
+            .borderColor(DesignTokens.BORDER_COLOR)
+
+            Row() {
+              Text(this.vm.getUiStrings().themeLabel)
+                .fontSize(15)
+                .fontColor(DesignTokens.TEXT_MAIN)
+                .animation({ duration: 300, curve: Curve.EaseInOut })
+              Text(this.vm.getUiStrings().themeValue)
+                .fontSize(14)
+                .fontColor(DesignTokens.TEXT_MUTED)
+                .animation({ duration: 300, curve: Curve.EaseInOut })
+            }
+            .width('100%')
+            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .justifyContent(FlexAlign.SpaceBetween)
+            .alignItems(VerticalAlign.Center)
+            .borderWidth({ bottom: 1 })
+            .borderColor(DesignTokens.BORDER_COLOR)
+
+            Row() {
+              Text(this.vm.getUiStrings().aboutLabel)
+                .fontSize(15)
+                .fontColor(DesignTokens.TEXT_MAIN)
+                .animation({ duration: 300, curve: Curve.EaseInOut })
+              Text('v1.0.0')
+                .fontSize(14)
+                .fontColor(DesignTokens.TEXT_MUTED)
+            }
+            .width('100%')
+            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .justifyContent(FlexAlign.SpaceBetween)
+            .alignItems(VerticalAlign.Center)
+          }
+          .width('100%')
+          .borderRadius(16)
+          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .clip(true)
+          .shadow({
+            radius: 12,
+            color: 'rgba(0, 0, 0, 0.02)',
+            offsetX: 0,
+            offsetY: 4
+          })
+        }
+        .width('100%')
+        .padding(24)
+      }
+      .layoutWeight(1)
+      .scrollBar(BarState.Off)
+      .width('100%')
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor(DesignTokens.BG_PAGE)
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
+  }
+}
