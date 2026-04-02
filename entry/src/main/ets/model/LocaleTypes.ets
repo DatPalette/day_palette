@@ -2,7 +2,6 @@ import type { Occasion } from './Occasion';
 
 /** 与 HTML `i18n[lang]` 中除 data 外的静态文案一致。 */
 export interface UiStrings {
-  loc: string;
   date: string;
   storyTitle: string;
   curatedTitle: string;

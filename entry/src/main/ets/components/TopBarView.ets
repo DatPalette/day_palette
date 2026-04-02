@@ -19,55 +19,74 @@ export struct TopBarView {
     return [DesignTokens.DEFAULT_MAIN, DesignTokens.DEFAULT_SEC, DesignTokens.DEFAULT_ACC];
   }
 
+  /** 顶栏收缩态单行标题（Hero 与同源，`<br>` 折为间隔） */
+  private compactOccasionTitle(): string {
+    const occ = this.vm.getActiveOccasion();
+    if (occ === undefined) {
+      return '';
+    }
+    return occ.title.replace(/<br\s*\/?>/gi, ' ').trim();
+  }
+
   build() {
     Row() {
       Stack({ alignContent: Alignment.BottomStart }) {
-        Column({ space: 4 }) {
-          Text(this.vm.getUiStrings().loc)
-            .fontSize(11)
-            .fontWeight(FontWeight.Medium)
-            .fontColor(DesignTokens.TEXT_MUTED)
-            .letterSpacing(1.1)
-            .textCase(TextCase.UpperCase)
-          Text(this.vm.getUiStrings().date)
-            .fontSize(24)
-            .fontWeight(FontWeight.Medium)
-            .fontColor(DesignTokens.TEXT_MAIN)
-            .letterSpacing(0.48)
-            .fontFamily(this.vm.currentLang === AppLanguage.ZH ? 'HarmonyOS Serif' : 'serif')
-        }
-        .alignItems(HorizontalAlign.Start)
+        Text(this.vm.getUiStrings().date)
+          .fontSize(24)
+          .fontWeight(FontWeight.Medium)
+          .fontColor(DesignTokens.TEXT_MAIN)
+          .letterSpacing(0.48)
+          .fontFamily(this.vm.currentLang === AppLanguage.ZH ? 'HarmonyOS Serif' : 'serif')
+          .alignSelf(ItemAlign.Start)
         .opacity(this.barCompact ? 0 : 1)
         .translate({ y: this.barCompact ? -10 : 0 })
         .animation({ duration: 400, curve: Curve.EaseInOut })
 
-        Row() {
-          Row()
-            .layoutWeight(3)
-            .height('100%')
-            .backgroundColor(this.miniColors()[0])
+        Row({ space: 10 }) {
+          Text(this.compactOccasionTitle())
+            .fontSize(15)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+            .letterSpacing(0.3)
+            .maxLines(1)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .constraintSize({ maxWidth: '52%' })
+            .fontFamily(this.vm.currentLang === AppLanguage.ZH ? 'HarmonyOS Serif' : 'serif')
+            .fontStyle(this.vm.currentLang === AppLanguage.ZH ? FontStyle.Normal : FontStyle.Italic)
             .animation({ duration: 600, curve: Curve.EaseInOut })
-          Row()
-            .layoutWeight(2)
-            .height('100%')
-            .backgroundColor(this.miniColors()[1])
-            .animation({ duration: 600, curve: Curve.EaseInOut })
-          Row()
-            .layoutWeight(1)
-            .height('100%')
-            .backgroundColor(this.miniColors()[2])
-            .animation({ duration: 600, curve: Curve.EaseInOut })
+
+          Row() {
+            Row()
+              .layoutWeight(3)
+              .height('100%')
+              .backgroundColor(this.miniColors()[0])
+              .animation({ duration: 600, curve: Curve.EaseInOut })
+            Row()
+              .layoutWeight(2)
+              .height('100%')
+              .backgroundColor(this.miniColors()[1])
+              .animation({ duration: 600, curve: Curve.EaseInOut })
+            Row()
+              .layoutWeight(1)
+              .height('100%')
+              .backgroundColor(this.miniColors()[2])
+              .animation({ duration: 600, curve: Curve.EaseInOut })
+          }
+          .width(140)
+          .height(36)
+          .borderRadius(18)
+          .clip(true)
+          .shadow({
+            radius: 16,
+            color: 'rgba(0, 0, 0, 0.08)',
+            offsetX: 0,
+            offsetY: 6
+          })
+          .flexShrink(0)
         }
-        .width(140)
-        .height(36)
-        .borderRadius(18)
-        .clip(true)
-        .shadow({
-          radius: 16,
-          color: 'rgba(0, 0, 0, 0.08)',
-          offsetX: 0,
-          offsetY: 6
-        })
+        .width('100%')
+        .justifyContent(FlexAlign.Start)
+        .alignItems(VerticalAlign.Center)
         .opacity(this.barCompact ? 1 : 0)
         .translate({ y: this.barCompact ? 0 : 10 })
         .animation({ duration: 400, curve: Curve.EaseInOut })

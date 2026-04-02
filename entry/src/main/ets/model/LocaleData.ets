@@ -90,7 +90,6 @@ const ZH_OCCASIONS: Occasion[] = [
 
 const EN_BUNDLE: LocaleBundle = {
   ui: {
-    loc: 'Shanghai, CN',
     date: 'Apr 01, 2026',
     storyTitle: 'Story of the Day',
     curatedTitle: 'Curated Palettes',
@@ -111,7 +110,6 @@ const EN_BUNDLE: LocaleBundle = {
 
 const ZH_BUNDLE: LocaleBundle = {
   ui: {
-    loc: '中国 · 上海',
     date: '2026年4月1日',
     storyTitle: '今天的故事',
     curatedTitle: '精选配色盘',
