@@ -1,12 +1,20 @@
+import type { common } from '@kit.AbilityKit';
 import { AppLanguage } from '../model/AppLanguage';
+import { readLanguageOverride, writeLanguageOverride } from '../model/LanguagePreferenceStore';
 import { getLocaleBundle } from '../model/LocaleData';
 import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
 import type { Occasion } from '../model/Occasion';
 import type { Palette } from '../model/Palette';
+import { getSystemAppLanguage } from '../model/SystemLanguageResolver';
 
 @Observed
 export class DayPaletteViewModel {
-  /** 与 HTML 默认 `currentLang` 一致。 */
+  /**
+   * 手动选择的语言；null 表示跟随系统。
+   * 首帧前由 Index.aboutToAppear 从 Preferences 同步。
+   */
+  manualLanguage: AppLanguage | null = null;
+  /** 实际用于文案与数据的语言（系统或手动解析结果）。 */
   currentLang: AppLanguage = AppLanguage.EN;
   /** 与 HTML `activeOccasion` 一致。 */
   activeOccasionId: string = 'workday';
@@ -67,8 +75,39 @@ export class DayPaletteViewModel {
     this.activePaletteId = paletteId;
   }
 
-  /** 设置语言；跨语言 id 一致，若当前 palette 不在新 bundle 中则回退到该场合首项。 */
-  setLanguage(lang: AppLanguage): void {
+  /** 从本地恢复手动覆盖并应用当前有效语言（应在首屏 build 前调用）。 */
+  loadLanguageFromStorage(context: common.UIAbilityContext): void {
+    this.manualLanguage = readLanguageOverride(context);
+    const effective: AppLanguage = this.manualLanguage ?? getSystemAppLanguage();
+    this.applyResolvedLocale(effective);
+  }
+
+  /** 系统区域/语言变化且当前为「跟随系统」时调用。 */
+  refreshLocaleIfFollowingSystem(context: common.UIAbilityContext): void {
+    if (this.manualLanguage !== null) {
+      return;
+    }
+    const effective: AppLanguage = getSystemAppLanguage();
+    this.applyResolvedLocale(effective);
+  }
+
+  setFollowSystem(context: common.UIAbilityContext): void {
+    this.manualLanguage = null;
+    writeLanguageOverride(context, null);
+    this.applyResolvedLocale(getSystemAppLanguage());
+  }
+
+  setManualLanguage(context: common.UIAbilityContext, lang: AppLanguage): void {
+    this.manualLanguage = lang;
+    writeLanguageOverride(context, lang);
+    this.applyResolvedLocale(lang);
+  }
+
+  isFollowingSystem(): boolean {
+    return this.manualLanguage === null;
+  }
+
+  private applyResolvedLocale(lang: AppLanguage): void {
     if (this.currentLang === lang) {
       return;
     }
