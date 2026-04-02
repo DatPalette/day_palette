@@ -9,8 +9,20 @@ import { OccasionSelectorView } from '../components/OccasionSelectorView';
 import { PaletteSelectorView } from '../components/PaletteSelectorView';
 import { BottomActionsView } from '../components/BottomActionsView';
 import { SettingsPanelView } from '../components/SettingsPanelView';
+import { FineTuneSheet } from '../components/FineTuneSheet';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { LayoutConstants } from '../common/constants/LayoutConstants';
+import {
+  saveTodayPaletteToGallery,
+  shareTodayPaletteImage
+} from '../export/PaletteShareActions';
+import type {
+  PaletteExportSnapshot,
+  SavePaletteImageFailure,
+  SavePaletteImageResult,
+  SharePaletteFailure,
+  SharePaletteResult
+} from '../export/PaletteShareActions';
 
 @Entry
 @Component
@@ -19,6 +31,7 @@ struct Index {
   private scroller: Scroller = new Scroller();
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
+  @State fineTuneOpen: boolean = false;
   /** 底部导航指示条 / 手势区高度（vp），用于底栏内边距与主列表底部留白 */
   @State bottomGestureInsetVp: number = 0;
   private localeEventHandler: (() => void) | undefined = undefined;
@@ -35,7 +48,10 @@ struct Index {
 
   aboutToAppear(): void {
     const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    this.vm.setPersistContext(ctx);
     this.vm.loadLanguageFromStorage(ctx);
+    this.vm.loadAccessibilityFromStorage(ctx);
+    this.vm.loadTodayOutfitFromStorage();
     this.localeEventHandler = (): void => {
       const host = this.getUIContext().getHostContext() as common.UIAbilityContext;
       this.vm.refreshLocaleIfFollowingSystem(host);
@@ -55,7 +71,7 @@ struct Index {
 
   private applyBottomGestureInsetFromWindow(win: window.Window): void {
     const px: number = getBottomGestureBarHeightPx(win);
-    let vp: number = px2vp(px);
+    let vp: number = this.getUIContext().px2vp(px);
     if (px <= 0 || vp <= 0) {
       vp = LayoutConstants.BOTTOM_INDICATOR_FALLBACK_VP;
     }
@@ -88,23 +104,100 @@ struct Index {
     }
   }
 
+  private uiAnimMs(normal: number): number {
+    return this.vm.reduceMotion ? 0 : normal;
+  }
+
   private scrollMainToTop(): void {
     this.scroller.scrollTo({
       xOffset: 0,
       yOffset: 0,
-      animation: { duration: 400, curve: Curve.EaseInOut }
+      animation: { duration: this.uiAnimMs(400), curve: Curve.EaseInOut }
     });
   }
 
   private openSettings(): void {
-    this.getUIContext()?.animateTo({ duration: 400, curve: Curve.EaseInOut }, () => {
+    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(400), curve: Curve.EaseInOut }, () => {
       this.isSettingsOpen = true;
     });
   }
 
   private closeSettings(): void {
-    this.getUIContext()?.animateTo({ duration: 400, curve: Curve.EaseInOut }, () => {
+    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(400), curve: Curve.EaseInOut }, () => {
       this.isSettingsOpen = false;
+    });
+  }
+
+  private showToastMsg(message: string, longDuration: boolean = false): void {
+    try {
+      this.getUIContext().getPromptAction().showToast({
+        message: message,
+        duration: longDuration ? 8000 : 3000
+      });
+    } catch (_e) {
+    }
+  }
+
+  private messageForSaveFailure(r: SavePaletteImageFailure): string {
+    const u = this.vm.getUiStrings();
+    let msg: string;
+    switch (r.hint) {
+      case 'album_permission_denied':
+        msg = u.saveFailAlbumPermission;
+        break;
+      case 'permission_request_failed':
+        msg = u.saveFailPermissionRequest;
+        break;
+      case 'export_pixel_map':
+        msg = u.saveFailBuildImage;
+        break;
+      case 'export_pack_png':
+        msg = u.saveFailEncodeImage;
+        break;
+      case 'gallery_create_open':
+        msg = u.saveFailGalleryApi;
+        break;
+      case 'gallery_write':
+        msg = u.saveFailGalleryWrite;
+        break;
+      case 'save_dialog_cancelled':
+        msg = u.saveCancelled;
+        break;
+      default:
+        msg = u.saveFailUnknown;
+        break;
+    }
+    if (r.code !== undefined && r.code >= 0) {
+      msg = `${msg} [${r.code}]`;
+    }
+    return msg;
+  }
+
+  private handleSaveImage(snap: PaletteExportSnapshot): void {
+    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    void saveTodayPaletteToGallery(ctx, snap).then((r: SavePaletteImageResult) => {
+      if (r.ok) {
+        this.showToastMsg(this.vm.getUiStrings().saveSuccess, false);
+      } else {
+        const rf: SavePaletteImageFailure = r as SavePaletteImageFailure;
+        if (rf.hint === 'save_dialog_cancelled') {
+          this.showToastMsg(this.vm.getUiStrings().saveCancelled, false);
+        } else {
+          this.showToastMsg(this.messageForSaveFailure(rf), true);
+        }
+      }
+    });
+  }
+
+  private handleShareImage(snap: PaletteExportSnapshot): void {
+    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    void shareTodayPaletteImage(ctx, snap).then((r: SharePaletteResult) => {
+      if (!r.ok) {
+        const fail: SharePaletteFailure = r as SharePaletteFailure;
+        const u = this.vm.getUiStrings();
+        const msg: string = fail.hint === 'build_image' ? u.shareFailBuildImage : u.shareFailOther;
+        this.showToastMsg(msg, true);
+      }
     });
   }
 
@@ -116,7 +209,21 @@ struct Index {
             .height(LayoutConstants.SCROLL_TOP_INSET_VP)
           HeroDisplayView({ vm: this.vm })
           OccasionSelectorView({ vm: this.vm })
-          PaletteSelectorView({ vm: this.vm })
+          PaletteSelectorView({
+            vm: this.vm,
+            onRandom: () => {
+              this.vm.randomPaletteInActiveOccasion();
+            },
+            onYesterday: () => {
+              const ok: boolean = this.vm.applyYesterdayOutfitFromStorage();
+              if (!ok) {
+                this.showToastMsg(this.vm.getUiStrings().yesterdayEmpty);
+              }
+            },
+            onFineTune: () => {
+              this.fineTuneOpen = true;
+            }
+          })
           Blank()
             .height(LayoutConstants.SCROLL_BOTTOM_INSET_VP + this.bottomGestureInsetVp)
         }
@@ -149,7 +256,13 @@ struct Index {
 
         BottomActionsView({
           vm: this.vm,
-          bottomGestureInsetVp: this.bottomGestureInsetVp
+          bottomGestureInsetVp: this.bottomGestureInsetVp,
+          onTapSave: (snap: PaletteExportSnapshot) => {
+            this.handleSaveImage(snap);
+          },
+          onTapShare: (snap: PaletteExportSnapshot) => {
+            this.handleShareImage(snap);
+          }
         })
           .width('100%')
           .position({ bottom: 0, left: 0 })
@@ -168,7 +281,24 @@ struct Index {
           .height('100%')
           .position({ top: 0, left: 0 })
           .zIndex(100)
-          .transition(TransitionEffect.translate({ x: '100%' }).animation({ duration: 400, curve: Curve.EaseInOut }))
+          .transition(TransitionEffect.translate({ x: '100%' }).animation({
+            duration: this.uiAnimMs(400),
+            curve: Curve.EaseInOut
+          }))
+      }
+
+      if (this.fineTuneOpen) {
+        FineTuneSheet({
+          vm: this.vm,
+          bottomGestureInsetVp: this.bottomGestureInsetVp,
+          onRequestClose: () => {
+            this.fineTuneOpen = false;
+          }
+        })
+          .width('100%')
+          .height('100%')
+          .position({ top: 0, left: 0 })
+          .zIndex(120)
       }
     }
     .width('100%')

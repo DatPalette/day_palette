@@ -7,24 +7,22 @@ import { LayoutConstants } from '../common/constants/LayoutConstants';
 export struct HeroDisplayView {
   @ObjectLink vm: DayPaletteViewModel;
 
-  private heroColors(): string[] {
-    const p = this.vm.getActivePalette();
-    if (p !== undefined && p.colors.length >= 3) {
-      return p.colors;
-    }
-    return [DesignTokens.DEFAULT_MAIN, DesignTokens.DEFAULT_SEC, DesignTokens.DEFAULT_ACC];
+  private heroDur(): number {
+    return this.vm.reduceMotion ? 1 : 600;
   }
 
-  private moodLines(): string[] {
-    const occ = this.vm.getActiveOccasion();
-    const raw = occ !== undefined ? occ.title : '';
-    return raw.split('<br>');
+  private heroColors(): string[] {
+    return this.vm.getHeroColorStrings();
+  }
+
+  private heroTitleLines(): string[] {
+    return this.vm.getHeroTitleLines();
   }
 
   build() {
     Column() {
       Column({ space: 0 }) {
-        ForEach(this.moodLines(), (line: string, index: number) => {
+        ForEach(this.heroTitleLines(), (line: string, index: number) => {
           Text(line)
             .fontSize(42)
             .fontWeight(FontWeight.Medium)
@@ -32,8 +30,8 @@ export struct HeroDisplayView {
             .lineHeight(46.2)
             .fontFamily(this.vm.currentLang === AppLanguage.ZH ? 'HarmonyOS Serif' : 'serif')
             .fontStyle(this.vm.currentLang === AppLanguage.ZH ? FontStyle.Normal : FontStyle.Italic)
-            .animation({ duration: 300, curve: Curve.EaseInOut })
-        }, (line: string, index: number) => `mood-${index}-${this.vm.currentLang}`)
+            .animation({ duration: this.vm.reduceMotion ? 1 : 300, curve: Curve.EaseInOut })
+        }, (line: string, index: number) => `hero-title-${index}-${this.vm.activePaletteId}-${this.vm.currentLang}`)
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
@@ -60,7 +58,7 @@ export struct HeroDisplayView {
             offsetX: 0,
             offsetY: 20
           })
-          .animation({ duration: 600, curve: Curve.EaseInOut })
+          .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(1)
 
         Stack()
@@ -83,7 +81,7 @@ export struct HeroDisplayView {
             offsetX: 0,
             offsetY: 20
           })
-          .animation({ duration: 600, curve: Curve.EaseInOut })
+          .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(2)
 
         Stack()
@@ -98,8 +96,17 @@ export struct HeroDisplayView {
             offsetX: 0,
             offsetY: 20
           })
-          .animation({ duration: 600, curve: Curve.EaseInOut })
+          .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(3)
+
+        if (this.vm.noiseOverlay) {
+          Column()
+            .width('100%')
+            .height(320)
+            .backgroundColor('rgba(30,30,30,0.06)')
+            .blendMode(BlendMode.MULTIPLY)
+            .zIndex(10)
+        }
       }
       .width('100%')
       .height(320)
@@ -150,7 +157,7 @@ export struct HeroDisplayView {
       .width('100%')
       .justifyContent(FlexAlign.SpaceBetween)
       .margin({ top: 8 })
-      .animation({ duration: 600, curve: Curve.EaseInOut })
+      .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)

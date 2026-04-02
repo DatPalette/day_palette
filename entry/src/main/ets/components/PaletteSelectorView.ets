@@ -6,6 +6,12 @@ import { LayoutConstants } from '../common/constants/LayoutConstants';
 @Component
 export struct PaletteSelectorView {
   @ObjectLink vm: DayPaletteViewModel;
+  onRandom: () => void = () => {
+  };
+  onYesterday: () => void = () => {
+  };
+  onFineTune: () => void = () => {
+  };
 
   build() {
     Column() {
@@ -18,6 +24,36 @@ export struct PaletteSelectorView {
         .width('100%')
         .textAlign(TextAlign.Start)
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
+
+      Row({ space: 20 }) {
+        Text(this.vm.getUiStrings().randomPalette)
+          .fontSize(11)
+          .fontWeight(FontWeight.Medium)
+          .fontColor(DesignTokens.TEXT_MAIN)
+          .decoration({ type: TextDecorationType.Underline })
+          .onClick(() => {
+            this.onRandom();
+          })
+        Text(this.vm.getUiStrings().yesterdayOutfit)
+          .fontSize(11)
+          .fontWeight(FontWeight.Medium)
+          .fontColor(DesignTokens.TEXT_MAIN)
+          .decoration({ type: TextDecorationType.Underline })
+          .onClick(() => {
+            this.onYesterday();
+          })
+        Text(this.vm.getUiStrings().fineTune)
+          .fontSize(11)
+          .fontWeight(FontWeight.Medium)
+          .fontColor(DesignTokens.TEXT_MAIN)
+          .decoration({ type: TextDecorationType.Underline })
+          .onClick(() => {
+            this.onFineTune();
+          })
+      }
+      .width('100%')
+      .justifyContent(FlexAlign.Start)
+      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 12 })
 
       Scroll() {
         Row({ space: 16 }) {
