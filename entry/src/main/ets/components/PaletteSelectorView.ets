@@ -25,49 +25,66 @@ export struct PaletteSelectorView {
         .textAlign(TextAlign.Start)
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
 
-      Row({ space: 20 }) {
-        Column() {
+      Row({ space: 10 }) {
+        Column({ space: 2 }) {
           Text(this.vm.getUiStrings().randomPalette)
-            .fontSize(11)
+            .fontSize(13)
             .fontWeight(FontWeight.Medium)
             .fontColor(DesignTokens.TEXT_MAIN)
-            .decoration({ type: TextDecorationType.Underline })
-            .onClick(() => {
-              this.onRandom();
-            })
           Text(this.vm.getUiStrings().randomPaletteHint)
             .fontSize(9)
             .fontColor(DesignTokens.TEXT_MUTED)
-            .margin({ top: 4 })
-            .maxLines(2)
+            .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
-            .width(120)
-            .onClick(() => {
-              this.onRandom();
-            })
         }
-        .alignItems(HorizontalAlign.Start)
-        Text(this.vm.getUiStrings().yesterdayOutfit)
-          .fontSize(11)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(DesignTokens.TEXT_MAIN)
-          .decoration({ type: TextDecorationType.Underline })
-          .onClick(() => {
-            this.onYesterday();
-          })
-        Text(this.vm.getUiStrings().fineTune)
-          .fontSize(11)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(DesignTokens.TEXT_MAIN)
-          .decoration({ type: TextDecorationType.Underline })
-          .onClick(() => {
-            this.onFineTune();
-          })
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
+        .height(48)
+        .layoutWeight(1)
+        .backgroundColor(DesignTokens.SURFACE_CARD)
+        .borderRadius(24)
+        .shadow({ radius: 12, color: 'rgba(0, 0, 0, 0.03)', offsetY: 4 })
+        .onClick(() => {
+          this.onRandom();
+        })
+
+        Column() {
+          Text(this.vm.getUiStrings().yesterdayOutfit)
+            .fontSize(13)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+        }
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
+        .height(48)
+        .padding({ left: 20, right: 20 })
+        .backgroundColor(DesignTokens.SURFACE_CARD)
+        .borderRadius(24)
+        .shadow({ radius: 12, color: 'rgba(0, 0, 0, 0.03)', offsetY: 4 })
+        .onClick(() => {
+          this.onYesterday();
+        })
+
+        Column() {
+          Text(this.vm.getUiStrings().fineTune)
+            .fontSize(13)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+        }
+        .alignItems(HorizontalAlign.Center)
+        .justifyContent(FlexAlign.Center)
+        .height(48)
+        .padding({ left: 20, right: 20 })
+        .backgroundColor(DesignTokens.SURFACE_CARD)
+        .borderRadius(24)
+        .shadow({ radius: 12, color: 'rgba(0, 0, 0, 0.03)', offsetY: 4 })
+        .onClick(() => {
+          this.onFineTune();
+        })
       }
       .width('100%')
-      .alignItems(VerticalAlign.Top)
-      .justifyContent(FlexAlign.Start)
-      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 12 })
+      .alignItems(VerticalAlign.Center)
+      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 16 })
 
       Scroll() {
         Row({ space: 16 }) {

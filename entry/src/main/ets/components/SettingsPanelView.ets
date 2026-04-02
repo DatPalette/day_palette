@@ -19,6 +19,12 @@ export struct SettingsPanelView {
     if (id === 'tpl_thirds_v3') {
       return this.vm.getUiStrings().templateThirds;
     }
+    if (id === 'tpl_bento_v4') {
+      return this.vm.getUiStrings().templateBento;
+    }
+    if (id === 'tpl_stack_v5') {
+      return this.vm.getUiStrings().templateStack;
+    }
     return this.vm.getUiStrings().templateEditorial;
   }
 
@@ -167,7 +173,7 @@ export struct SettingsPanelView {
                 .width('100%')
                 .textAlign(TextAlign.Start)
                 .animation({ duration: this.vm.reduceMotion ? 1 : 300, curve: Curve.EaseInOut })
-              Row({ space: 8 }) {
+              Flex({ wrap: FlexWrap.Wrap }) {
                 ForEach(TEMPLATE_IDS, (tid: string) => {
                   Text(this.templateOptionTitle(tid))
                     .fontSize(12)
@@ -179,6 +185,7 @@ export struct SettingsPanelView {
                       top: 8,
                       bottom: 8
                     })
+                    .margin({ right: 8, bottom: 8 })
                     .borderRadius(6)
                     .backgroundColor(this.vm.templateId === tid ? DesignTokens.TEXT_MAIN : Color.Transparent)
                     .border({

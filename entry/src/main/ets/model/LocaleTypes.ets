@@ -53,6 +53,8 @@ export interface UiStrings {
   templateEditorial: string;
   templateColumns: string;
   templateThirds: string;
+  templateBento: string;
+  templateStack: string;
   reduceMotionLabel: string;
   noiseLabel: string;
   themeFollowSystem: string;

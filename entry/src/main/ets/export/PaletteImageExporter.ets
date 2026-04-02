@@ -70,6 +70,35 @@ export function createPaletteExportPixelMap(
     fillRect(buf, w, h, 0, 0, w, band, main[0], main[1], main[2]);
     fillRect(buf, w, h, 0, band, w, band * 2, sec[0], sec[1], sec[2]);
     fillRect(buf, w, h, 0, band * 2, w, h, acc[0], acc[1], acc[2]);
+  } else if (templateId === 'tpl_bento_v4') {
+    const wMain: number = Math.floor((w * 4) / 6);
+    const hSec: number = Math.floor((h * 2) / 3);
+    fillRect(buf, w, h, 0, 0, wMain, h, main[0], main[1], main[2]);
+    fillRect(buf, w, h, wMain, 0, w, hSec, sec[0], sec[1], sec[2]);
+    fillRect(buf, w, h, wMain, hSec, w, h, acc[0], acc[1], acc[2]);
+  } else if (templateId === 'tpl_stack_v5') {
+    // 模拟 Hero 的层叠效果（无旋转，仅通过位置和大小模拟错落感）
+    // 背景色使用浅灰白，模拟画布
+    fillRect(buf, w, h, 0, 0, w, h, 249, 248, 246);
+    
+    // 主色：75% 宽，高 65%，靠左上
+    const mainW = Math.floor(w * 0.75);
+    const mainH = Math.floor(h * 0.65);
+    fillRect(buf, w, h, 0, 0, mainW, mainH, main[0], main[1], main[2]);
+    
+    // 辅色：55% 宽，高 45%，居中偏右
+    const secW = Math.floor(w * 0.55);
+    const secH = Math.floor(h * 0.45);
+    const secX = Math.floor(w * 0.45);
+    const secY = Math.floor(h * 0.30);
+    fillRect(buf, w, h, secX, secY, secX + secW, secY + secH, sec[0], sec[1], sec[2]);
+    
+    // 点缀色：35% 宽，高 25%，靠左下
+    const accW = Math.floor(w * 0.35);
+    const accH = Math.floor(h * 0.25);
+    const accX = Math.floor(w * 0.15);
+    const accY = Math.floor(h * 0.55);
+    fillRect(buf, w, h, accX, accY, accX + accW, accY + accH, acc[0], acc[1], acc[2]);
   } else {
     const h1: number = Math.floor(h * 0.55);
     const h2: number = Math.floor(h * 0.30);
@@ -91,4 +120,4 @@ export function createPaletteExportPixelMap(
   }
 }
 
-export const TEMPLATE_IDS: string[] = [DEFAULT_TEMPLATE_ID, 'tpl_columns_v2', 'tpl_thirds_v3'];
+export const TEMPLATE_IDS: string[] = [DEFAULT_TEMPLATE_ID, 'tpl_columns_v2', 'tpl_thirds_v3', 'tpl_bento_v4', 'tpl_stack_v5'];
