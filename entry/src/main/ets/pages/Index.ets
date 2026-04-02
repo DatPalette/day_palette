@@ -1,5 +1,7 @@
 import { common } from '@kit.AbilityKit';
+import { window } from '@kit.ArkUI';
 import { LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
+import { getBottomGestureBarHeightPx } from '../common/window/NavigationIndicatorInset';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { TopBarView } from '../components/TopBarView';
 import { HeroDisplayView } from '../components/HeroDisplayView';
@@ -17,7 +19,19 @@ struct Index {
   private scroller: Scroller = new Scroller();
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
+  /** 底部导航指示条 / 手势区高度（vp），用于底栏内边距与主列表底部留白 */
+  @State bottomGestureInsetVp: number = 0;
   private localeEventHandler: (() => void) | undefined = undefined;
+  private bottomWindowRef: window.Window | undefined = undefined;
+  private avoidAreaChangeHandler = (data: window.AvoidAreaOptions): void => {
+    if (data.type === window.AvoidAreaType.TYPE_SYSTEM ||
+      data.type === window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR ||
+      data.type === window.AvoidAreaType.TYPE_SYSTEM_GESTURE) {
+      if (this.bottomWindowRef !== undefined) {
+        this.applyBottomGestureInsetFromWindow(this.bottomWindowRef);
+      }
+    }
+  };
 
   aboutToAppear(): void {
     const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
@@ -27,6 +41,7 @@ struct Index {
       this.vm.refreshLocaleIfFollowingSystem(host);
     };
     ctx.eventHub.on(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
+    this.attachBottomGestureInsetListener(ctx);
   }
 
   aboutToDisappear(): void {
@@ -34,6 +49,42 @@ struct Index {
     if (this.localeEventHandler !== undefined) {
       ctx.eventHub.off(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
       this.localeEventHandler = undefined;
+    }
+    this.detachBottomGestureInsetListener();
+  }
+
+  private applyBottomGestureInsetFromWindow(win: window.Window): void {
+    const px: number = getBottomGestureBarHeightPx(win);
+    let vp: number = px2vp(px);
+    if (px <= 0 || vp <= 0) {
+      vp = LayoutConstants.BOTTOM_INDICATOR_FALLBACK_VP;
+    }
+    this.bottomGestureInsetVp = vp;
+  }
+
+  private attachBottomGestureInsetListener(ctx: common.UIAbilityContext): void {
+    const bind = (win: window.Window): void => {
+      if (this.bottomWindowRef === undefined) {
+        this.bottomWindowRef = win;
+        win.on('avoidAreaChange', this.avoidAreaChangeHandler);
+      }
+      this.applyBottomGestureInsetFromWindow(win);
+    };
+    void window.getLastWindow(ctx).then(bind).catch(() => {
+    });
+    setTimeout((): void => {
+      void window.getLastWindow(ctx).then(bind).catch(() => {
+      });
+    }, 100);
+  }
+
+  private detachBottomGestureInsetListener(): void {
+    if (this.bottomWindowRef !== undefined) {
+      try {
+        this.bottomWindowRef.off('avoidAreaChange', this.avoidAreaChangeHandler);
+      } catch {
+      }
+      this.bottomWindowRef = undefined;
     }
   }
 
@@ -67,7 +118,7 @@ struct Index {
           OccasionSelectorView({ vm: this.vm })
           PaletteSelectorView({ vm: this.vm })
           Blank()
-            .height(LayoutConstants.SCROLL_BOTTOM_INSET_VP)
+            .height(LayoutConstants.SCROLL_BOTTOM_INSET_VP + this.bottomGestureInsetVp)
         }
         .width('100%')
         .backgroundColor(DesignTokens.BG_PAGE)
@@ -80,6 +131,7 @@ struct Index {
         const y: number = this.scroller.currentOffset().yOffset;
         this.mainScrollY = y > 0 ? y : 0;
       })
+      .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
 
         TopBarView({
           vm: this.vm,
@@ -95,7 +147,10 @@ struct Index {
           .position({ top: 0, left: 0 })
           .zIndex(30)
 
-        BottomActionsView({ vm: this.vm })
+        BottomActionsView({
+          vm: this.vm,
+          bottomGestureInsetVp: this.bottomGestureInsetVp
+        })
           .width('100%')
           .position({ bottom: 0, left: 0 })
           .zIndex(30)
@@ -104,6 +159,7 @@ struct Index {
         SettingsPanelView({
           vm: this.vm,
           isOpen: this.isSettingsOpen,
+          bottomGestureInsetVp: this.bottomGestureInsetVp,
           onRequestClose: () => {
             this.closeSettings();
           }
@@ -117,6 +173,7 @@ struct Index {
     }
     .width('100%')
     .height('100%')
-    .backgroundColor(DesignTokens.BG_CANVAS)
+    .backgroundColor(DesignTokens.BG_PAGE)
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
   }
 }

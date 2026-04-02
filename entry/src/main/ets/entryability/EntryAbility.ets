@@ -2,6 +2,7 @@ import { AbilityConstant, Configuration, ConfigurationConstant, UIAbility, Want 
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
+import { DesignTokens } from '../common/constants/DesignTokens';
 
 const DOMAIN = 0x0000;
 
@@ -33,6 +34,27 @@ export default class EntryAbility extends UIAbility {
         return;
       }
       hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
+      void windowStage.getMainWindow().then((win: window.Window) => {
+        try {
+          win.setWindowLayoutFullScreen(true);
+        } catch (e) {
+          hilog.warn(DOMAIN, 'testTag', 'setWindowLayoutFullScreen: %{public}s', JSON.stringify(e));
+        }
+        try {
+          win.setWindowBackgroundColor(DesignTokens.BG_PAGE);
+        } catch (e) {
+          hilog.warn(DOMAIN, 'testTag', 'setWindowBackgroundColor: %{public}s', JSON.stringify(e));
+        }
+        try {
+          win.setWindowSystemBarProperties({
+            navigationBarColor: '#00000000'
+          });
+        } catch (e) {
+          hilog.warn(DOMAIN, 'testTag', 'setWindowSystemBarProperties: %{public}s', JSON.stringify(e));
+        }
+      }).catch((e: Error) => {
+        hilog.warn(DOMAIN, 'testTag', 'getMainWindow: %{public}s', JSON.stringify(e));
+      });
     });
   }
 

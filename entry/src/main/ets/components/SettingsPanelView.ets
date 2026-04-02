@@ -7,6 +7,7 @@ import { AppLanguage } from '../model/AppLanguage';
 export struct SettingsPanelView {
   @ObjectLink vm: DayPaletteViewModel;
   @Prop isOpen: boolean = false;
+  @Prop bottomGestureInsetVp: number = 0;
   onRequestClose: () => void = () => {
   };
 
@@ -185,6 +186,7 @@ export struct SettingsPanelView {
     }
     .width('100%')
     .height('100%')
+    .padding({ bottom: this.bottomGestureInsetVp })
     .backgroundColor(DesignTokens.BG_PAGE)
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP, SafeAreaEdge.BOTTOM])
   }
