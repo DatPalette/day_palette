@@ -38,7 +38,7 @@
 
 ### [ ] Step 2.2: 实现 TopBarView (顶部导航栏)
 - 提取 HTML 中 `.top-bar` 的布局。
-- 包含日期（Date）、地点（Location）和设置按钮（Settings Button）。
+- 包含日期（Date）和设置按钮（Settings Button）；地点/天气见 PRD 未来规划。
 - 应用毛玻璃效果（Backdrop Blur / UltraThinMaterial）和半透明背景 `rgba(249, 248, 246, 0.75)`。
 - 固定在顶部（Sticky Header / Pinned View）。
 
@@ -73,7 +73,7 @@
 ### [ ] Step 3.3: 实现 Sticky Mini-Hero 滚动监听动效
 - **核心难点**：监听主 ScrollView 的滚动偏移量（Scroll Offset）。
 - 当向下滚动超过阈值（如 60px）时：
-  1. `TopBarView` 中的日期/地点文本淡出（Opacity 0, TranslateY -10px）。
+  1. `TopBarView` 中的日期文本淡出（Opacity 0, TranslateY -10px）。
   2. 原本隐藏的微缩三色胶囊（`.top-mini-palette`）淡入并滑现（Opacity 1, TranslateY 0）。
 - 点击微缩胶囊时，触发滚动回顶部（Scroll to Top）的动画。
 

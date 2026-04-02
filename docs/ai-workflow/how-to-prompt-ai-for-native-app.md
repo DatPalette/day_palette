@@ -51,7 +51,7 @@ AI 在处理大量代码和复杂逻辑时容易丢失细节（尤其是动画�
 > **Prompt 示例：**
 > “现在，请根据 HTML 中的 `<div class="device-inner">` 内部的结构，搭建主页面的原生 UI 组件（View）。
 > 请将其拆分为几个子组件结构：
-> 1. `TopBarView` (包含日期地点和设置按钮)
+> 1. `TopBarView` (包含日期和设置按钮；无占位地点文案)
 > 2. `HeroDisplayView` (包含主标题和大色卡)
 > 3. `OccasionSelectorView` (横向滚动的场合列表)
 > 4. `PaletteSelectorView` (横向滚动的配色盘列表)
