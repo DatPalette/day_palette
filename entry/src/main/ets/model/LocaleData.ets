@@ -101,6 +101,7 @@ const EN_BUNDLE: LocaleBundle = {
     acc: 'Acc',
     settingsTitle: 'Settings',
     langLabel: 'Language',
+    langFollowSystem: 'System',
     themeLabel: 'Appearance',
     themeValue: 'System',
     aboutLabel: 'About DayPalette'
@@ -121,6 +122,7 @@ const ZH_BUNDLE: LocaleBundle = {
     acc: '点缀',
     settingsTitle: '设置',
     langLabel: '语言',
+    langFollowSystem: '跟随系统',
     themeLabel: '外观',
     themeValue: '跟随系统',
     aboutLabel: '关于今日配色'

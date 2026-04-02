@@ -13,6 +13,7 @@ export interface UiStrings {
   acc: string;
   settingsTitle: string;
   langLabel: string;
+  langFollowSystem: string;
   themeLabel: string;
   themeValue: string;
   aboutLabel: string;
