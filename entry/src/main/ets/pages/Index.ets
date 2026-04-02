@@ -1,3 +1,5 @@
+import { common } from '@kit.AbilityKit';
+import { LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { TopBarView } from '../components/TopBarView';
 import { HeroDisplayView } from '../components/HeroDisplayView';
@@ -15,6 +17,25 @@ struct Index {
   private scroller: Scroller = new Scroller();
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
+  private localeEventHandler: (() => void) | undefined = undefined;
+
+  aboutToAppear(): void {
+    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    this.vm.loadLanguageFromStorage(ctx);
+    this.localeEventHandler = (): void => {
+      const host = this.getUIContext().getHostContext() as common.UIAbilityContext;
+      this.vm.refreshLocaleIfFollowingSystem(host);
+    };
+    ctx.eventHub.on(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
+  }
+
+  aboutToDisappear(): void {
+    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    if (this.localeEventHandler !== undefined) {
+      ctx.eventHub.off(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
+      this.localeEventHandler = undefined;
+    }
+  }
 
   private scrollMainToTop(): void {
     this.scroller.scrollTo({

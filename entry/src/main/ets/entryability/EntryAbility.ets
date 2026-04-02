@@ -1,6 +1,7 @@
-import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
+import { AbilityConstant, Configuration, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import { LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
 
 const DOMAIN = 0x0000;
 
@@ -12,6 +13,10 @@ export default class EntryAbility extends UIAbility {
       hilog.error(DOMAIN, 'testTag', 'Failed to set colorMode. Cause: %{public}s', JSON.stringify(err));
     }
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
+  }
+
+  onConfigurationUpdate(_config: Configuration): void {
+    this.context.eventHub.emit(LOCALE_CONFIG_CHANGED_EVENT);
   }
 
   onDestroy(): void {
