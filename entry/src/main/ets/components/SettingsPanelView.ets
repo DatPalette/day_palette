@@ -1,3 +1,4 @@
+import { common } from '@kit.AbilityKit';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { AppLanguage } from '../model/AppLanguage';
@@ -47,56 +48,88 @@ export struct SettingsPanelView {
       Scroll() {
         Column() {
           Column() {
-            Row() {
+            Column() {
               Text(this.vm.getUiStrings().langLabel)
                 .fontSize(15)
                 .fontColor(DesignTokens.TEXT_MAIN)
+                .width('100%')
+                .textAlign(TextAlign.Start)
                 .animation({ duration: 300, curve: Curve.EaseInOut })
-              Blank()
               Row({ space: 0 }) {
-                Text('EN')
-                  .fontSize(13)
+                Text(this.vm.getUiStrings().langFollowSystem)
+                  .fontSize(11)
                   .fontWeight(FontWeight.Medium)
-                  .fontColor(this.vm.currentLang === AppLanguage.EN ? DesignTokens.TEXT_MAIN :
-                  DesignTokens.TEXT_MUTED)
-                  .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+                  .fontColor(this.vm.isFollowingSystem() ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
+                  .padding({
+                    left: 6,
+                    right: 6,
+                    top: 6,
+                    bottom: 6
+                  })
+                  .layoutWeight(1)
+                  .textAlign(TextAlign.Center)
                   .borderRadius(6)
-                  .backgroundColor(this.vm.currentLang === AppLanguage.EN ? Color.White : Color.Transparent)
+                  .backgroundColor(this.vm.isFollowingSystem() ? Color.White : Color.Transparent)
                   .shadow({
-                    radius: this.vm.currentLang === AppLanguage.EN ? 8 : 0,
+                    radius: this.vm.isFollowingSystem() ? 8 : 0,
                     color: 'rgba(0, 0, 0, 0.06)',
                     offsetX: 0,
                     offsetY: 2
                   })
                   .onClick(() => {
-                    this.vm.setLanguage(AppLanguage.EN);
+                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+                    this.vm.setFollowSystem(ctx);
+                  })
+                Text('EN')
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(this.vm.manualLanguage === AppLanguage.EN ? DesignTokens.TEXT_MAIN :
+                  DesignTokens.TEXT_MUTED)
+                  .padding({ left: 8, right: 8, top: 6, bottom: 6 })
+                  .layoutWeight(1)
+                  .textAlign(TextAlign.Center)
+                  .borderRadius(6)
+                  .backgroundColor(this.vm.manualLanguage === AppLanguage.EN ? Color.White : Color.Transparent)
+                  .shadow({
+                    radius: this.vm.manualLanguage === AppLanguage.EN ? 8 : 0,
+                    color: 'rgba(0, 0, 0, 0.06)',
+                    offsetX: 0,
+                    offsetY: 2
+                  })
+                  .onClick(() => {
+                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+                    this.vm.setManualLanguage(ctx, AppLanguage.EN);
                   })
                 Text('中')
                   .fontSize(13)
                   .fontWeight(FontWeight.Medium)
-                  .fontColor(this.vm.currentLang === AppLanguage.ZH ? DesignTokens.TEXT_MAIN :
+                  .fontColor(this.vm.manualLanguage === AppLanguage.ZH ? DesignTokens.TEXT_MAIN :
                   DesignTokens.TEXT_MUTED)
-                  .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+                  .padding({ left: 8, right: 8, top: 6, bottom: 6 })
+                  .layoutWeight(1)
+                  .textAlign(TextAlign.Center)
                   .borderRadius(6)
-                  .backgroundColor(this.vm.currentLang === AppLanguage.ZH ? Color.White : Color.Transparent)
+                  .backgroundColor(this.vm.manualLanguage === AppLanguage.ZH ? Color.White : Color.Transparent)
                   .shadow({
-                    radius: this.vm.currentLang === AppLanguage.ZH ? 8 : 0,
+                    radius: this.vm.manualLanguage === AppLanguage.ZH ? 8 : 0,
                     color: 'rgba(0, 0, 0, 0.06)',
                     offsetX: 0,
                     offsetY: 2
                   })
                   .onClick(() => {
-                    this.vm.setLanguage(AppLanguage.ZH);
+                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+                    this.vm.setManualLanguage(ctx, AppLanguage.ZH);
                   })
               }
+              .width('100%')
+              .margin({ top: 12 })
               .padding(2)
               .backgroundColor('rgba(0, 0, 0, 0.04)')
               .borderRadius(8)
             }
             .width('100%')
             .padding({ left: 20, right: 20, top: 16, bottom: 16 })
-            .justifyContent(FlexAlign.SpaceBetween)
-            .alignItems(VerticalAlign.Center)
+            .alignItems(HorizontalAlign.Start)
             .borderWidth({ bottom: 1 })
             .borderColor(DesignTokens.BORDER_COLOR)
 

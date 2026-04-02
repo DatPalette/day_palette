@@ -105,9 +105,47 @@ export struct HeroDisplayView {
       .height(320)
 
       Row() {
-        this.colorLabel(this.vm.getUiStrings().main, this.heroColors()[0])
-        this.colorLabel(this.vm.getUiStrings().sec, this.heroColors()[1])
-        this.colorLabel(this.vm.getUiStrings().acc, this.heroColors()[2])
+        Column({ space: 4 }) {
+          Text(this.vm.getUiStrings().main)
+            .fontSize(10)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MUTED)
+            .letterSpacing(1.5)
+            .textCase(this.vm.currentLang === AppLanguage.ZH ? TextCase.Normal : TextCase.UpperCase)
+          Text(this.heroColors()[0].toUpperCase())
+            .fontSize(10)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+        }
+        .alignItems(HorizontalAlign.Start)
+
+        Column({ space: 4 }) {
+          Text(this.vm.getUiStrings().sec)
+            .fontSize(10)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MUTED)
+            .letterSpacing(1.5)
+            .textCase(this.vm.currentLang === AppLanguage.ZH ? TextCase.Normal : TextCase.UpperCase)
+          Text(this.heroColors()[1].toUpperCase())
+            .fontSize(10)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+        }
+        .alignItems(HorizontalAlign.Start)
+
+        Column({ space: 4 }) {
+          Text(this.vm.getUiStrings().acc)
+            .fontSize(10)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MUTED)
+            .letterSpacing(1.5)
+            .textCase(this.vm.currentLang === AppLanguage.ZH ? TextCase.Normal : TextCase.UpperCase)
+          Text(this.heroColors()[2].toUpperCase())
+            .fontSize(10)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+        }
+        .alignItems(HorizontalAlign.Start)
       }
       .width('100%')
       .justifyContent(FlexAlign.SpaceBetween)
@@ -121,22 +159,5 @@ export struct HeroDisplayView {
       left: LayoutConstants.PAGE_HORIZONTAL_VP,
       right: LayoutConstants.PAGE_HORIZONTAL_VP
     })
-  }
-
-  @Builder
-  colorLabel(caption: string, hex: string) {
-    Column({ space: 4 }) {
-      Text(caption)
-        .fontSize(10)
-        .fontWeight(FontWeight.Medium)
-        .fontColor(DesignTokens.TEXT_MUTED)
-        .letterSpacing(1.5)
-        .textCase(TextCase.UpperCase)
-      Text(hex.toUpperCase())
-        .fontSize(10)
-        .fontWeight(FontWeight.Medium)
-        .fontColor(DesignTokens.TEXT_MAIN)
-    }
-    .alignItems(HorizontalAlign.Start)
   }
 }
