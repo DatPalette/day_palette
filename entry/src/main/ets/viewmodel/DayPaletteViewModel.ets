@@ -188,7 +188,7 @@ export class DayPaletteViewModel {
     writeNoiseOverlayEnabled(context, enabled);
   }
 
-  /** 当前场合下随机一套（免费库内，不生成裸 RGB）。 */
+  /** 当前场合下从预置套组中随机选一套（不生成裸 RGB）。 */
   randomPaletteInActiveOccasion(): void {
     const occ: Occasion | undefined = this.getActiveOccasion();
     if (occ === undefined || occ.palettes.length === 0) {

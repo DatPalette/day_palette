@@ -26,14 +26,27 @@ export struct PaletteSelectorView {
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
 
       Row({ space: 20 }) {
-        Text(this.vm.getUiStrings().randomPalette)
-          .fontSize(11)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(DesignTokens.TEXT_MAIN)
-          .decoration({ type: TextDecorationType.Underline })
-          .onClick(() => {
-            this.onRandom();
-          })
+        Column() {
+          Text(this.vm.getUiStrings().randomPalette)
+            .fontSize(11)
+            .fontWeight(FontWeight.Medium)
+            .fontColor(DesignTokens.TEXT_MAIN)
+            .decoration({ type: TextDecorationType.Underline })
+            .onClick(() => {
+              this.onRandom();
+            })
+          Text(this.vm.getUiStrings().randomPaletteHint)
+            .fontSize(9)
+            .fontColor(DesignTokens.TEXT_MUTED)
+            .margin({ top: 4 })
+            .maxLines(2)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .width(120)
+            .onClick(() => {
+              this.onRandom();
+            })
+        }
+        .alignItems(HorizontalAlign.Start)
         Text(this.vm.getUiStrings().yesterdayOutfit)
           .fontSize(11)
           .fontWeight(FontWeight.Medium)
@@ -52,6 +65,7 @@ export struct PaletteSelectorView {
           })
       }
       .width('100%')
+      .alignItems(VerticalAlign.Top)
       .justifyContent(FlexAlign.Start)
       .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 12 })
 

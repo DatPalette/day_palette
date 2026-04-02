@@ -38,7 +38,10 @@ export interface UiStrings {
   shareFailBuildImage: string;
   shareFailOther: string;
   permissionDenied: string;
+  /** 主文案：从当前场合套组中随机换一套（非算法生成新色）。 */
   randomPalette: string;
+  /** 副文案：说明行为边界，字号更小，与主文案同列展示。 */
+  randomPaletteHint: string;
   yesterdayOutfit: string;
   fineTune: string;
   fineTuneTitle: string;

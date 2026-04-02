@@ -26,7 +26,7 @@
 | Key | Type | Priority | Summary | Source | Acceptance（摘要） | 排期 |
 |-----|------|----------|---------|--------|-------------------|------|
 | BL-BR-01 | Task | P1 | **提升「随机、精调、昨日」入口视觉权重** | Brainstorming T-01 | 保存/分享不动；更易发现与点击；对齐设计系统 | → [**iteration-02**](./iteration-02.md) |
-| BL-BR-02 | Task | P1 | **「随机」文案改为「随机选」等** | Brainstorming T-02 | 中英文案与真实行为一致；`LocaleData` 等 | → [**iteration-02**](./iteration-02.md) |
+| BL-BR-02 | Task | P1 | **「随机」文案改为「随机选」等** | Brainstorming T-02 | 中英文案与真实行为一致；`LocaleData` 等 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | Backlog |
 | BL-BR-04 | Task | P2 | **出图/分享色卡版式升级** | Brainstorming T-04 | 免费模板边界遵守 PRD | → [**iteration-02**](./iteration-02.md) |
 | BL-BR-05 | Task | P2 | **Hero 区三色呈现优化** | Brainstorming T-05 | 比例/圆角/动效遵守「减少动效」 | → [**iteration-02**](./iteration-02.md) |
@@ -53,7 +53,7 @@
 
 | Key | Type | Priority | Summary | Source | Notes |
 |-----|------|----------|---------|--------|-------|
-| BL-XXX- | Task | P? | （标题） | 口头/工单 | |
+| BL-XXX-1 | Task | P1 | 随机选交互优化 | 口头 | 目前的随机选，当配色盘很多的时候，看不到随机选中的配色盘 |
 
 ---
 
