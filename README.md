@@ -27,6 +27,18 @@
 
 若宿主仓库根目录存在 **`应用规划-今日穿搭色卡.md`** 等规划文档，可与本目录文档对照阅读。
 
+## 当前开发进度
+
+目前已完成 MVP（Minimum Viable Product）阶段的核心功能开发：
+- **UI & 交互**：完成主界面（Hero 区域、横向列表）、微缩胶囊（Sticky Mini-Hero）、设置面板的像素级还原与动效。
+- **数据层**：完成 `TodayOutfitState` 的 Preferences 持久化，支持跨日快照与恢复。
+- **选色扩展**：支持随机配色、昨日配色读取，以及自定义 HEX 精调（Fine-tune）。
+- **出图与分享**：接入 ImageKit 实现离屏渲染（支持多套版式），接入 MediaLibrary 实现系统弹窗安全保存相册，接入 Share Kit 实现原生分享。
+- **桌面卡片**：完成中卡（2x4）服务卡片（Form Card），与主应用状态同源并支持点击直达。
+- **无障碍与体验**：支持“减少动效”、“轻噪点叠层”开关，主题跟随系统。
+
+详细的阶段划分与完成情况请见：[`docs/ai-workflow/02-PHASED-IMPLEMENTATION-PLAN.md`](docs/ai-workflow/02-PHASED-IMPLEMENTATION-PLAN.md)。
+
 ## 工程说明
 
 使用 DevEco Studio 创建 HarmonyOS 工程时，可将模块置于本目录下，或把本目录内容迁入 `entry/` 等标准结构；以你本地 Gradle/oh-package 布局为准。

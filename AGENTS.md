@@ -12,7 +12,8 @@
 2. [`docs/design/design-system.md`](docs/design/design-system.md) — **长期视觉与交互令牌**；日常实现以此为准。  
 3. [`docs/architecture/architecture.md`](docs/architecture/architecture.md) — 模块与 Kit 边界。  
 4. [`docs/architecture/data-model.md`](docs/architecture/data-model.md) — 持久化与字段约束。  
-5. [`docs/mockups/daypalette-premium-mockup.html`](docs/mockups/daypalette-premium-mockup.html) — 仅用于像素级疑难对照；与上两项冲突时先对齐设计系统，再按需改 HTML/设计文档。
+5. [`docs/architecture/knowledge-base.md`](docs/architecture/knowledge-base.md) — **鸿蒙开发避坑指南与知识库**（包含底层 API、权限、状态同步等经验）。
+6. [`docs/mockups/daypalette-premium-mockup.html`](docs/mockups/daypalette-premium-mockup.html) — 仅用于像素级疑难对照；与上两项冲突时先对齐设计系统，再按需改 HTML/设计文档。
 
 ## 工程约束
 

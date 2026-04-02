@@ -25,7 +25,7 @@
 
 ### 2.1 组件化拆分 (Componentization)
 不要将所有 UI 写在一个庞大的文件里。请按照 HTML 原型中的 DOM 结构，拆分为以下独立的子组件（Views）：
-- `TopBarView`：顶部导航栏（包含日期、地点、设置按钮及滚动时浮现的 Mini-Hero）。
+- `TopBarView`：顶部导航栏（日期、设置按钮；滚动时浮现标题 + Mini-Hero 胶囊）。
 - `HeroDisplayView`：大色卡预览区（包含主标题、三个带 3D 层叠阴影的物理色卡、色值标签）。
 - `OccasionSelectorView`：横向滚动的场合选择列表。
 - `PaletteSelectorView`：横向滚动的配色盘列表。

@@ -10,7 +10,27 @@
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "DayPalette"
+    },
+    {
+      "name": "permission_write_imagevideo_reason",
+      "value": "Save your palette image to the gallery."
+    },
+    {
+      "name": "form_display_name",
+      "value": "DayPalette · Today"
+    },
+    {
+      "name": "form_display_desc",
+      "value": "Shows today's saved palette and opens the app."
+    },
+    {
+      "name": "TodayOutfitFormAbility_label",
+      "value": "DayPalette form"
+    },
+    {
+      "name": "TodayOutfitFormAbility_desc",
+      "value": "Service widget for today's outfit colors"
     }
   ]
 }

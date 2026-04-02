@@ -151,13 +151,6 @@
       font-weight: 600;
       letter-spacing: 0.02em;
     }
-    .location {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
     .settings-btn {
       width: 36px;
       height: 36px;
@@ -536,7 +529,6 @@
         
         <div class="top-bar" id="topBar">
           <div class="date-info">
-            <span class="location" id="locText">Shanghai, CN</span>
             <span class="date" id="dateText">Apr 01, 2026</span>
           </div>
           
@@ -648,7 +640,6 @@
     // i18n Dictionary
     const i18n = {
       en: {
-        loc: 'Shanghai, CN',
         date: 'Apr 01, 2026',
         storyTitle: 'Story of the Day',
         curatedTitle: 'Curated Palettes',
@@ -699,7 +690,6 @@
         }
       },
       zh: {
-        loc: '中国 · 上海',
         date: '2026年4月1日',
         storyTitle: '今天的故事',
         curatedTitle: '精选配色盘',
@@ -782,7 +772,6 @@
       document.getElementById('btnZh').classList.toggle('active', lang === 'zh');
       
       // Update static texts
-      document.getElementById('locText').textContent = i18n[currentLang].loc;
       document.getElementById('dateText').textContent = i18n[currentLang].date;
       document.getElementById('storyTitle').textContent = i18n[currentLang].storyTitle;
       document.getElementById('curatedTitle').textContent = i18n[currentLang].curatedTitle;

@@ -1,0 +1,25 @@
+{
+  "forms": [
+    {
+      "name": "TodayOutfitMedium",
+      "displayName": "$string:form_display_name",
+      "description": "$string:form_display_desc",
+      "src": "./ets/widget/TodayOutfitFormCard.ets",
+      "uiSyntax": "arkts",
+      "window": {
+        "designWidth": 720,
+        "autoDesignWidth": true
+      },
+      "colorMode": "auto",
+      "isDefault": true,
+      "updateEnabled": true,
+      "scheduledUpdateTime": "10:30",
+      "updateDuration": 240,
+      "defaultDimension": "2*4",
+      "supportDimensions": [
+        "2*4",
+        "2*2"
+      ]
+    }
+  ]
+}
