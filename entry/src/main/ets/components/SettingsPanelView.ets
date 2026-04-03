@@ -1,6 +1,7 @@
 import { common, ConfigurationConstant } from '@kit.AbilityKit';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
+import { LayoutConstants } from '../common/constants/LayoutConstants';
 import { AppLanguage } from '../model/AppLanguage';
 import { MiniPreviewStyle } from '../model/MiniPreviewStyle';
 import {
@@ -24,6 +25,14 @@ export struct SettingsPanelView {
   onRequestClose: () => void = () => {
   };
 
+  private hostContext(): common.UIAbilityContext {
+    return this.getUIContext().getHostContext() as common.UIAbilityContext;
+  }
+
+  private selectedShadowRadius(selected: boolean): number {
+    return selected ? LayoutConstants.SETTINGS_SELECTED_SHADOW_RADIUS_VP : 0;
+  }
+
   private templateOptionTitle(id: string): string {
     if (id === TEMPLATE_COLUMNS_ID) {
       return this.vm.getUiStrings().templateColumns;
@@ -41,7 +50,7 @@ export struct SettingsPanelView {
   }
 
   private themeLabelFromConfiguration(): string {
-    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    const ctx = this.hostContext();
     try {
       const cfg = ctx.config;
       if (cfg.colorMode === ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT) {
@@ -69,8 +78,8 @@ export struct SettingsPanelView {
             .fontColor(DesignTokens.TEXT_MAIN)
             .fontWeight(FontWeight.Lighter)
         }
-        .width(36)
-        .height(36)
+        .width(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
+        .height(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
         .backgroundColor(Color.Transparent)
         .onClick(() => {
           this.onRequestClose();
@@ -86,14 +95,14 @@ export struct SettingsPanelView {
           .animation({ duration: 300, curve: Curve.EaseInOut })
 
         Row()
-          .width(36)
-          .height(36)
+          .width(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
+          .height(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
       }
       .width('100%')
-      .padding({ top: 42, left: 8, right: 24, bottom: 16 })
+      .padding({ top: 42, left: 8, right: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 16 })
       .alignItems(VerticalAlign.Center)
       .borderWidth({ bottom: 1 })
-      .borderColor('rgba(0, 0, 0, 0.03)')
+      .borderColor(DesignTokens.BORDER_SUBTLE)
 
       Scroll() {
         Column() {
@@ -111,74 +120,86 @@ export struct SettingsPanelView {
                   .fontWeight(FontWeight.Medium)
                   .fontColor(this.vm.isFollowingSystem() ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
                   .padding({
-                    left: 6,
-                    right: 6,
-                    top: 6,
-                    bottom: 6
+                    left: LayoutConstants.SETTINGS_SYSTEM_CHIP_PADDING_HORIZONTAL_VP,
+                    right: LayoutConstants.SETTINGS_SYSTEM_CHIP_PADDING_HORIZONTAL_VP,
+                    top: LayoutConstants.SETTINGS_CHIP_PADDING_VERTICAL_VP,
+                    bottom: LayoutConstants.SETTINGS_CHIP_PADDING_VERTICAL_VP
                   })
                   .layoutWeight(1)
                   .textAlign(TextAlign.Center)
-                  .borderRadius(6)
+                  .borderRadius(LayoutConstants.SETTINGS_CHIP_RADIUS_VP)
                   .backgroundColor(this.vm.isFollowingSystem() ? Color.White : Color.Transparent)
                   .shadow({
-                    radius: this.vm.isFollowingSystem() ? 8 : 0,
-                    color: 'rgba(0, 0, 0, 0.06)',
+                    radius: this.selectedShadowRadius(this.vm.isFollowingSystem()),
+                    color: DesignTokens.SHADOW_SOFT,
                     offsetX: 0,
                     offsetY: 2
                   })
                   .onClick(() => {
-                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
-                    this.vm.setFollowSystem(ctx);
+                    this.vm.setFollowSystem(this.hostContext());
                   })
                 Text('EN')
                   .fontSize(13)
                   .fontWeight(FontWeight.Medium)
                   .fontColor(this.vm.manualLanguage === AppLanguage.EN ? DesignTokens.TEXT_MAIN :
                   DesignTokens.TEXT_MUTED)
-                  .padding({ left: 8, right: 8, top: 6, bottom: 6 })
+                  .padding({
+                    left: LayoutConstants.SETTINGS_CHIP_PADDING_HORIZONTAL_VP,
+                    right: LayoutConstants.SETTINGS_CHIP_PADDING_HORIZONTAL_VP,
+                    top: LayoutConstants.SETTINGS_CHIP_PADDING_VERTICAL_VP,
+                    bottom: LayoutConstants.SETTINGS_CHIP_PADDING_VERTICAL_VP
+                  })
                   .layoutWeight(1)
                   .textAlign(TextAlign.Center)
-                  .borderRadius(6)
+                  .borderRadius(LayoutConstants.SETTINGS_CHIP_RADIUS_VP)
                   .backgroundColor(this.vm.manualLanguage === AppLanguage.EN ? Color.White : Color.Transparent)
                   .shadow({
-                    radius: this.vm.manualLanguage === AppLanguage.EN ? 8 : 0,
-                    color: 'rgba(0, 0, 0, 0.06)',
+                    radius: this.selectedShadowRadius(this.vm.manualLanguage === AppLanguage.EN),
+                    color: DesignTokens.SHADOW_SOFT,
                     offsetX: 0,
                     offsetY: 2
                   })
                   .onClick(() => {
-                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
-                    this.vm.setManualLanguage(ctx, AppLanguage.EN);
+                    this.vm.setManualLanguage(this.hostContext(), AppLanguage.EN);
                   })
                 Text('中')
                   .fontSize(13)
                   .fontWeight(FontWeight.Medium)
                   .fontColor(this.vm.manualLanguage === AppLanguage.ZH ? DesignTokens.TEXT_MAIN :
                   DesignTokens.TEXT_MUTED)
-                  .padding({ left: 8, right: 8, top: 6, bottom: 6 })
+                  .padding({
+                    left: LayoutConstants.SETTINGS_CHIP_PADDING_HORIZONTAL_VP,
+                    right: LayoutConstants.SETTINGS_CHIP_PADDING_HORIZONTAL_VP,
+                    top: LayoutConstants.SETTINGS_CHIP_PADDING_VERTICAL_VP,
+                    bottom: LayoutConstants.SETTINGS_CHIP_PADDING_VERTICAL_VP
+                  })
                   .layoutWeight(1)
                   .textAlign(TextAlign.Center)
-                  .borderRadius(6)
+                  .borderRadius(LayoutConstants.SETTINGS_CHIP_RADIUS_VP)
                   .backgroundColor(this.vm.manualLanguage === AppLanguage.ZH ? Color.White : Color.Transparent)
                   .shadow({
-                    radius: this.vm.manualLanguage === AppLanguage.ZH ? 8 : 0,
-                    color: 'rgba(0, 0, 0, 0.06)',
+                    radius: this.selectedShadowRadius(this.vm.manualLanguage === AppLanguage.ZH),
+                    color: DesignTokens.SHADOW_SOFT,
                     offsetX: 0,
                     offsetY: 2
                   })
                   .onClick(() => {
-                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
-                    this.vm.setManualLanguage(ctx, AppLanguage.ZH);
+                    this.vm.setManualLanguage(this.hostContext(), AppLanguage.ZH);
                   })
               }
               .width('100%')
-              .margin({ top: 12 })
-              .padding(2)
-              .backgroundColor('rgba(0, 0, 0, 0.04)')
-              .borderRadius(8)
+              .margin({ top: LayoutConstants.SETTINGS_BLOCK_MARGIN_TOP_VP })
+              .padding(LayoutConstants.SETTINGS_SEGMENT_INSET_VP)
+              .backgroundColor(DesignTokens.SURFACE_TINTED)
+              .borderRadius(LayoutConstants.SETTINGS_CARD_RADIUS_VP)
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .alignItems(HorizontalAlign.Start)
             .borderWidth({ bottom: 1 })
             .borderColor(DesignTokens.BORDER_COLOR)
@@ -203,7 +224,7 @@ export struct SettingsPanelView {
                       bottom: 8
                     })
                     .margin({ right: 8, bottom: 8 })
-                    .borderRadius(6)
+                    .borderRadius(LayoutConstants.SETTINGS_CHIP_RADIUS_VP)
                     .backgroundColor(this.vm.templateId === tid ? DesignTokens.TEXT_MAIN : Color.Transparent)
                     .border({
                       width: 1,
@@ -215,10 +236,15 @@ export struct SettingsPanelView {
                 }, (tid: string) => tid)
               }
               .width('100%')
-              .margin({ top: 12 })
+              .margin({ top: LayoutConstants.SETTINGS_BLOCK_MARGIN_TOP_VP })
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .alignItems(HorizontalAlign.Start)
             .borderWidth({ bottom: 1 })
             .borderColor(DesignTokens.BORDER_COLOR)
@@ -247,25 +273,29 @@ export struct SettingsPanelView {
                       .fontColor(this.vm.miniPreviewStyle === style ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
                   }
                   .layoutWeight(1)
-                  .padding({ left: 12, right: 12, top: 12, bottom: 12 })
+                  .padding(LayoutConstants.SETTINGS_OPTION_CARD_PADDING_VP)
                   .alignItems(HorizontalAlign.Center)
-                  .backgroundColor(this.vm.miniPreviewStyle === style ? 'rgba(0, 0, 0, 0.03)' : Color.Transparent)
-                  .borderRadius(8)
+                  .backgroundColor(this.vm.miniPreviewStyle === style ? DesignTokens.SURFACE_SUBTLE : Color.Transparent)
+                  .borderRadius(LayoutConstants.SETTINGS_CARD_RADIUS_VP)
                   .border({
                     width: 1,
                     color: this.vm.miniPreviewStyle === style ? DesignTokens.TEXT_MAIN : DesignTokens.BORDER_COLOR
                   })
                   .onClick(() => {
-                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
-                    this.vm.setMiniPreviewStyle(ctx, style);
+                    this.vm.setMiniPreviewStyle(this.hostContext(), style);
                   })
                 }, (style: MiniPreviewStyle) => style)
               }
               .width('100%')
-              .margin({ top: 12 })
+              .margin({ top: LayoutConstants.SETTINGS_BLOCK_MARGIN_TOP_VP })
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .alignItems(HorizontalAlign.Start)
             .borderWidth({ bottom: 1 })
             .borderColor(DesignTokens.BORDER_COLOR)
@@ -278,12 +308,16 @@ export struct SettingsPanelView {
               Toggle({ type: ToggleType.Switch, isOn: this.vm.reduceMotion })
                 .selectedColor(DesignTokens.TEXT_MAIN)
                 .onChange((on: boolean) => {
-                  const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
-                  this.vm.setReduceMotion(ctx, on);
+                  this.vm.setReduceMotion(this.hostContext(), on);
                 })
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
             .borderWidth({ bottom: 1 })
@@ -297,12 +331,16 @@ export struct SettingsPanelView {
               Toggle({ type: ToggleType.Switch, isOn: this.vm.noiseOverlay })
                 .selectedColor(DesignTokens.TEXT_MAIN)
                 .onChange((on: boolean) => {
-                  const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
-                  this.vm.setNoiseOverlay(ctx, on);
+                  this.vm.setNoiseOverlay(this.hostContext(), on);
                 })
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
             .borderWidth({ bottom: 1 })
@@ -319,7 +357,12 @@ export struct SettingsPanelView {
                 .animation({ duration: this.vm.reduceMotion ? 1 : 300, curve: Curve.EaseInOut })
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
             .borderWidth({ bottom: 1 })
@@ -335,7 +378,12 @@ export struct SettingsPanelView {
                 .fontColor(DesignTokens.TEXT_MUTED)
             }
             .width('100%')
-            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .padding({
+              left: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              right: LayoutConstants.SETTINGS_SECTION_HORIZONTAL_VP,
+              top: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP,
+              bottom: LayoutConstants.SETTINGS_SECTION_VERTICAL_VP
+            })
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
           }
@@ -352,7 +400,7 @@ export struct SettingsPanelView {
           })
         }
         .width('100%')
-        .padding(24)
+        .padding(LayoutConstants.SETTINGS_PANEL_OUTER_PADDING_VP)
       }
       .layoutWeight(1)
       .scrollBar(BarState.Off)
