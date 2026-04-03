@@ -1,5 +1,6 @@
 import { preferences } from '@kit.ArkData';
 import { common } from '@kit.AbilityKit';
+import { MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { parseTodayOutfitStateJson, stringifyTodayOutfitState } from '../model/TodayOutfitState';
 
@@ -249,13 +250,13 @@ export function readMiniPreviewStyleRaw(context: common.Context): string {
   }
 }
 
-export function writeMiniPreviewStyleRaw(context: common.Context, style: string): void {
+export function writeMiniPreviewStyleRaw(context: common.Context, style: MiniPreviewStyle): void {
   try {
     const pref: preferences.Preferences | null = getPref(context);
     if (pref === null) {
       return;
     }
-    pref.putSync(KEY_MINI_PREVIEW_STYLE, style);
+    pref.putSync(KEY_MINI_PREVIEW_STYLE, parseMiniPreviewStyle(style));
     scheduleSettingsPrefFlush(pref);
   } catch {
   }

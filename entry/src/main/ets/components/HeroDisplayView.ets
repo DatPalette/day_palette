@@ -6,10 +6,16 @@ import {
   HERO_ACCENT_CARD_LAYOUT,
   HERO_MAIN_CARD_LAYOUT,
   HERO_PALETTE_BASE_SIZE,
-  HERO_SECONDARY_CARD_LAYOUT,
-  scaleHeroPaletteLayout,
-  scaleHeroPaletteValue
+  HERO_SECONDARY_CARD_LAYOUT
 } from '../common/constants/HeroPaletteLayout';
+
+const HERO_DISPLAY_COMPOSITION_HEIGHT: number = HERO_PALETTE_BASE_SIZE;
+const HERO_DISPLAY_MAIN_CARD = HERO_MAIN_CARD_LAYOUT;
+const HERO_DISPLAY_SECONDARY_CARD = HERO_SECONDARY_CARD_LAYOUT;
+const HERO_DISPLAY_ACCENT_CARD = HERO_ACCENT_CARD_LAYOUT;
+const HERO_DISPLAY_CARD_RADIUS: number = 16;
+const HERO_DISPLAY_SHADOW_RADIUS: number = 24;
+const HERO_DISPLAY_SHADOW_OFFSET_Y: number = 12;
 
 @Component
 export struct HeroDisplayView {
@@ -25,34 +31,6 @@ export struct HeroDisplayView {
 
   private heroTitleLines(): string[] {
     return this.vm.getHeroTitleLines();
-  }
-
-  private heroCompositionHeight(): number {
-    return HERO_PALETTE_BASE_SIZE;
-  }
-
-  private heroMainCard() {
-    return scaleHeroPaletteLayout(HERO_MAIN_CARD_LAYOUT, this.heroCompositionHeight());
-  }
-
-  private heroSecondaryCard() {
-    return scaleHeroPaletteLayout(HERO_SECONDARY_CARD_LAYOUT, this.heroCompositionHeight());
-  }
-
-  private heroAccentCard() {
-    return scaleHeroPaletteLayout(HERO_ACCENT_CARD_LAYOUT, this.heroCompositionHeight());
-  }
-
-  private heroCardRadius(): number {
-    return scaleHeroPaletteValue(16, this.heroCompositionHeight());
-  }
-
-  private heroShadowRadius(): number {
-    return scaleHeroPaletteValue(24, this.heroCompositionHeight());
-  }
-
-  private heroShadowOffsetY(): number {
-    return scaleHeroPaletteValue(12, this.heroCompositionHeight());
   }
 
   build() {
@@ -75,62 +53,62 @@ export struct HeroDisplayView {
 
       Stack({ alignContent: Alignment.TopStart }) {
         Stack()
-          .width(this.heroMainCard().width)
-          .height(this.heroMainCard().height)
+          .width(HERO_DISPLAY_MAIN_CARD.width)
+          .height(HERO_DISPLAY_MAIN_CARD.height)
           .backgroundColor(this.heroColors()[0])
-          .borderRadius(this.heroCardRadius())
-          .margin({ top: this.heroMainCard().top, left: this.heroMainCard().left })
+          .borderRadius(HERO_DISPLAY_CARD_RADIUS)
+          .margin({ top: HERO_DISPLAY_MAIN_CARD.top, left: HERO_DISPLAY_MAIN_CARD.left })
           .rotate({
             x: 0,
             y: 1,
             z: 0,
-            angle: this.heroMainCard().angle,
+            angle: HERO_DISPLAY_MAIN_CARD.angle,
             centerX: '50%',
             centerY: '50%'
           })
           .shadow({
-            radius: this.heroShadowRadius(),
+            radius: HERO_DISPLAY_SHADOW_RADIUS,
             color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: this.heroShadowOffsetY()
+            offsetY: HERO_DISPLAY_SHADOW_OFFSET_Y
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(1)
 
         Stack()
-          .width(this.heroSecondaryCard().width)
-          .height(this.heroSecondaryCard().height)
+          .width(HERO_DISPLAY_SECONDARY_CARD.width)
+          .height(HERO_DISPLAY_SECONDARY_CARD.height)
           .backgroundColor(this.heroColors()[1])
-          .borderRadius(this.heroCardRadius())
-          .margin({ top: this.heroSecondaryCard().top, left: this.heroSecondaryCard().left })
+          .borderRadius(HERO_DISPLAY_CARD_RADIUS)
+          .margin({ top: HERO_DISPLAY_SECONDARY_CARD.top, left: HERO_DISPLAY_SECONDARY_CARD.left })
           .rotate({
             x: 0,
             y: 1,
             z: 0,
-            angle: this.heroSecondaryCard().angle,
+            angle: HERO_DISPLAY_SECONDARY_CARD.angle,
             centerX: '50%',
             centerY: '50%'
           })
           .shadow({
-            radius: this.heroShadowRadius(),
+            radius: HERO_DISPLAY_SHADOW_RADIUS,
             color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: this.heroShadowOffsetY()
+            offsetY: HERO_DISPLAY_SHADOW_OFFSET_Y
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(2)
 
         Stack()
-          .width(this.heroAccentCard().width)
-          .height(this.heroAccentCard().height)
+          .width(HERO_DISPLAY_ACCENT_CARD.width)
+          .height(HERO_DISPLAY_ACCENT_CARD.height)
           .backgroundColor(this.heroColors()[2])
-          .borderRadius(this.heroCardRadius())
-          .margin({ top: this.heroAccentCard().top, left: this.heroAccentCard().left })
+          .borderRadius(HERO_DISPLAY_CARD_RADIUS)
+          .margin({ top: HERO_DISPLAY_ACCENT_CARD.top, left: HERO_DISPLAY_ACCENT_CARD.left })
           .shadow({
-            radius: this.heroShadowRadius(),
+            radius: HERO_DISPLAY_SHADOW_RADIUS,
             color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: this.heroShadowOffsetY()
+            offsetY: HERO_DISPLAY_SHADOW_OFFSET_Y
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(3)
@@ -138,14 +116,14 @@ export struct HeroDisplayView {
         if (this.vm.noiseOverlay) {
           Column()
             .width('100%')
-            .height(320)
+            .height(HERO_DISPLAY_COMPOSITION_HEIGHT)
             .backgroundColor('rgba(30,30,30,0.06)')
             .blendMode(BlendMode.MULTIPLY)
             .zIndex(10)
         }
       }
       .width('100%')
-      .height(this.heroCompositionHeight())
+      .height(HERO_DISPLAY_COMPOSITION_HEIGHT)
 
       Row() {
         Column({ space: 4 }) {
