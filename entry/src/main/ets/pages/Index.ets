@@ -210,6 +210,10 @@ struct Index {
     });
   }
 
+  private fineTuneSyncToken(): string {
+    return this.vm.getHeroColorStrings().join('|');
+  }
+
   build() {
     Stack({ alignContent: Alignment.TopStart }) {
       Scroll(this.scroller) {
@@ -299,6 +303,7 @@ struct Index {
       if (this.fineTuneOpen) {
         FineTuneSheet({
           vm: this.vm,
+          syncToken: this.fineTuneSyncToken(),
           bottomGestureInsetVp: this.bottomGestureInsetVp,
           onRequestClose: () => {
             this.fineTuneOpen = false;

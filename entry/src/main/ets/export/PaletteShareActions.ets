@@ -55,6 +55,8 @@ function logSaveError(step: string, err: Error | object | string): void {
 }
 
 const WRITE_MEDIA_PERMS: Permissions[] = ['ohos.permission.WRITE_IMAGEVIDEO'] as Permissions[];
+const EXPORT_FILE_READY_RETRY_MS: number = 24;
+const EXPORT_FILE_READY_MAX_RETRIES: number = 12;
 
 /** 直接编码落盘，避免 packToData 在子线程完成后与主线程缓冲区/释放顺序相关的异常 */
 async function packPngPixelMapToPath(pixelMap: image.PixelMap, path: string): Promise<boolean> {
@@ -97,6 +99,29 @@ function readWholeFileSync(path: string): ArrayBuffer | null {
     logSaveError('readWholeFile', e as object);
     return null;
   }
+}
+
+function hasReadableFileContent(path: string): boolean {
+  try {
+    const st: fileIo.Stat = fileIo.statSync(path);
+    return st.size > 0;
+  } catch {
+    return false;
+  }
+}
+
+async function waitUntilFileReadable(path: string): Promise<boolean> {
+  for (let i: number = 0; i < EXPORT_FILE_READY_MAX_RETRIES; i++) {
+    if (hasReadableFileContent(path)) {
+      return true;
+    }
+    await new Promise<void>((resolve) => {
+      setTimeout((): void => {
+        resolve();
+      }, EXPORT_FILE_READY_RETRY_MS);
+    });
+  }
+  return hasReadableFileContent(path);
 }
 
 function disposePixelMap(pm: image.PixelMap | null): void {
@@ -227,10 +252,16 @@ async function buildExportPngFileInCache(
     }
     return null;
   }
-  
-  // 强制延迟，给文件系统落盘与系统图库扫描留出时间，避免读到旧/空文件
-  await new Promise<void>(resolve => setTimeout(resolve, 300));
-  
+
+  if (!(await waitUntilFileReadable(path))) {
+    logSaveError('export_wait_ready', 'png file not readable after pack');
+    try {
+      fileIo.unlinkSync(path);
+    } catch (_u) {
+    }
+    return null;
+  }
+
   return path;
 }
 
