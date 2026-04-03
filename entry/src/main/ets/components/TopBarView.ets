@@ -89,8 +89,8 @@ export struct TopBarView {
           MiniPalettePreviewView({
             colors: this.miniColors(),
             style: this.vm.miniPreviewStyle,
-            previewWidth: 140,
-            previewHeight: 36,
+            previewWidth: 150,
+            previewHeight: 28,
             reduceMotion: this.vm.reduceMotion
           })
         }
@@ -98,7 +98,7 @@ export struct TopBarView {
         .translate({ y: this.barCompact ? 0 : 8 })
         .animation({ duration: this.barDur(400), curve: Curve.EaseInOut })
       }
-      .width(140)
+      .width(152)
       .height(44)
       .justifyContent(FlexAlign.Center)
       .hitTestBehavior(this.barCompact ? HitTestMode.Default : HitTestMode.None)

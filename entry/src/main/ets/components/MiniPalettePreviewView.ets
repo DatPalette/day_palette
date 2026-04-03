@@ -26,7 +26,7 @@ export struct MiniPalettePreviewView {
   }
 
   private radius(): number {
-    return this.style === MiniPreviewStyle.Capsule ? this.previewHeight / 2 : 6;
+    return this.style === MiniPreviewStyle.Capsule ? Math.min(14, this.previewHeight / 2) : 6;
   }
 
   private heroFrameWidth(): number {
@@ -81,10 +81,10 @@ export struct MiniPalettePreviewView {
     .borderRadius(this.radius())
     .clip(true)
     .shadow({
-      radius: 16,
-      color: 'rgba(0, 0, 0, 0.08)',
+      radius: 10,
+      color: 'rgba(0, 0, 0, 0.06)',
       offsetX: 0,
-      offsetY: 6
+      offsetY: 3
     })
   }
 
