@@ -95,7 +95,7 @@ export struct PaletteSelectorView {
           Row({ space: 14 }) {
             Column({ space: 4 }) {
               Text(this.vm.getUiStrings().randomPalette)
-                .fontSize(15)
+                .fontSize(14)
                 .fontWeight(FontWeight.Medium)
                 .fontColor(DesignTokens.TEXT_MAIN)
 
@@ -126,8 +126,8 @@ export struct PaletteSelectorView {
                   .backgroundColor(this.actionPreviewColors()[2])
                   .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
               }
-              .width(84)
-              .height(12)
+              .width(76)
+              .height(10)
               .borderRadius(2)
               .clip(true)
 
@@ -135,13 +135,13 @@ export struct PaletteSelectorView {
                 .strokeWidth(1)
                 .color('rgba(0, 0, 0, 0.06)')
                 .vertical(false)
-                .width(84)
+                .width(76)
             }
             .alignItems(HorizontalAlign.End)
             .justifyContent(FlexAlign.Center)
           }
           .width('100%')
-          .padding({ left: 16, right: 16, top: 14, bottom: 14 })
+          .padding({ left: 16, right: 16, top: 12, bottom: 12 })
         }
         .width('100%')
         .backgroundColor(DesignTokens.SURFACE_CARD)
@@ -162,7 +162,7 @@ export struct PaletteSelectorView {
               .textOverflow({ overflow: TextOverflow.Ellipsis })
           }
           .layoutWeight(1)
-          .height(44)
+          .height(42)
           .backgroundColor(DesignTokens.SURFACE_CARD)
           .borderRadius(2)
           .border({ width: 1, color: DesignTokens.BORDER_COLOR })
@@ -179,7 +179,7 @@ export struct PaletteSelectorView {
               .textOverflow({ overflow: TextOverflow.Ellipsis })
           }
           .layoutWeight(1)
-          .height(44)
+          .height(42)
           .backgroundColor(DesignTokens.SURFACE_CARD)
           .borderRadius(2)
           .border({ width: 1, color: DesignTokens.BORDER_COLOR })
@@ -190,7 +190,7 @@ export struct PaletteSelectorView {
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
-      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP, top: 18, bottom: 16 })
+      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP, top: 20, bottom: 14 })
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
