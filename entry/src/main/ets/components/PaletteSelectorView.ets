@@ -36,36 +36,39 @@ export struct PaletteSelectorView {
               Row() {
                 Row()
                   .layoutWeight(3)
-                  .height(4)
+                  .height(8)
                   .backgroundColor(pal.colors[0])
                 Row()
                   .layoutWeight(2)
-                  .height(4)
+                  .height(8)
                   .backgroundColor(pal.colors[1])
                 Row()
                   .layoutWeight(1)
-                  .height(4)
+                  .height(8)
                   .backgroundColor(pal.colors[2])
               }
               .width('100%')
               .borderRadius(2)
               .clip(true)
-              .margin({ bottom: 12 })
+ 
+              Column({ space: 4 }) {
+                Text(pal.name)
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(DesignTokens.TEXT_MAIN)
 
-              Text(pal.name)
-                .fontSize(13)
-                .fontWeight(FontWeight.Medium)
-                .fontColor(DesignTokens.TEXT_MAIN)
-                .margin({ bottom: 4 })
-              Text(pal.desc)
-                .fontSize(11)
-                .fontColor(DesignTokens.TEXT_MUTED)
-                .maxLines(2)
-                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                Text(pal.desc)
+                  .fontSize(11)
+                  .fontColor(DesignTokens.TEXT_MUTED)
+                  .maxLines(2)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+              }
+              .width('100%')
             }
             .width(140)
-            .height(104)
+            .height(96)
             .alignItems(HorizontalAlign.Start)
+            .justifyContent(FlexAlign.SpaceBetween)
             .padding(16)
             .backgroundColor(DesignTokens.SURFACE_CARD)
             .borderRadius(2)
@@ -84,7 +87,11 @@ export struct PaletteSelectorView {
             })
           }, (pal: Palette) => pal.id + '_' + this.vm.currentLang)
         }
-        .padding({ right: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 20 })
+        .padding({
+          left: LayoutConstants.PAGE_HORIZONTAL_VP,
+          right: LayoutConstants.PAGE_HORIZONTAL_VP,
+          bottom: 20
+        })
       }
       .scrollable(ScrollDirection.Horizontal)
       .scrollBar(BarState.Off)
