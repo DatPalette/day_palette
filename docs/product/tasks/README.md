@@ -9,7 +9,7 @@
 | `README.md` | 本说明 + 索引 |
 | `iteration-01.md` | 迭代一（**已完成**）交付清单 |
 | `iteration-02.md` | 迭代二（**已完成**）：体验与视觉 — BR-01/02/04/05/06 |
-| `iteration-03.md` | 迭代三（**已排期**）：工程自检、实现收敛、文档回流 |
+| `iteration-03.md` | 迭代三（**已完成**）：工程自检、实现收敛、文档回流 |
 | `Backlog.md` | 统一待办池（PRD 缺口、头脑风暴、未来规划等） |
 
 ## Issue 字段（建议）
@@ -35,5 +35,5 @@
 
 - [迭代一（已完成）](./iteration-01.md)
 - [迭代二（已完成）](./iteration-02.md)
-- [迭代三（已排期）](./iteration-03.md)
+- [迭代三（已完成）](./iteration-03.md)
 - [Backlog](./Backlog.md)
