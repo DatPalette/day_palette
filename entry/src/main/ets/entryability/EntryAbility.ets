@@ -1,7 +1,7 @@
 import { AbilityConstant, Configuration, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import { LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
+import { APP_FOREGROUND_EVENT, LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
 import { DesignTokens } from '../common/constants/DesignTokens';
 
 const DOMAIN = 0x0000;
@@ -66,6 +66,7 @@ export default class EntryAbility extends UIAbility {
   onForeground(): void {
     // Ability has brought to foreground
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onForeground');
+    this.context.eventHub.emit(APP_FOREGROUND_EVENT);
   }
 
   onBackground(): void {

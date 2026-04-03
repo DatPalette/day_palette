@@ -173,12 +173,19 @@ export class DayPaletteViewModel {
     if (this.persistContext === null) {
       return;
     }
-    rollCalendarDayAndMaybeSnapshotYesterday(this.persistContext, todayLocalYmd());
+    this.refreshCalendarDayBoundary();
     const saved: TodayOutfitState | null = readTodayOutfitState(this.persistContext);
     if (saved === null) {
       return;
     }
     this.applyTodayOutfitState(saved);
+  }
+
+  refreshCalendarDayBoundary(): void {
+    if (this.persistContext === null) {
+      return;
+    }
+    rollCalendarDayAndMaybeSnapshotYesterday(this.persistContext, todayLocalYmd());
   }
 
   loadAccessibilityFromStorage(context: common.UIAbilityContext): void {
