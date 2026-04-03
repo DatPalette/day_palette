@@ -55,6 +55,9 @@ export interface UiStrings {
   templateThirds: string;
   templateBento: string;
   templateStack: string;
+  miniPreviewStyleLabel: string;
+  miniPreviewStyleCapsule: string;
+  miniPreviewStyleHero: string;
   reduceMotionLabel: string;
   noiseLabel: string;
   themeFollowSystem: string;

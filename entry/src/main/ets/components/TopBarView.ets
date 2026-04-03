@@ -1,6 +1,7 @@
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { AppLanguage } from '../model/AppLanguage';
+import { MiniPalettePreviewView } from './MiniPalettePreviewView';
 
 @Component
 export struct TopBarView {
@@ -22,38 +23,6 @@ export struct TopBarView {
   /** 顶栏收缩态单行标题（与 Hero 同源：当前套组名） */
   private compactHeroTitle(): string {
     return this.vm.getHeroTitleCompact();
-  }
-
-  /** 微缩三色胶囊：按设计系统保持 140x36，为展开态也预留同等空间。 */
-  @Builder
-  private MiniPaletteCapsule() {
-    Row() {
-      Row()
-        .layoutWeight(3)
-        .height('100%')
-        .backgroundColor(this.miniColors()[0])
-        .animation({ duration: this.barDur(600), curve: Curve.EaseInOut })
-      Row()
-        .layoutWeight(2)
-        .height('100%')
-        .backgroundColor(this.miniColors()[1])
-        .animation({ duration: this.barDur(600), curve: Curve.EaseInOut })
-      Row()
-        .layoutWeight(1)
-        .height('100%')
-        .backgroundColor(this.miniColors()[2])
-        .animation({ duration: this.barDur(600), curve: Curve.EaseInOut })
-    }
-    .width(140)
-    .height(36)
-    .borderRadius(18)
-    .clip(true)
-    .shadow({
-      radius: 16,
-      color: 'rgba(0, 0, 0, 0.08)',
-      offsetX: 0,
-      offsetY: 6
-    })
   }
 
   build() {
@@ -117,7 +86,13 @@ export struct TopBarView {
       // 中央：始终保留 36vp 高度标准，但不占用左右文案宽度
       Row() {
         Stack() {
-          this.MiniPaletteCapsule()
+          MiniPalettePreviewView({
+            colors: this.miniColors(),
+            style: this.vm.miniPreviewStyle,
+            previewWidth: 140,
+            previewHeight: 36,
+            reduceMotion: this.vm.reduceMotion
+          })
         }
         .opacity(this.barCompact ? 1 : 0)
         .translate({ y: this.barCompact ? 0 : 8 })

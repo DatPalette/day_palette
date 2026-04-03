@@ -8,15 +8,18 @@ import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
 import type { Occasion } from '../model/Occasion';
 import type { Palette } from '../model/Palette';
 import { getSystemAppLanguage } from '../model/SystemLanguageResolver';
+import { DEFAULT_MINI_PREVIEW_STYLE, MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { DEFAULT_TEMPLATE_ID } from '../model/TodayOutfitState';
 import {
+  readMiniPreviewStyleRaw,
   readNoiseOverlayEnabled,
   readReduceMotionEnabled,
   readTodayOutfitState,
   readYesterdayOutfitState,
   rollCalendarDayAndMaybeSnapshotYesterday,
   todayLocalYmd,
+  writeMiniPreviewStyleRaw,
   writeNoiseOverlayEnabled,
   writeReduceMotionEnabled,
   writeTodayOutfitState
@@ -45,6 +48,8 @@ export class DayPaletteViewModel {
   reduceMotion: boolean = false;
   /** Hero 轻噪点叠层。 */
   noiseOverlay: boolean = false;
+  /** 顶栏微缩预览样式。 */
+  miniPreviewStyle: MiniPreviewStyle = DEFAULT_MINI_PREVIEW_STYLE;
 
   private persistContext: common.UIAbilityContext | null = null;
 
@@ -176,6 +181,7 @@ export class DayPaletteViewModel {
   loadAccessibilityFromStorage(context: common.UIAbilityContext): void {
     this.reduceMotion = readReduceMotionEnabled(context);
     this.noiseOverlay = readNoiseOverlayEnabled(context);
+    this.miniPreviewStyle = parseMiniPreviewStyle(readMiniPreviewStyleRaw(context));
   }
 
   setReduceMotion(context: common.UIAbilityContext, enabled: boolean): void {
@@ -186,6 +192,14 @@ export class DayPaletteViewModel {
   setNoiseOverlay(context: common.UIAbilityContext, enabled: boolean): void {
     this.noiseOverlay = enabled;
     writeNoiseOverlayEnabled(context, enabled);
+  }
+
+  setMiniPreviewStyle(context: common.UIAbilityContext, style: MiniPreviewStyle): void {
+    if (this.miniPreviewStyle === style) {
+      return;
+    }
+    this.miniPreviewStyle = style;
+    writeMiniPreviewStyleRaw(context, style);
   }
 
   /** 当前场合下从预置套组中随机选一套（不生成裸 RGB）。 */

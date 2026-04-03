@@ -18,6 +18,7 @@ const KEY_LAST_CALENDAR_DAY: string = 'last_open_calendar_day';
 const KEY_YESTERDAY_OUTFIT_JSON: string = 'yesterday_outfit_state_json';
 const KEY_REDUCE_MOTION: string = 'reduce_motion_enabled';
 const KEY_NOISE_OVERLAY: string = 'noise_overlay_enabled';
+const KEY_MINI_PREVIEW_STYLE: string = 'mini_preview_style';
 
 function getPref(context: common.Context): preferences.Preferences | null {
   try {
@@ -163,6 +164,30 @@ export function writeNoiseOverlayEnabled(context: common.Context, enabled: boole
       return;
     }
     pref.putSync(KEY_NOISE_OVERLAY, enabled);
+    pref.flush();
+  } catch {
+  }
+}
+
+export function readMiniPreviewStyleRaw(context: common.Context): string {
+  try {
+    const pref: preferences.Preferences | null = getPref(context);
+    if (pref === null) {
+      return '';
+    }
+    return pref.getSync(KEY_MINI_PREVIEW_STYLE, '') as string;
+  } catch {
+    return '';
+  }
+}
+
+export function writeMiniPreviewStyleRaw(context: common.Context, style: string): void {
+  try {
+    const pref: preferences.Preferences | null = getPref(context);
+    if (pref === null) {
+      return;
+    }
+    pref.putSync(KEY_MINI_PREVIEW_STYLE, style);
     pref.flush();
   } catch {
   }
