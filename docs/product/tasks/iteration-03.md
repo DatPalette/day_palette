@@ -17,8 +17,8 @@
 |-----|------|----------|---------|--------|-------------------|
 | BL-ENG-01 | Task | P1 | 纯代码层面自检与冗余清理 | Ready | 盘点未使用代码、重复常量/逻辑、可合并实现；优先处理低风险冗余，避免行为变化 |
 | BL-ENG-02 | Task | P1 | 渲染与状态链路的性能风险排查 | In Progress | 对主滚动区、TopBar、Hero、导出链路、持久化写入频率做检查；记录风险、结论与必要修正 |
-| BL-DOC-01 | Task | P1 | 架构文档按实现回流校准 | Ready | [../../architecture/architecture.md](../../architecture/architecture.md) 以 `entry/src/main/ets/` 当前真实模块划分为准，修正状态、渲染、持久化边界描述 |
-| BL-DOC-02 | Task | P1 | 设计系统按实现回流校准 | Ready | [../../design/design-system.md](../../design/design-system.md) 同步当前已落地的 Hero、微缩预览、按钮区、精选配色盘卡片与顶栏形态 |
+| BL-DOC-01 | Task | P1 | 架构文档按实现回流校准 | Done | [../../architecture/architecture.md](../../architecture/architecture.md) 以 `entry/src/main/ets/` 当前真实模块划分为准，修正状态、渲染、持久化边界描述 |
+| BL-DOC-02 | Task | P1 | 设计系统按实现回流校准 | Done | [../../design/design-system.md](../../design/design-system.md) 同步当前已落地的 Hero、微缩预览、按钮区、精选配色盘卡片与顶栏形态 |
 | BL-DOC-03 | Task | P1 | 产品文档按实现回流校准 | Ready | [../PRD.md](../PRD.md) 与任务文档按真实实现更新，特别是昨日规则、微缩预览样式、导出模板与当前交互限制 |
 
 
