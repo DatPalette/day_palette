@@ -16,7 +16,7 @@
 | Key | Type | Priority | Summary | Status | Acceptance（摘要） |
 |-----|------|----------|---------|--------|-------------------|
 | BL-ENG-01 | Task | P1 | 纯代码层面自检与冗余清理 | Ready | 盘点未使用代码、重复常量/逻辑、可合并实现；优先处理低风险冗余，避免行为变化 |
-| BL-ENG-02 | Task | P1 | 渲染与状态链路的性能风险排查 | Ready | 对主滚动区、TopBar、Hero、导出链路、持久化写入频率做检查；记录风险、结论与必要修正 |
+| BL-ENG-02 | Task | P1 | 渲染与状态链路的性能风险排查 | In Progress | 对主滚动区、TopBar、Hero、导出链路、持久化写入频率做检查；记录风险、结论与必要修正 |
 | BL-DOC-01 | Task | P1 | 架构文档按实现回流校准 | Ready | [../../architecture/architecture.md](../../architecture/architecture.md) 以 `entry/src/main/ets/` 当前真实模块划分为准，修正状态、渲染、持久化边界描述 |
 | BL-DOC-02 | Task | P1 | 设计系统按实现回流校准 | Ready | [../../design/design-system.md](../../design/design-system.md) 同步当前已落地的 Hero、微缩预览、按钮区、精选配色盘卡片与顶栏形态 |
 | BL-DOC-03 | Task | P1 | 产品文档按实现回流校准 | Ready | [../PRD.md](../PRD.md) 与任务文档按真实实现更新，特别是昨日规则、微缩预览样式、导出模板与当前交互限制 |
@@ -63,6 +63,30 @@
 - 状态修改是否导致不必要的全局刷新，尤其是 TopBar、Hero、PaletteSelector 等高频可见区域。
 - 持久化是否存在过度写入、重复写入或时机不清晰的问题。
 - 导出/分享链路是否已经最大程度复用主预览构图与共享参数。
+
+
+## BL-ENG-02 阶段结论（2026-04-03）
+
+### 已落地修复
+
+- 已补齐桌面卡片同步链路：今日状态写入本地后，会刷新已登记的 Form，避免主应用与桌面卡片长期不一致。
+- 已补齐跨午夜回前台的自然日滚动检查：应用回到前台时会重新执行 yesterday snapshot 相关滚动逻辑，不再只依赖首屏启动。
+- 已将设置项（减少动效、轻微颗粒、微缩预览样式）的写盘改为短窗口合并 `flush()`，降低频繁点击时的同步 I/O。
+- 已移除导出链路中固定 `300ms` 盲等，改为按导出文件是否真正可读进行有界重试。
+- 已修复 FineTuneSheet 只在 `onAppear()` 同步一次输入值的问题；底层 Hero 三色变化时，精调输入会重新和当前状态对齐。
+- 已在持久化边界收紧 `mini preview style` 的写入校验，避免任意字符串进入 Preferences。
+- 已收敛 `HeroDisplayView` 与 `MiniPalettePreviewView` 中一批重复布局推导，减少高频渲染路径中的重复计算。
+
+### 暂缓观察 / 暂不立刻改代码
+
+- `Index` 的 `onDidScroll()` 逐像素更新 `mainScrollY` 目前保留。它与顶栏过渡手感强绑定，是否需要节流应以真机 profiling 结果为准，而不是先做主观优化。
+- `TopBar` 的 compact title 字符串规整、`PaletteSelector` 的语言相关 key、`SettingsPanel` 中少量 live getter 重复调用，目前量级较小，先归为观察项，不在本轮继续打散实现。
+- `applyTodayOutfitState()` 的防御式回退分支仍偏啰嗦，但当前未观察到真实行为错误；后续可在文档回流阶段补注释说明，而不是为“更优雅”而重写。
+
+### 当前判断
+
+- BL-ENG-02 中已经识别出的高价值、低风险问题已完成主要修正。
+- 剩余项更适合进入文档沉淀、真机 profiling 或后续专项优化，而不是继续在本迭代做大面积渲染层改写。
 
 ### C. 文档回流
 
