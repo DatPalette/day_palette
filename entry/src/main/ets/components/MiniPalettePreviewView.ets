@@ -1,4 +1,13 @@
 import { MiniPreviewStyle } from '../model/MiniPreviewStyle';
+import {
+  type HeroPaletteCardLayout,
+  HERO_ACCENT_CARD_LAYOUT,
+  HERO_MAIN_CARD_LAYOUT,
+  HERO_PALETTE_BASE_SIZE,
+  HERO_SECONDARY_CARD_LAYOUT,
+  scaleHeroPaletteLayout,
+  scaleHeroPaletteValue
+} from '../common/constants/HeroPaletteLayout';
 
 @Component
 export struct MiniPalettePreviewView {
@@ -7,8 +16,6 @@ export struct MiniPalettePreviewView {
   @Prop previewWidth: number = 140;
   @Prop previewHeight: number = 36;
   @Prop reduceMotion: boolean = false;
-
-  private static readonly HERO_BASE_SIZE: number = 320;
 
   private animDuration(): number {
     return this.reduceMotion ? 1 : 600;
@@ -22,28 +29,32 @@ export struct MiniPalettePreviewView {
     return this.style === MiniPreviewStyle.Capsule ? this.previewHeight / 2 : 6;
   }
 
-  private heroScale(): number {
-    return this.previewHeight / MiniPalettePreviewView.HERO_BASE_SIZE;
-  }
-
-  private heroScaled(value: number): number {
-    return Math.max(1, Math.round(value * this.heroScale()));
-  }
-
   private heroFrameWidth(): number {
-    return this.heroScaled(MiniPalettePreviewView.HERO_BASE_SIZE);
+    return scaleHeroPaletteValue(HERO_PALETTE_BASE_SIZE, this.previewHeight);
   }
 
   private heroRadius(): number {
-    return Math.max(2, this.heroScaled(16));
+    return Math.max(2, scaleHeroPaletteValue(16, this.previewHeight));
   }
 
   private heroShadowRadius(): number {
-    return Math.max(4, this.heroScaled(24));
+    return Math.max(4, scaleHeroPaletteValue(24, this.previewHeight));
   }
 
   private heroShadowOffsetY(): number {
-    return Math.max(2, this.heroScaled(12));
+    return Math.max(2, scaleHeroPaletteValue(12, this.previewHeight));
+  }
+
+  private mainCardLayout(): HeroPaletteCardLayout {
+    return scaleHeroPaletteLayout(HERO_MAIN_CARD_LAYOUT, this.previewHeight);
+  }
+
+  private secondaryCardLayout(): HeroPaletteCardLayout {
+    return scaleHeroPaletteLayout(HERO_SECONDARY_CARD_LAYOUT, this.previewHeight);
+  }
+
+  private accentCardLayout(): HeroPaletteCardLayout {
+    return scaleHeroPaletteLayout(HERO_ACCENT_CARD_LAYOUT, this.previewHeight);
   }
 
   @Builder
@@ -82,11 +93,11 @@ export struct MiniPalettePreviewView {
     Row() {
       Stack({ alignContent: Alignment.TopStart }) {
         Stack()
-          .width(this.heroScaled(240))
-          .height(this.heroScaled(260))
+          .width(this.mainCardLayout().width)
+          .height(this.mainCardLayout().height)
           .backgroundColor(this.previewColors()[0])
           .borderRadius(this.heroRadius())
-          .rotate({ x: 0, y: 1, z: 0, angle: 5, centerX: '50%', centerY: '50%' })
+          .rotate({ x: 0, y: 1, z: 0, angle: this.mainCardLayout().angle, centerX: '50%', centerY: '50%' })
           .shadow({
             radius: this.heroShadowRadius(),
             color: 'rgba(0, 0, 0, 0.1)',
@@ -97,15 +108,15 @@ export struct MiniPalettePreviewView {
           .zIndex(1)
 
         Stack()
-          .width(this.heroScaled(176))
-          .height(this.heroScaled(180))
+          .width(this.secondaryCardLayout().width)
+          .height(this.secondaryCardLayout().height)
           .backgroundColor(this.previewColors()[1])
           .borderRadius(this.heroRadius())
           .margin({
-            top: this.heroScaled(120),
-            left: this.heroScaled(144)
+            top: this.secondaryCardLayout().top,
+            left: this.secondaryCardLayout().left
           })
-          .rotate({ x: 0, y: 1, z: 0, angle: -5, centerX: '50%', centerY: '50%' })
+          .rotate({ x: 0, y: 1, z: 0, angle: this.secondaryCardLayout().angle, centerX: '50%', centerY: '50%' })
           .shadow({
             radius: this.heroShadowRadius(),
             color: 'rgba(0, 0, 0, 0.1)',
@@ -116,13 +127,13 @@ export struct MiniPalettePreviewView {
           .zIndex(2)
 
         Stack()
-          .width(this.heroScaled(112))
-          .height(this.heroScaled(100))
+          .width(this.accentCardLayout().width)
+          .height(this.accentCardLayout().height)
           .backgroundColor(this.previewColors()[2])
           .borderRadius(this.heroRadius())
           .margin({
-            top: this.heroScaled(220),
-            left: this.heroScaled(48)
+            top: this.accentCardLayout().top,
+            left: this.accentCardLayout().left
           })
           .shadow({
             radius: this.heroShadowRadius(),
