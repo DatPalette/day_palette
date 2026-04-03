@@ -1,5 +1,6 @@
 import type { common } from '@kit.AbilityKit';
 import { DesignTokens } from '../common/constants/DesignTokens';
+import { refreshTrackedTodayOutfitForms } from '../formability/TodayOutfitFormSync';
 import { hexToRgb888 } from '../export/HexColor';
 import { AppLanguage } from '../model/AppLanguage';
 import { readLanguageOverride, writeLanguageOverride } from '../model/LanguagePreferenceStore';
@@ -302,6 +303,7 @@ export class DayPaletteViewModel {
     const state: TodayOutfitState | null = this.buildTodayOutfitState();
     if (state !== null) {
       writeTodayOutfitState(this.persistContext, state);
+      void refreshTrackedTodayOutfitForms(this.persistContext);
     }
   }
 
