@@ -4,18 +4,29 @@ import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { parseTodayOutfitStateJson, stringifyTodayOutfitState } from '../model/TodayOutfitState';
 
 /** 本地日历日 YYYY-MM-DD（用于跨日「昨日」快照）。 */
-export function todayLocalYmd(): string {
+function localYmdWithOffset(offsetDays: number): string {
   const d: Date = new Date();
+  d.setDate(d.getDate() + offsetDays);
   const y: number = d.getFullYear();
   const m: string = (d.getMonth() + 1).toString().padStart(2, '0');
   const day: string = d.getDate().toString().padStart(2, '0');
   return `${y}-${m}-${day}`;
 }
 
+export function todayLocalYmd(): string {
+  return localYmdWithOffset(0);
+}
+
+export function yesterdayLocalYmd(): string {
+  return localYmdWithOffset(-1);
+}
+
 const PREF_NAME: string = 'day_palette_today';
 const KEY_OUTFIT_JSON: string = 'today_outfit_state_json';
+const KEY_OUTFIT_CALENDAR_DAY: string = 'today_outfit_calendar_day';
 const KEY_LAST_CALENDAR_DAY: string = 'last_open_calendar_day';
 const KEY_YESTERDAY_OUTFIT_JSON: string = 'yesterday_outfit_state_json';
+const KEY_YESTERDAY_OUTFIT_CALENDAR_DAY: string = 'yesterday_outfit_calendar_day';
 const KEY_REDUCE_MOTION: string = 'reduce_motion_enabled';
 const KEY_NOISE_OVERLAY: string = 'noise_overlay_enabled';
 const KEY_MINI_PREVIEW_STYLE: string = 'mini_preview_style';
@@ -51,6 +62,31 @@ export function writeTodayOutfitState(context: common.Context, state: TodayOutfi
       return;
     }
     pref.putSync(KEY_OUTFIT_JSON, stringifyTodayOutfitState(state));
+    pref.putSync(KEY_OUTFIT_CALENDAR_DAY, todayLocalYmd());
+    pref.flush();
+  } catch {
+  }
+}
+
+export function readTodayOutfitCalendarDay(context: common.Context): string {
+  try {
+    const pref: preferences.Preferences | null = getPref(context);
+    if (pref === null) {
+      return '';
+    }
+    return pref.getSync(KEY_OUTFIT_CALENDAR_DAY, '') as string;
+  } catch {
+    return '';
+  }
+}
+
+export function writeTodayOutfitCalendarDay(context: common.Context, day: string): void {
+  try {
+    const pref: preferences.Preferences | null = getPref(context);
+    if (pref === null) {
+      return;
+    }
+    pref.putSync(KEY_OUTFIT_CALENDAR_DAY, day);
     pref.flush();
   } catch {
   }
@@ -80,13 +116,14 @@ export function writeLastCalendarOpenDay(context: common.Context, day: string): 
   }
 }
 
-export function writeYesterdayOutfitState(context: common.Context, state: TodayOutfitState): void {
+export function writeYesterdayOutfitState(context: common.Context, state: TodayOutfitState, day: string): void {
   try {
     const pref: preferences.Preferences | null = getPref(context);
     if (pref === null) {
       return;
     }
     pref.putSync(KEY_YESTERDAY_OUTFIT_JSON, stringifyTodayOutfitState(state));
+    pref.putSync(KEY_YESTERDAY_OUTFIT_CALENDAR_DAY, day);
     pref.flush();
   } catch {
   }
@@ -108,6 +145,18 @@ export function readYesterdayOutfitState(context: common.Context): TodayOutfitSt
   }
 }
 
+export function readYesterdayOutfitCalendarDay(context: common.Context): string {
+  try {
+    const pref: preferences.Preferences | null = getPref(context);
+    if (pref === null) {
+      return '';
+    }
+    return pref.getSync(KEY_YESTERDAY_OUTFIT_CALENDAR_DAY, '') as string;
+  } catch {
+    return '';
+  }
+}
+
 /** 跨自然日首次打开时：将当前存档快照写入「昨日」槽，便于沿用昨日套组。 */
 export function rollCalendarDayAndMaybeSnapshotYesterday(context: common.Context, todayLocal: string): void {
   const last: string = readLastCalendarOpenDay(context);
@@ -115,8 +164,9 @@ export function rollCalendarDayAndMaybeSnapshotYesterday(context: common.Context
     return;
   }
   const current: TodayOutfitState | null = readTodayOutfitState(context);
-  if (last.length > 0 && current !== null) {
-    writeYesterdayOutfitState(context, current);
+  const draftDay: string = readTodayOutfitCalendarDay(context);
+  if (current !== null && draftDay === yesterdayLocalYmd()) {
+    writeYesterdayOutfitState(context, current, draftDay);
   }
   writeLastCalendarOpenDay(context, todayLocal);
 }

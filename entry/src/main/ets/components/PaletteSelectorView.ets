@@ -17,6 +17,10 @@ export struct PaletteSelectorView {
     return this.vm.getHeroColorStrings();
   }
 
+  private yesterdayEnabled(): boolean {
+    return this.vm.canApplyYesterdayOutfit();
+  }
+
   build() {
     Column() {
       Text(this.vm.getUiStrings().curatedTitle)
@@ -164,15 +168,20 @@ export struct PaletteSelectorView {
             Text(this.vm.getUiStrings().yesterdayOutfit)
               .fontSize(13)
               .fontWeight(FontWeight.Medium)
-              .fontColor(DesignTokens.TEXT_MAIN)
+              .fontColor(this.yesterdayEnabled() ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
               .maxLines(1)
               .textOverflow({ overflow: TextOverflow.Ellipsis })
           }
           .layoutWeight(1)
           .height(42)
-          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .backgroundColor(this.yesterdayEnabled() ? DesignTokens.SURFACE_CARD : 'rgba(0, 0, 0, 0.02)')
           .borderRadius(2)
-          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .border({
+            width: 1,
+            color: this.yesterdayEnabled() ? DesignTokens.BORDER_COLOR : 'rgba(0, 0, 0, 0.04)'
+          })
+          .opacity(this.yesterdayEnabled() ? 1 : 0.56)
+          .hitTestBehavior(this.yesterdayEnabled() ? HitTestMode.Default : HitTestMode.None)
           .onClick(() => {
             this.onYesterday();
           })

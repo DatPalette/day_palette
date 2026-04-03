@@ -16,9 +16,11 @@ import {
   readNoiseOverlayEnabled,
   readReduceMotionEnabled,
   readTodayOutfitState,
+  readYesterdayOutfitCalendarDay,
   readYesterdayOutfitState,
   rollCalendarDayAndMaybeSnapshotYesterday,
   todayLocalYmd,
+  yesterdayLocalYmd,
   writeMiniPreviewStyleRaw,
   writeNoiseOverlayEnabled,
   writeReduceMotionEnabled,
@@ -216,6 +218,9 @@ export class DayPaletteViewModel {
 
   /** 恢复跨日时快照的「昨日」套组；若无快照返回 false。 */
   applyYesterdayOutfitFromStorage(): boolean {
+    if (!this.canApplyYesterdayOutfit()) {
+      return false;
+    }
     if (this.persistContext === null) {
       return false;
     }
@@ -226,6 +231,17 @@ export class DayPaletteViewModel {
     this.applyTodayOutfitState(y);
     this.flushTodayOutfitToStorage();
     return true;
+  }
+
+  canApplyYesterdayOutfit(): boolean {
+    if (this.persistContext === null) {
+      return false;
+    }
+    const yesterdayDay: string = readYesterdayOutfitCalendarDay(this.persistContext);
+    if (yesterdayDay !== yesterdayLocalYmd()) {
+      return false;
+    }
+    return readYesterdayOutfitState(this.persistContext) !== null;
   }
 
   getHeroColorStrings(): string[] {
