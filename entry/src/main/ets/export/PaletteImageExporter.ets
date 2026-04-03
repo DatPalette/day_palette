@@ -12,6 +12,10 @@ import { hexToRgb888 } from './HexColor';
 
 /** 导出正方形边长（短边 ≥1080） */
 export const EXPORT_SIZE: number = 1080;
+export const TEMPLATE_COLUMNS_ID: string = 'tpl_columns_v2';
+export const TEMPLATE_THIRDS_ID: string = 'tpl_thirds_v3';
+export const TEMPLATE_BENTO_ID: string = 'tpl_bento_v4';
+export const TEMPLATE_STACK_ID: string = 'tpl_stack_v5';
 
 function blendPixel(buf: Uint8Array, index: number, r: number, g: number, b: number, alpha: number): void {
   if (alpha <= 0) {
@@ -206,25 +210,25 @@ export function createPaletteExportPixelMap(
   const buffer: ArrayBuffer = new ArrayBuffer(byteLength);
   const buf: Uint8Array = new Uint8Array(buffer);
 
-  if (templateId === 'tpl_columns_v2') {
+  if (templateId === TEMPLATE_COLUMNS_ID) {
     const w1: number = Math.floor((w * 3) / 6);
     const w2: number = Math.floor((w * 2) / 6);
     const w3: number = w - w1 - w2;
     fillRect(buf, w, h, 0, 0, w1, h, main[0], main[1], main[2]);
     fillRect(buf, w, h, w1, 0, w1 + w2, h, sec[0], sec[1], sec[2]);
     fillRect(buf, w, h, w1 + w2, 0, w, h, acc[0], acc[1], acc[2]);
-  } else if (templateId === 'tpl_thirds_v3') {
+  } else if (templateId === TEMPLATE_THIRDS_ID) {
     const band: number = Math.floor(h / 3);
     fillRect(buf, w, h, 0, 0, w, band, main[0], main[1], main[2]);
     fillRect(buf, w, h, 0, band, w, band * 2, sec[0], sec[1], sec[2]);
     fillRect(buf, w, h, 0, band * 2, w, h, acc[0], acc[1], acc[2]);
-  } else if (templateId === 'tpl_bento_v4') {
+  } else if (templateId === TEMPLATE_BENTO_ID) {
     const wMain: number = Math.floor((w * 4) / 6);
     const hSec: number = Math.floor((h * 2) / 3);
     fillRect(buf, w, h, 0, 0, wMain, h, main[0], main[1], main[2]);
     fillRect(buf, w, h, wMain, 0, w, hSec, sec[0], sec[1], sec[2]);
     fillRect(buf, w, h, wMain, hSec, w, h, acc[0], acc[1], acc[2]);
-  } else if (templateId === 'tpl_stack_v5' || templateId === DEFAULT_TEMPLATE_ID) {
+  } else if (templateId === TEMPLATE_STACK_ID || templateId === DEFAULT_TEMPLATE_ID) {
     renderHeroComposition(buf, w, h, main, sec, acc);
   } else {
     const h1: number = Math.floor(h * 0.55);
@@ -247,4 +251,10 @@ export function createPaletteExportPixelMap(
   }
 }
 
-export const TEMPLATE_IDS: string[] = [DEFAULT_TEMPLATE_ID, 'tpl_columns_v2', 'tpl_thirds_v3', 'tpl_bento_v4', 'tpl_stack_v5'];
+export const TEMPLATE_IDS: string[] = [
+  DEFAULT_TEMPLATE_ID,
+  TEMPLATE_COLUMNS_ID,
+  TEMPLATE_THIRDS_ID,
+  TEMPLATE_BENTO_ID,
+  TEMPLATE_STACK_ID
+];

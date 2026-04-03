@@ -1,6 +1,12 @@
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { AppLanguage } from '../model/AppLanguage';
+import {
+  TOP_BAR_MINI_PREVIEW_HEIGHT,
+  TOP_BAR_MINI_PREVIEW_SLOT_HEIGHT,
+  TOP_BAR_MINI_PREVIEW_SLOT_WIDTH,
+  TOP_BAR_MINI_PREVIEW_WIDTH
+} from '../common/constants/MiniPreviewLayout';
 import { MiniPalettePreviewView } from './MiniPalettePreviewView';
 
 @Component
@@ -89,8 +95,8 @@ export struct TopBarView {
           MiniPalettePreviewView({
             colors: this.miniColors(),
             style: this.vm.miniPreviewStyle,
-            previewWidth: 150,
-            previewHeight: 28,
+            previewWidth: TOP_BAR_MINI_PREVIEW_WIDTH,
+            previewHeight: TOP_BAR_MINI_PREVIEW_HEIGHT,
             reduceMotion: this.vm.reduceMotion
           })
         }
@@ -98,8 +104,8 @@ export struct TopBarView {
         .translate({ y: this.barCompact ? 0 : 8 })
         .animation({ duration: this.barDur(400), curve: Curve.EaseInOut })
       }
-      .width(152)
-      .height(44)
+      .width(TOP_BAR_MINI_PREVIEW_SLOT_WIDTH)
+      .height(TOP_BAR_MINI_PREVIEW_SLOT_HEIGHT)
       .justifyContent(FlexAlign.Center)
       .hitTestBehavior(this.barCompact ? HitTestMode.Default : HitTestMode.None)
       .onClick(() => {

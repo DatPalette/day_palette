@@ -3,8 +3,18 @@ import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { AppLanguage } from '../model/AppLanguage';
 import { MiniPreviewStyle } from '../model/MiniPreviewStyle';
+import {
+  SETTINGS_MINI_PREVIEW_HEIGHT,
+  SETTINGS_MINI_PREVIEW_WIDTH
+} from '../common/constants/MiniPreviewLayout';
 import { MiniPalettePreviewView } from './MiniPalettePreviewView';
-import { TEMPLATE_IDS } from '../export/PaletteImageExporter';
+import {
+  TEMPLATE_BENTO_ID,
+  TEMPLATE_COLUMNS_ID,
+  TEMPLATE_IDS,
+  TEMPLATE_STACK_ID,
+  TEMPLATE_THIRDS_ID
+} from '../export/PaletteImageExporter';
 
 @Component
 export struct SettingsPanelView {
@@ -15,16 +25,16 @@ export struct SettingsPanelView {
   };
 
   private templateOptionTitle(id: string): string {
-    if (id === 'tpl_columns_v2') {
+    if (id === TEMPLATE_COLUMNS_ID) {
       return this.vm.getUiStrings().templateColumns;
     }
-    if (id === 'tpl_thirds_v3') {
+    if (id === TEMPLATE_THIRDS_ID) {
       return this.vm.getUiStrings().templateThirds;
     }
-    if (id === 'tpl_bento_v4') {
+    if (id === TEMPLATE_BENTO_ID) {
       return this.vm.getUiStrings().templateBento;
     }
-    if (id === 'tpl_stack_v5') {
+    if (id === TEMPLATE_STACK_ID) {
       return this.vm.getUiStrings().templateStack;
     }
     return this.vm.getUiStrings().templateEditorial;
@@ -226,8 +236,8 @@ export struct SettingsPanelView {
                     MiniPalettePreviewView({
                       colors: this.vm.getHeroColorStrings(),
                       style,
-                      previewWidth: 96,
-                      previewHeight: 40,
+                      previewWidth: SETTINGS_MINI_PREVIEW_WIDTH,
+                      previewHeight: SETTINGS_MINI_PREVIEW_HEIGHT,
                       reduceMotion: this.vm.reduceMotion
                     })
 

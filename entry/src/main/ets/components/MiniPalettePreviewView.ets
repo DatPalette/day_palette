@@ -1,4 +1,5 @@
 import { MiniPreviewStyle } from '../model/MiniPreviewStyle';
+import { DesignTokens } from '../common/constants/DesignTokens';
 import {
   type HeroPaletteCardLayout,
   HERO_ACCENT_CARD_LAYOUT,
@@ -9,9 +10,15 @@ import {
   scaleHeroPaletteValue
 } from '../common/constants/HeroPaletteLayout';
 
+const FALLBACK_PREVIEW_COLORS: string[] = [
+  DesignTokens.DEFAULT_MAIN,
+  DesignTokens.DEFAULT_SEC,
+  DesignTokens.DEFAULT_ACC
+];
+
 @Component
 export struct MiniPalettePreviewView {
-  @Prop colors: string[] = ['#E8D8D3', '#C5B9B6', '#5D637A'];
+  @Prop colors: string[] = FALLBACK_PREVIEW_COLORS;
   @Prop style: MiniPreviewStyle = MiniPreviewStyle.Capsule;
   @Prop previewWidth: number = 140;
   @Prop previewHeight: number = 36;
@@ -22,7 +29,7 @@ export struct MiniPalettePreviewView {
   }
 
   private previewColors(): string[] {
-    return this.colors.length >= 3 ? this.colors : ['#E8D8D3', '#C5B9B6', '#5D637A'];
+    return this.colors.length >= 3 ? this.colors : FALLBACK_PREVIEW_COLORS;
   }
 
   private radius(): number {

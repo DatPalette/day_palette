@@ -14,10 +14,8 @@ export interface UiStrings {
   langLabel: string;
   langFollowSystem: string;
   themeLabel: string;
-  themeValue: string;
   aboutLabel: string;
   saveSuccess: string;
-  saveFail: string;
   /** 用户拒绝或未授予相册写入 */
   saveFailAlbumPermission: string;
   /** 申请权限过程异常 */
@@ -34,10 +32,8 @@ export interface UiStrings {
   saveFailUnknown: string;
   /** 用户在系统「保存到相册」弹窗中取消 */
   saveCancelled: string;
-  shareFail: string;
   shareFailBuildImage: string;
   shareFailOther: string;
-  permissionDenied: string;
   /** 主文案：从当前场合套组中随机换一套（非算法生成新色）。 */
   randomPalette: string;
   /** 副文案：说明行为边界，字号更小，与主文案同列展示。 */
