@@ -42,7 +42,7 @@ export struct HeroDisplayView {
           .width('75%')
           .height(260)
           .backgroundColor(this.heroColors()[0])
-          .borderRadius(2)
+          .borderRadius(16)
           .margin({ top: 0, left: 0 })
           .rotate({
             x: 0,
@@ -53,10 +53,10 @@ export struct HeroDisplayView {
             centerY: '50%'
           })
           .shadow({
-            radius: 40,
-            color: 'rgba(0, 0, 0, 0.08)',
+            radius: 24,
+            color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: 20
+            offsetY: 12
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(1)
@@ -65,7 +65,7 @@ export struct HeroDisplayView {
           .width('55%')
           .height(180)
           .backgroundColor(this.heroColors()[1])
-          .borderRadius(2)
+          .borderRadius(16)
           .margin({ top: 120, left: '45%' })
           .rotate({
             x: 0,
@@ -76,10 +76,10 @@ export struct HeroDisplayView {
             centerY: '50%'
           })
           .shadow({
-            radius: 40,
-            color: 'rgba(0, 0, 0, 0.08)',
+            radius: 24,
+            color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: 20
+            offsetY: 12
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(2)
@@ -88,13 +88,13 @@ export struct HeroDisplayView {
           .width('35%')
           .height(100)
           .backgroundColor(this.heroColors()[2])
-          .borderRadius(2)
+          .borderRadius(16)
           .margin({ top: 220, left: '15%' })
           .shadow({
-            radius: 40,
-            color: 'rgba(0, 0, 0, 0.08)',
+            radius: 24,
+            color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: 20
+            offsetY: 12
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(3)

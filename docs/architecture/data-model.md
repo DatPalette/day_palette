@@ -20,6 +20,25 @@
 
 **约束**：`ext` 建议始终序列化为对象，避免 `null` 与缺键混用。
 
+### 1.1 轻量持久化槽位（用于“昨日”）
+
+为保持工具属性与本地轻量，不建立按日历史表；仅维护以下 Preferences 槽位：
+
+| 槽位 | 类型 | 说明 |
+|------|------|------|
+| `today_outfit_state_json` | string | 当前 draft 的 `TodayOutfitState` JSON。 |
+| `today_outfit_calendar_day` | string | 当前 draft 对应的本地自然日，格式 `YYYY-MM-DD`。 |
+| `yesterday_outfit_state_json` | string | 上一自然日快照。 |
+| `yesterday_outfit_calendar_day` | string | `yesterday_outfit_state_json` 对应日期，必须严格等于“今天的昨天”才算有效。 |
+| `last_open_calendar_day` | string | 最近一次打开 App 时的本地自然日，用于跨日滚动。 |
+
+**滚动规则**
+
+1. 用户当天的修改持续覆盖 `today_outfit_state_json`，并同步写入 `today_outfit_calendar_day`。
+2. App 启动时若发现 `today_outfit_calendar_day` 恰好等于昨天，则将该 draft 复制到 `yesterday_*` 槽位。
+3. 若 `today_outfit_calendar_day` 早于昨天，不自动覆盖 `yesterday_*`，避免将更早草稿误判为“昨日”。
+4. “昨日”按钮仅在 `yesterday_outfit_calendar_day` 严格等于昨天时视为有效。
+
 ## 2. Entitlement（Pro）
 
 | 字段 | 类型 | 说明 |
@@ -62,3 +81,5 @@
 ## 5. 修订
 
 随 PRD 与实现变更更新本表，并在 PRD 修订记录中交叉注明。
+
+- 2026-04-03：新增“昨日”轻量快照槽位说明；明确不做按日历史，仅维护 today draft 与 yesterday snapshot。

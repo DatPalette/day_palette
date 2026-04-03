@@ -2,6 +2,8 @@ import { common, ConfigurationConstant } from '@kit.AbilityKit';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { AppLanguage } from '../model/AppLanguage';
+import { MiniPreviewStyle } from '../model/MiniPreviewStyle';
+import { MiniPalettePreviewView } from './MiniPalettePreviewView';
 import { TEMPLATE_IDS } from '../export/PaletteImageExporter';
 
 @Component
@@ -19,6 +21,12 @@ export struct SettingsPanelView {
     if (id === 'tpl_thirds_v3') {
       return this.vm.getUiStrings().templateThirds;
     }
+    if (id === 'tpl_bento_v4') {
+      return this.vm.getUiStrings().templateBento;
+    }
+    if (id === 'tpl_stack_v5') {
+      return this.vm.getUiStrings().templateStack;
+    }
     return this.vm.getUiStrings().templateEditorial;
   }
 
@@ -35,6 +43,11 @@ export struct SettingsPanelView {
     } catch (_e) {
     }
     return this.vm.getUiStrings().themeFollowSystem;
+  }
+
+  private miniPreviewLabel(style: MiniPreviewStyle): string {
+    return style === MiniPreviewStyle.Hero ?
+      this.vm.getUiStrings().miniPreviewStyleHero : this.vm.getUiStrings().miniPreviewStyleCapsule;
   }
 
   build() {
@@ -167,7 +180,7 @@ export struct SettingsPanelView {
                 .width('100%')
                 .textAlign(TextAlign.Start)
                 .animation({ duration: this.vm.reduceMotion ? 1 : 300, curve: Curve.EaseInOut })
-              Row({ space: 8 }) {
+              Flex({ wrap: FlexWrap.Wrap }) {
                 ForEach(TEMPLATE_IDS, (tid: string) => {
                   Text(this.templateOptionTitle(tid))
                     .fontSize(12)
@@ -179,6 +192,7 @@ export struct SettingsPanelView {
                       top: 8,
                       bottom: 8
                     })
+                    .margin({ right: 8, bottom: 8 })
                     .borderRadius(6)
                     .backgroundColor(this.vm.templateId === tid ? DesignTokens.TEXT_MAIN : Color.Transparent)
                     .border({
@@ -189,6 +203,53 @@ export struct SettingsPanelView {
                       this.vm.setTemplateId(tid);
                     })
                 }, (tid: string) => tid)
+              }
+              .width('100%')
+              .margin({ top: 12 })
+            }
+            .width('100%')
+            .padding({ left: 20, right: 20, top: 16, bottom: 16 })
+            .alignItems(HorizontalAlign.Start)
+            .borderWidth({ bottom: 1 })
+            .borderColor(DesignTokens.BORDER_COLOR)
+
+            Column() {
+              Text(this.vm.getUiStrings().miniPreviewStyleLabel)
+                .fontSize(15)
+                .fontColor(DesignTokens.TEXT_MAIN)
+                .width('100%')
+                .textAlign(TextAlign.Start)
+                .animation({ duration: this.vm.reduceMotion ? 1 : 300, curve: Curve.EaseInOut })
+              Row({ space: 12 }) {
+                ForEach([MiniPreviewStyle.Capsule, MiniPreviewStyle.Hero], (style: MiniPreviewStyle) => {
+                  Column({ space: 10 }) {
+                    MiniPalettePreviewView({
+                      colors: this.vm.getHeroColorStrings(),
+                      style,
+                      previewWidth: 96,
+                      previewHeight: 40,
+                      reduceMotion: this.vm.reduceMotion
+                    })
+
+                    Text(this.miniPreviewLabel(style))
+                      .fontSize(12)
+                      .fontWeight(FontWeight.Medium)
+                      .fontColor(this.vm.miniPreviewStyle === style ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
+                  }
+                  .layoutWeight(1)
+                  .padding({ left: 12, right: 12, top: 12, bottom: 12 })
+                  .alignItems(HorizontalAlign.Center)
+                  .backgroundColor(this.vm.miniPreviewStyle === style ? 'rgba(0, 0, 0, 0.03)' : Color.Transparent)
+                  .borderRadius(8)
+                  .border({
+                    width: 1,
+                    color: this.vm.miniPreviewStyle === style ? DesignTokens.TEXT_MAIN : DesignTokens.BORDER_COLOR
+                  })
+                  .onClick(() => {
+                    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+                    this.vm.setMiniPreviewStyle(ctx, style);
+                  })
+                }, (style: MiniPreviewStyle) => style)
               }
               .width('100%')
               .margin({ top: 12 })

@@ -8,15 +8,20 @@ import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
 import type { Occasion } from '../model/Occasion';
 import type { Palette } from '../model/Palette';
 import { getSystemAppLanguage } from '../model/SystemLanguageResolver';
+import { DEFAULT_MINI_PREVIEW_STYLE, MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { DEFAULT_TEMPLATE_ID } from '../model/TodayOutfitState';
 import {
+  readMiniPreviewStyleRaw,
   readNoiseOverlayEnabled,
   readReduceMotionEnabled,
   readTodayOutfitState,
+  readYesterdayOutfitCalendarDay,
   readYesterdayOutfitState,
   rollCalendarDayAndMaybeSnapshotYesterday,
   todayLocalYmd,
+  yesterdayLocalYmd,
+  writeMiniPreviewStyleRaw,
   writeNoiseOverlayEnabled,
   writeReduceMotionEnabled,
   writeTodayOutfitState
@@ -45,6 +50,8 @@ export class DayPaletteViewModel {
   reduceMotion: boolean = false;
   /** Hero 轻噪点叠层。 */
   noiseOverlay: boolean = false;
+  /** 顶栏微缩预览样式。 */
+  miniPreviewStyle: MiniPreviewStyle = DEFAULT_MINI_PREVIEW_STYLE;
 
   private persistContext: common.UIAbilityContext | null = null;
 
@@ -176,6 +183,7 @@ export class DayPaletteViewModel {
   loadAccessibilityFromStorage(context: common.UIAbilityContext): void {
     this.reduceMotion = readReduceMotionEnabled(context);
     this.noiseOverlay = readNoiseOverlayEnabled(context);
+    this.miniPreviewStyle = parseMiniPreviewStyle(readMiniPreviewStyleRaw(context));
   }
 
   setReduceMotion(context: common.UIAbilityContext, enabled: boolean): void {
@@ -188,7 +196,15 @@ export class DayPaletteViewModel {
     writeNoiseOverlayEnabled(context, enabled);
   }
 
-  /** 当前场合下随机一套（免费库内，不生成裸 RGB）。 */
+  setMiniPreviewStyle(context: common.UIAbilityContext, style: MiniPreviewStyle): void {
+    if (this.miniPreviewStyle === style) {
+      return;
+    }
+    this.miniPreviewStyle = style;
+    writeMiniPreviewStyleRaw(context, style);
+  }
+
+  /** 当前场合下从预置套组中随机选一套（不生成裸 RGB）。 */
   randomPaletteInActiveOccasion(): void {
     const occ: Occasion | undefined = this.getActiveOccasion();
     if (occ === undefined || occ.palettes.length === 0) {
@@ -202,6 +218,9 @@ export class DayPaletteViewModel {
 
   /** 恢复跨日时快照的「昨日」套组；若无快照返回 false。 */
   applyYesterdayOutfitFromStorage(): boolean {
+    if (!this.canApplyYesterdayOutfit()) {
+      return false;
+    }
     if (this.persistContext === null) {
       return false;
     }
@@ -212,6 +231,17 @@ export class DayPaletteViewModel {
     this.applyTodayOutfitState(y);
     this.flushTodayOutfitToStorage();
     return true;
+  }
+
+  canApplyYesterdayOutfit(): boolean {
+    if (this.persistContext === null) {
+      return false;
+    }
+    const yesterdayDay: string = readYesterdayOutfitCalendarDay(this.persistContext);
+    if (yesterdayDay !== yesterdayLocalYmd()) {
+      return false;
+    }
+    return readYesterdayOutfitState(this.persistContext) !== null;
   }
 
   getHeroColorStrings(): string[] {

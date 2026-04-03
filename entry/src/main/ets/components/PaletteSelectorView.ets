@@ -13,6 +13,14 @@ export struct PaletteSelectorView {
   onFineTune: () => void = () => {
   };
 
+  private actionPreviewColors(): string[] {
+    return this.vm.getHeroColorStrings();
+  }
+
+  private yesterdayEnabled(): boolean {
+    return this.vm.canApplyYesterdayOutfit();
+  }
+
   build() {
     Column() {
       Text(this.vm.getUiStrings().curatedTitle)
@@ -25,36 +33,6 @@ export struct PaletteSelectorView {
         .textAlign(TextAlign.Start)
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
 
-      Row({ space: 20 }) {
-        Text(this.vm.getUiStrings().randomPalette)
-          .fontSize(11)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(DesignTokens.TEXT_MAIN)
-          .decoration({ type: TextDecorationType.Underline })
-          .onClick(() => {
-            this.onRandom();
-          })
-        Text(this.vm.getUiStrings().yesterdayOutfit)
-          .fontSize(11)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(DesignTokens.TEXT_MAIN)
-          .decoration({ type: TextDecorationType.Underline })
-          .onClick(() => {
-            this.onYesterday();
-          })
-        Text(this.vm.getUiStrings().fineTune)
-          .fontSize(11)
-          .fontWeight(FontWeight.Medium)
-          .fontColor(DesignTokens.TEXT_MAIN)
-          .decoration({ type: TextDecorationType.Underline })
-          .onClick(() => {
-            this.onFineTune();
-          })
-      }
-      .width('100%')
-      .justifyContent(FlexAlign.Start)
-      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 12 })
-
       Scroll() {
         Row({ space: 16 }) {
           ForEach(this.paletteList(), (pal: Palette) => {
@@ -62,36 +40,39 @@ export struct PaletteSelectorView {
               Row() {
                 Row()
                   .layoutWeight(3)
-                  .height(4)
+                  .height(8)
                   .backgroundColor(pal.colors[0])
                 Row()
                   .layoutWeight(2)
-                  .height(4)
+                  .height(8)
                   .backgroundColor(pal.colors[1])
                 Row()
                   .layoutWeight(1)
-                  .height(4)
+                  .height(8)
                   .backgroundColor(pal.colors[2])
               }
               .width('100%')
               .borderRadius(2)
               .clip(true)
-              .margin({ bottom: 12 })
+ 
+              Column({ space: 4 }) {
+                Text(pal.name)
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(DesignTokens.TEXT_MAIN)
 
-              Text(pal.name)
-                .fontSize(13)
-                .fontWeight(FontWeight.Medium)
-                .fontColor(DesignTokens.TEXT_MAIN)
-                .margin({ bottom: 4 })
-              Text(pal.desc)
-                .fontSize(11)
-                .fontColor(DesignTokens.TEXT_MUTED)
-                .maxLines(2)
-                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                Text(pal.desc)
+                  .fontSize(11)
+                  .fontColor(DesignTokens.TEXT_MUTED)
+                  .maxLines(2)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+              }
+              .width('100%')
             }
             .width(140)
-            .height(104)
+            .height(96)
             .alignItems(HorizontalAlign.Start)
+            .justifyContent(FlexAlign.SpaceBetween)
             .padding(16)
             .backgroundColor(DesignTokens.SURFACE_CARD)
             .borderRadius(2)
@@ -110,11 +91,122 @@ export struct PaletteSelectorView {
             })
           }, (pal: Palette) => pal.id + '_' + this.vm.currentLang)
         }
-        .padding({ right: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 20 })
+        .padding({
+          left: LayoutConstants.PAGE_HORIZONTAL_VP,
+          right: LayoutConstants.PAGE_HORIZONTAL_VP,
+          bottom: 20
+        })
       }
       .scrollable(ScrollDirection.Horizontal)
       .scrollBar(BarState.Off)
       .width('100%')
+
+      Column({ space: 10 }) {
+        Button({ type: ButtonType.Normal, stateEffect: true }) {
+          Row({ space: 14 }) {
+            Column({ space: 4 }) {
+              Text(this.vm.getUiStrings().randomPalette)
+                .fontSize(14)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(DesignTokens.TEXT_MAIN)
+
+              Text(this.vm.getUiStrings().randomPaletteHint)
+                .fontSize(10)
+                .fontColor(DesignTokens.TEXT_MUTED)
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+            }
+            .layoutWeight(1)
+            .alignItems(HorizontalAlign.Start)
+
+            Column({ space: 8 }) {
+              Row() {
+                Row()
+                  .layoutWeight(3)
+                  .height('100%')
+                  .backgroundColor(this.actionPreviewColors()[0])
+                  .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
+                Row()
+                  .layoutWeight(2)
+                  .height('100%')
+                  .backgroundColor(this.actionPreviewColors()[1])
+                  .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
+                Row()
+                  .layoutWeight(1)
+                  .height('100%')
+                  .backgroundColor(this.actionPreviewColors()[2])
+                  .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
+              }
+              .width(76)
+              .height(10)
+              .borderRadius(2)
+              .clip(true)
+
+              Divider()
+                .strokeWidth(1)
+                .color('rgba(0, 0, 0, 0.06)')
+                .vertical(false)
+                .width(76)
+            }
+            .alignItems(HorizontalAlign.End)
+            .justifyContent(FlexAlign.Center)
+          }
+          .width('100%')
+          .padding({ left: 16, right: 16, top: 12, bottom: 12 })
+        }
+        .width('100%')
+        .backgroundColor(DesignTokens.SURFACE_CARD)
+        .borderRadius(2)
+        .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+        .shadow({ radius: 10, color: 'rgba(0, 0, 0, 0.02)', offsetY: 4 })
+        .onClick(() => {
+          this.onRandom();
+        })
+
+        Row({ space: 10 }) {
+          Button({ type: ButtonType.Normal, stateEffect: true }) {
+            Text(this.vm.getUiStrings().yesterdayOutfit)
+              .fontSize(13)
+              .fontWeight(FontWeight.Medium)
+              .fontColor(this.yesterdayEnabled() ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+          }
+          .layoutWeight(1)
+          .height(42)
+          .backgroundColor(this.yesterdayEnabled() ? DesignTokens.SURFACE_CARD : 'rgba(0, 0, 0, 0.02)')
+          .borderRadius(2)
+          .border({
+            width: 1,
+            color: this.yesterdayEnabled() ? DesignTokens.BORDER_COLOR : 'rgba(0, 0, 0, 0.04)'
+          })
+          .opacity(this.yesterdayEnabled() ? 1 : 0.56)
+          .hitTestBehavior(this.yesterdayEnabled() ? HitTestMode.Default : HitTestMode.None)
+          .onClick(() => {
+            this.onYesterday();
+          })
+
+          Button({ type: ButtonType.Normal, stateEffect: true }) {
+            Text(this.vm.getUiStrings().fineTune)
+              .fontSize(13)
+              .fontWeight(FontWeight.Medium)
+              .fontColor(DesignTokens.TEXT_MAIN)
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+          }
+          .layoutWeight(1)
+          .height(42)
+          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .borderRadius(2)
+          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .onClick(() => {
+            this.onFineTune();
+          })
+        }
+      }
+      .width('100%')
+      .alignItems(HorizontalAlign.Start)
+      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP, top: 20, bottom: 14 })
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
