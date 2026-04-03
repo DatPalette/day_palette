@@ -83,7 +83,7 @@ export struct TopBarView {
       .height(44)
       .alignItems(VerticalAlign.Center)
 
-      // 中央：始终保留 36vp 高度标准，但不占用左右文案宽度
+      // 中央：始终保留微缩预览插槽，但不占用左右文案宽度
       Row() {
         Stack() {
           MiniPalettePreviewView({

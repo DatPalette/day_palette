@@ -80,18 +80,6 @@ export function readTodayOutfitCalendarDay(context: common.Context): string {
   }
 }
 
-export function writeTodayOutfitCalendarDay(context: common.Context, day: string): void {
-  try {
-    const pref: preferences.Preferences | null = getPref(context);
-    if (pref === null) {
-      return;
-    }
-    pref.putSync(KEY_OUTFIT_CALENDAR_DAY, day);
-    pref.flush();
-  } catch {
-  }
-}
-
 export function readLastCalendarOpenDay(context: common.Context): string {
   try {
     const pref: preferences.Preferences | null = getPref(context);
