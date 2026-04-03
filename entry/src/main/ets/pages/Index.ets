@@ -1,6 +1,6 @@
 import { common } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
-import { LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
+import { APP_FOREGROUND_EVENT, LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
 import { getBottomGestureBarHeightPx } from '../common/window/NavigationIndicatorInset';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { TopBarView } from '../components/TopBarView';
@@ -35,6 +35,7 @@ struct Index {
   /** 底部导航指示条 / 手势区高度（vp），用于底栏内边距与主列表底部留白 */
   @State bottomGestureInsetVp: number = 0;
   private localeEventHandler: (() => void) | undefined = undefined;
+  private appForegroundHandler: (() => void) | undefined = undefined;
   private bottomWindowRef: window.Window | undefined = undefined;
   private avoidAreaChangeHandler = (data: window.AvoidAreaOptions): void => {
     if (data.type === window.AvoidAreaType.TYPE_SYSTEM ||
@@ -56,7 +57,11 @@ struct Index {
       const host = this.getUIContext().getHostContext() as common.UIAbilityContext;
       this.vm.refreshLocaleIfFollowingSystem(host);
     };
+    this.appForegroundHandler = (): void => {
+      this.vm.refreshCalendarDayBoundary();
+    };
     ctx.eventHub.on(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
+    ctx.eventHub.on(APP_FOREGROUND_EVENT, this.appForegroundHandler);
     this.attachBottomGestureInsetListener(ctx);
   }
 
@@ -65,6 +70,10 @@ struct Index {
     if (this.localeEventHandler !== undefined) {
       ctx.eventHub.off(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
       this.localeEventHandler = undefined;
+    }
+    if (this.appForegroundHandler !== undefined) {
+      ctx.eventHub.off(APP_FOREGROUND_EVENT, this.appForegroundHandler);
+      this.appForegroundHandler = undefined;
     }
     this.detachBottomGestureInsetListener();
   }
@@ -201,6 +210,10 @@ struct Index {
     });
   }
 
+  private fineTuneSyncToken(): string {
+    return this.vm.getHeroColorStrings().join('|');
+  }
+
   build() {
     Stack({ alignContent: Alignment.TopStart }) {
       Scroll(this.scroller) {
@@ -290,6 +303,7 @@ struct Index {
       if (this.fineTuneOpen) {
         FineTuneSheet({
           vm: this.vm,
+          syncToken: this.fineTuneSyncToken(),
           bottomGestureInsetVp: this.bottomGestureInsetVp,
           onRequestClose: () => {
             this.fineTuneOpen = false;

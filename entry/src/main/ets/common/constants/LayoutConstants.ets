@@ -5,10 +5,23 @@ export class LayoutConstants {
   /** 底栏 padding + 52 按钮高；首页另加 bottomGestureInsetVp 以避开底部手势条 */
   static readonly SCROLL_BOTTOM_INSET_VP: number = 108;
   static readonly PAGE_HORIZONTAL_VP: number = 24;
+  static readonly CHROME_ICON_BUTTON_SIZE_VP: number = 36;
   static readonly HERO_TOP_PADDING_VP: number = 10;
   static readonly OCCASION_TOP_MARGIN_VP: number = 70;
   static readonly OCCASION_BOTTOM_MARGIN_VP: number = 30;
   static readonly PALETTE_LIST_BOTTOM_PADDING_VP: number = 80;
+  static readonly SETTINGS_BLOCK_MARGIN_TOP_VP: number = 12;
+  static readonly SETTINGS_SEGMENT_INSET_VP: number = 2;
+  static readonly SETTINGS_CARD_RADIUS_VP: number = 8;
+  static readonly SETTINGS_CHIP_RADIUS_VP: number = 6;
+  static readonly SETTINGS_CHIP_PADDING_HORIZONTAL_VP: number = 8;
+  static readonly SETTINGS_CHIP_PADDING_VERTICAL_VP: number = 6;
+  static readonly SETTINGS_SYSTEM_CHIP_PADDING_HORIZONTAL_VP: number = 6;
+  static readonly SETTINGS_OPTION_CARD_PADDING_VP: number = 12;
+  static readonly SETTINGS_SELECTED_SHADOW_RADIUS_VP: number = 8;
+  static readonly SETTINGS_SECTION_HORIZONTAL_VP: number = 20;
+  static readonly SETTINGS_SECTION_VERTICAL_VP: number = 16;
+  static readonly SETTINGS_PANEL_OUTER_PADDING_VP: number = 24;
   /** 顶栏收缩态：主 Scroll 纵向偏移超过此值（vp）时显示 Mini-Palette */
   static readonly TOP_BAR_SCROLL_THRESHOLD_VP: number = 60;
   /**

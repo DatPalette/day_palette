@@ -4,6 +4,7 @@ import { DesignTokens } from '../common/constants/DesignTokens';
 @Component
 export struct FineTuneSheet {
   @ObjectLink vm: DayPaletteViewModel;
+  @Watch('onSyncTokenChanged') @Prop syncToken: string = '';
   @Prop bottomGestureInsetVp: number = 0;
   onRequestClose: () => void = () => {
   };
@@ -16,6 +17,10 @@ export struct FineTuneSheet {
     this.mainHex = c[0];
     this.secHex = c[1];
     this.accHex = c[2];
+  }
+
+  private onSyncTokenChanged(): void {
+    this.syncFromVm();
   }
 
   build() {

@@ -1,3 +1,5 @@
+import { DesignTokens } from '../common/constants/DesignTokens';
+
 /**
  * 与 docs/architecture/data-model.md TodayOutfitState 对齐；
  * activePaletteId 用于恢复 UI 选中项（JSON 资源侧 id）。
@@ -24,9 +26,9 @@ export function createDefaultTodayOutfitState(): TodayOutfitState {
   const now: number = Date.now();
   return {
     schemaVersion: SCHEMA_VERSION,
-    primaryColor: '#E8D8D3',
-    secondaryColor: '#C5B9B6',
-    accentColor: '#5D637A',
+    primaryColor: DesignTokens.DEFAULT_MAIN,
+    secondaryColor: DesignTokens.DEFAULT_SEC,
+    accentColor: DesignTokens.DEFAULT_ACC,
     occasionId: 'workday',
     activePaletteId: 'w1',
     shortNote: '',

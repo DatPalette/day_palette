@@ -2,6 +2,20 @@ import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { AppLanguage } from '../model/AppLanguage';
 import { LayoutConstants } from '../common/constants/LayoutConstants';
+import {
+  HERO_ACCENT_CARD_LAYOUT,
+  HERO_MAIN_CARD_LAYOUT,
+  HERO_PALETTE_BASE_SIZE,
+  HERO_SECONDARY_CARD_LAYOUT
+} from '../common/constants/HeroPaletteLayout';
+
+const HERO_DISPLAY_COMPOSITION_HEIGHT: number = HERO_PALETTE_BASE_SIZE;
+const HERO_DISPLAY_MAIN_CARD = HERO_MAIN_CARD_LAYOUT;
+const HERO_DISPLAY_SECONDARY_CARD = HERO_SECONDARY_CARD_LAYOUT;
+const HERO_DISPLAY_ACCENT_CARD = HERO_ACCENT_CARD_LAYOUT;
+const HERO_DISPLAY_CARD_RADIUS: number = 16;
+const HERO_DISPLAY_SHADOW_RADIUS: number = 24;
+const HERO_DISPLAY_SHADOW_OFFSET_Y: number = 12;
 
 @Component
 export struct HeroDisplayView {
@@ -39,62 +53,62 @@ export struct HeroDisplayView {
 
       Stack({ alignContent: Alignment.TopStart }) {
         Stack()
-          .width('75%')
-          .height(260)
+          .width(HERO_DISPLAY_MAIN_CARD.width)
+          .height(HERO_DISPLAY_MAIN_CARD.height)
           .backgroundColor(this.heroColors()[0])
-          .borderRadius(16)
-          .margin({ top: 0, left: 0 })
+          .borderRadius(HERO_DISPLAY_CARD_RADIUS)
+          .margin({ top: HERO_DISPLAY_MAIN_CARD.top, left: HERO_DISPLAY_MAIN_CARD.left })
           .rotate({
             x: 0,
             y: 1,
             z: 0,
-            angle: 5,
+            angle: HERO_DISPLAY_MAIN_CARD.angle,
             centerX: '50%',
             centerY: '50%'
           })
           .shadow({
-            radius: 24,
+            radius: HERO_DISPLAY_SHADOW_RADIUS,
             color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: 12
+            offsetY: HERO_DISPLAY_SHADOW_OFFSET_Y
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(1)
 
         Stack()
-          .width('55%')
-          .height(180)
+          .width(HERO_DISPLAY_SECONDARY_CARD.width)
+          .height(HERO_DISPLAY_SECONDARY_CARD.height)
           .backgroundColor(this.heroColors()[1])
-          .borderRadius(16)
-          .margin({ top: 120, left: '45%' })
+          .borderRadius(HERO_DISPLAY_CARD_RADIUS)
+          .margin({ top: HERO_DISPLAY_SECONDARY_CARD.top, left: HERO_DISPLAY_SECONDARY_CARD.left })
           .rotate({
             x: 0,
             y: 1,
             z: 0,
-            angle: -5,
+            angle: HERO_DISPLAY_SECONDARY_CARD.angle,
             centerX: '50%',
             centerY: '50%'
           })
           .shadow({
-            radius: 24,
+            radius: HERO_DISPLAY_SHADOW_RADIUS,
             color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: 12
+            offsetY: HERO_DISPLAY_SHADOW_OFFSET_Y
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(2)
 
         Stack()
-          .width('35%')
-          .height(100)
+          .width(HERO_DISPLAY_ACCENT_CARD.width)
+          .height(HERO_DISPLAY_ACCENT_CARD.height)
           .backgroundColor(this.heroColors()[2])
-          .borderRadius(16)
-          .margin({ top: 220, left: '15%' })
+          .borderRadius(HERO_DISPLAY_CARD_RADIUS)
+          .margin({ top: HERO_DISPLAY_ACCENT_CARD.top, left: HERO_DISPLAY_ACCENT_CARD.left })
           .shadow({
-            radius: 24,
+            radius: HERO_DISPLAY_SHADOW_RADIUS,
             color: 'rgba(0, 0, 0, 0.1)',
             offsetX: 0,
-            offsetY: 12
+            offsetY: HERO_DISPLAY_SHADOW_OFFSET_Y
           })
           .animation({ duration: this.heroDur(), curve: Curve.EaseInOut })
           .zIndex(3)
@@ -102,14 +116,14 @@ export struct HeroDisplayView {
         if (this.vm.noiseOverlay) {
           Column()
             .width('100%')
-            .height(320)
+            .height(HERO_DISPLAY_COMPOSITION_HEIGHT)
             .backgroundColor('rgba(30,30,30,0.06)')
             .blendMode(BlendMode.MULTIPLY)
             .zIndex(10)
         }
       }
       .width('100%')
-      .height(320)
+      .height(HERO_DISPLAY_COMPOSITION_HEIGHT)
 
       Row() {
         Column({ space: 4 }) {

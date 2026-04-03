@@ -1,61 +1,171 @@
 # 技术架构概要 · DayPalette
 
-> 轻量 TDD：个人开发用，随实现补链接到具体 Ability / 模块路径。
+> 本文描述 **当前已落地实现**，不是预研态草图。若代码与本文冲突，以 `entry/src/main/ets/` 实际实现为准，并在迭代内回流本文。
 
 ## 1. 技术栈
 
-- **平台**：HarmonyOS（API 版本以 DevEco 工程为准）。  
-- **UI**：ArkUI（声明式）。  
-- **语言**：ArkTS。
+- **平台**：HarmonyOS Next（API 版本以 DevEco 工程为准）  
+- **UI**：ArkUI（声明式）  
+- **语言**：ArkTS  
+- **本地持久化**：Preferences  
+- **桌面卡片**：Form Kit  
+- **图片导出/分享**：Image Kit + Core File Kit + MediaLibrary Kit + Share Kit
 
-## 2. 模块划分（建议）
+## 2. 当前模块划分（按真实目录）
 
 ```
-今日域（核心）
-  ├── state: TodayOutfitStore（读写的唯一真相源）
-  ├── ui: TodayPage（预览 + 场合 + 套组 + 操作）
-  ├── palette: 免费/付费套组加载、场合规则、随机/规则生成
-  └── render: 预览与出图共用布局参数
-
-桌面域
-  └── form: FormExtensionAbility，订阅 Store 或读同一本地存储
-
-商业化
-  ├── iap: 查询 Pro、恢复购买、写本地 entitlement
-  └── assets: 付费 palette 包、皮肤资源
-
-基础设施
-  ├── persistence: Preferences / RDB 封装
-  └── share/save: Share Kit、保存相册
+entry/src/main/ets/
+  ├── pages/
+  │   └── Index.ets                 # 今日页总装，负责页面编排、浮层开关、事件订阅
+  ├── viewmodel/
+  │   └── DayPaletteViewModel.ets   # 今日域唯一 UI 状态中心
+  ├── persistence/
+  │   └── TodayStateStore.ets       # 今日状态 / 昨日快照 / 设置项的 Preferences 读写
+  ├── components/
+  │   ├── TopBarView.ets
+  │   ├── HeroDisplayView.ets
+  │   ├── OccasionSelectorView.ets
+  │   ├── PaletteSelectorView.ets
+  │   ├── BottomActionsView.ets
+  │   ├── FineTuneSheet.ets
+  │   ├── MiniPalettePreviewView.ets
+  │   └── SettingsPanelView.ets
+  ├── export/
+  │   ├── PaletteImageExporter.ets  # 纯 PixelMap 构图与模板输出
+  │   ├── PaletteShareActions.ets   # 保存/分享流程、权限、缓存文件、错误归类
+  │   └── HexColor.ets
+  ├── formability/
+  │   ├── TodayOutfitFormAbility.ets
+  │   └── TodayOutfitFormSync.ets   # Form 绑定构建 + formId 跟踪 + 主应用触发刷新
+  ├── widget/
+  │   └── TodayOutfitFormCard.ets   # 桌面卡片 UI
+  ├── model/
+  │   ├── TodayOutfitState.ets
+  │   ├── LocaleData.ets / LocaleTypes.ets
+  │   ├── MiniPreviewStyle.ets
+  │   ├── AppLanguage.ets / SystemLanguageResolver.ets
+  │   └── Palette / Occasion 等领域模型
+  ├── common/
+  │   ├── constants/               # 设计令牌、布局常量、Hero/MiniPreview 规格、事件名
+  │   └── window/                  # 底部手势区避让计算
+  └── entryability/
+      └── EntryAbility.ets         # Ability 生命周期、前台事件、系统配置变更转发
 ```
 
-**原则**：Form 与 App **不各写一套颜色逻辑**，只读 **同一持久化或同一 Store**。
+## 3. 状态边界
 
-## 3. 鸿蒙 Kit 映射
+### 3.1 页面状态中心
 
-| Kit | 用途 |
-|-----|------|
-| Form Kit | 桌面小卡/中卡 |
-| Share Kit | 分享图片 |
-| 媒体/文件 | 保存出图到相册（按当期 API 选具体模块） |
-| IAP | Pro 解锁（华为应用内支付） |
-| Intents（可选 V1） | 直达今日页 |
+- 当前没有单独的 `TodayOutfitStore` 类。  
+- **唯一 UI 状态中心** 是 `DayPaletteViewModel`：负责场合、套组、精调三色、导出版式、语言、无障碍设置、顶栏微缩预览样式等。  
+- `Index.ets` 只负责组装页面与转发交互，不持有业务规则本身。
 
-**不依赖（首版）**：Notification Kit（留给洗护后期）。
+### 3.2 持久化边界
 
-## 4. 关键数据流
+- `TodayStateStore.ets` 是当前本地持久化边界。  
+- 今日页状态以 `TodayOutfitState` 为主快照写入 Preferences。  
+- 同时维护：
+  - `today_outfit_state_json`
+  - `today_outfit_calendar_day`
+  - `yesterday_outfit_state_json`
+  - `yesterday_outfit_calendar_day`
+  - `last_open_calendar_day`
+  - `reduce_motion_enabled`
+  - `noise_overlay_enabled`
+  - `mini_preview_style`
+- 设置类写入采用短窗口合并 `flush()`；今日状态与跨日快照写入仍立即 `flush()`，优先保证状态正确性。
 
-1. 用户改场合/套组/微调 → 更新 **TodayOutfitStore** → 写本地。  
-2. Form **onUpdate** / 定时刷新 → 读本地 → 渲染。  
-3. 出图：读 Store + `templateId` + `skinId`（若出图也区分皮肤）→ 离屏渲染 → 分享或保存。
+### 3.3 Form 同步边界
 
-## 5. 配置与资源
+- 桌面卡片 **不直接读取页面 VM**。  
+- `TodayOutfitFormAbility` 与 `TodayOutfitFormSync` 通过同一份持久化数据构建卡片绑定。  
+- 主应用在 `DayPaletteViewModel.flushTodayOutfitToStorage()` 后触发已登记 formId 的刷新，保证 App 与桌面卡片读同一份本地真相源。
 
-- `rawfile` / `resources`：`palettes.json`（可分 `palettes_free.json` / `palettes_pro.json` 或同一文件内 `tier` 字段）。  
-- `occasion-rules.json`：场合 → 默认套组 id 或默认三色。  
-- 皮肤：`skin` 资源 id 与 Form 布局绑定。
+## 4. 页面与组件职责
 
-## 6. 参考
+### 4.1 `Index.ets`
 
-- 规划文档：`应用规划-今日穿搭色卡.md` 第四、五、六、七、八、十一章。  
-- PRD：[`../product/PRD.md`](../product/PRD.md)。
+- 今日页总装容器。  
+- 管理主滚动区、TopBar、BottomActions、SettingsPanel、FineTuneSheet 的显隐与叠层。  
+- 订阅 `EntryAbility` 通过 `eventHub` 发出的事件：
+  - `LOCALE_CONFIG_CHANGED_EVENT`
+  - `APP_FOREGROUND_EVENT`
+- 负责底部手势区避让监听与 toast 展示。
+
+### 4.2 视觉组件
+
+- `HeroDisplayView`：主视觉 Hero 三色卡与标题。  
+- `OccasionSelectorView`：场合切换。  
+- `PaletteSelectorView`：精选套组列表与“随机选 / 沿用昨日 / 精调”入口。  
+- `TopBarView`：顶部日期 / 收缩标题 / 微缩预览 / 设置入口。  
+- `BottomActionsView`：保存与分享。  
+- `SettingsPanelView`：语言、导出版式、微缩预览样式、减少动效、轻微颗粒等设置。  
+- `FineTuneSheet`：三色 hex 精调面板。
+
+### 4.3 共享渲染规格
+
+- `HeroPaletteLayout.ets`：Hero 三卡构图规格，主视图、微缩 Hero 预览、导出链路共用。  
+- `MiniPreviewLayout.ets`：顶栏与设置中的微缩预览尺寸。  
+- `DesignTokens.ets` 与 `LayoutConstants.ets`：页面级语义色、霜面外壳、面板节奏、避让常量。
+
+## 5. 关键数据流
+
+### 5.1 今日页主链路
+
+1. `Index.aboutToAppear()` 初始化 `DayPaletteViewModel` 上下文。  
+2. 从本地读取语言、设置项、今日状态。  
+3. `DayPaletteViewModel` 解析当前语言下的 `LocaleData`，决定 `activeOccasionId` / `activePaletteId` / `customHex`。  
+4. 组件通过 `@ObjectLink vm` 渲染，交互回调再回到 ViewModel 修改状态。
+
+### 5.2 今日状态写回链路
+
+1. 用户切换场合、切换套组、随机、沿用昨日、应用精调、重置精调、修改导出版式等。  
+2. `DayPaletteViewModel` 更新内存状态。  
+3. 调用 `flushTodayOutfitToStorage()` 写入 `TodayStateStore`。  
+4. 写入成功后同步刷新已登记桌面卡片。
+
+### 5.3 跨自然日链路
+
+- 首屏加载时执行一次自然日滚动检查。  
+- 应用回到前台时，`EntryAbility.onForeground()` 通过 `APP_FOREGROUND_EVENT` 通知 `Index`，再由 `DayPaletteViewModel.refreshCalendarDayBoundary()` 补做检查。  
+- 规则是：仅当当前草稿确实属于上一自然日时，才写入 yesterday snapshot 槽。
+
+### 5.4 导出 / 分享链路
+
+1. `BottomActionsView` 点击时先从 VM 生成 `PaletteExportSnapshot`，锁定当前三色、标题、模板。  
+2. `PaletteShareActions` 使用 snapshot 调 `PaletteImageExporter` 生成 PixelMap。  
+3. 先写入 cache PNG，再等待文件真正可读。  
+4. 保存走图库/资产创建流程；分享走 Share Panel。  
+- 导出链路不再依赖固定 `300ms` 盲等。
+
+## 6. 鸿蒙 Kit 映射
+
+| Kit | 当前用途 |
+|-----|----------|
+| Form Kit | 桌面卡片 Ability 与卡片数据刷新 |
+| Image Kit | PixelMap 创建、PNG 编码 |
+| Core File Kit | cache 文件写入、读取、unlink |
+| MediaLibrary Kit | 保存到图库 |
+| Share Kit | 系统分享面板 |
+| ArkData Preferences | 今日状态、昨日快照、设置项、本地 formId 跟踪 |
+
+当前未落地：IAP、Intents、通知。
+
+## 7. 实现原则
+
+- **状态单向回收**：组件不各自持久化业务状态，统一回到 `DayPaletteViewModel` 与 `TodayStateStore`。  
+- **Form 与 App 共用同一本地真相源**：不各写一套颜色推导逻辑。  
+- **导出与主视觉共用构图规格**：Hero 预览、微缩 Hero、导出模板尽量复用同一组几何参数。  
+- **低风险优先**：渲染层优化以共享常量、缓存重复计算、减少无意义刷盘为主，不轻易改变用户可感知行为。
+
+## 8. 后续仍待文档补齐的方向
+
+- 商业化与 Pro 资源边界当前仍停留在 Backlog/PRD，尚未进入已实现架构。  
+- 若后续引入真正的 Store/EventBus 分层，应在本文中明确替换当前 `Index + ViewModel + Preferences` 的边界描述。  
+- 若导出模板继续扩展，应补一份单独的“导出渲染子系统”说明文档。
+
+## 9. 参考
+
+- PRD：[`../product/PRD.md`](../product/PRD.md)  
+- 数据模型：[`./data-model.md`](./data-model.md)  
+- 设计系统：[`../design/design-system.md`](../design/design-system.md)

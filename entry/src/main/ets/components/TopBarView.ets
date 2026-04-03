@@ -1,6 +1,13 @@
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
+import { LayoutConstants } from '../common/constants/LayoutConstants';
 import { AppLanguage } from '../model/AppLanguage';
+import {
+  TOP_BAR_MINI_PREVIEW_HEIGHT,
+  TOP_BAR_MINI_PREVIEW_SLOT_HEIGHT,
+  TOP_BAR_MINI_PREVIEW_SLOT_WIDTH,
+  TOP_BAR_MINI_PREVIEW_WIDTH
+} from '../common/constants/MiniPreviewLayout';
 import { MiniPalettePreviewView } from './MiniPalettePreviewView';
 
 @Component
@@ -67,15 +74,15 @@ export struct TopBarView {
               .fontSize(20)
               .fontColor([DesignTokens.TEXT_MAIN])
           }
-          .width(36)
-          .height(36)
+          .width(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
+          .height(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
           .backgroundColor(Color.Transparent)
           .border({ width: 1, color: DesignTokens.BORDER_COLOR })
           .onClick(() => {
             this.onOpenSettings();
           })
         }
-        .width(36)
+        .width(LayoutConstants.CHROME_ICON_BUTTON_SIZE_VP)
         .justifyContent(FlexAlign.End)
         .alignItems(VerticalAlign.Center)
       }
@@ -83,14 +90,14 @@ export struct TopBarView {
       .height(44)
       .alignItems(VerticalAlign.Center)
 
-      // 中央：始终保留 36vp 高度标准，但不占用左右文案宽度
+      // 中央：始终保留微缩预览插槽，但不占用左右文案宽度
       Row() {
         Stack() {
           MiniPalettePreviewView({
             colors: this.miniColors(),
             style: this.vm.miniPreviewStyle,
-            previewWidth: 150,
-            previewHeight: 28,
+            previewWidth: TOP_BAR_MINI_PREVIEW_WIDTH,
+            previewHeight: TOP_BAR_MINI_PREVIEW_HEIGHT,
             reduceMotion: this.vm.reduceMotion
           })
         }
@@ -98,8 +105,8 @@ export struct TopBarView {
         .translate({ y: this.barCompact ? 0 : 8 })
         .animation({ duration: this.barDur(400), curve: Curve.EaseInOut })
       }
-      .width(152)
-      .height(44)
+      .width(TOP_BAR_MINI_PREVIEW_SLOT_WIDTH)
+      .height(TOP_BAR_MINI_PREVIEW_SLOT_HEIGHT)
       .justifyContent(FlexAlign.Center)
       .hitTestBehavior(this.barCompact ? HitTestMode.Default : HitTestMode.None)
       .onClick(() => {
@@ -111,14 +118,14 @@ export struct TopBarView {
     .width('100%')
     .padding({
       top: 42,
-      left: 24,
-      right: 24,
+      left: LayoutConstants.PAGE_HORIZONTAL_VP,
+      right: LayoutConstants.PAGE_HORIZONTAL_VP,
       bottom: 16
     })
-    .backgroundColor('rgba(249, 248, 246, 0.75)')
+    .backgroundColor(DesignTokens.SURFACE_FROSTED)
     .backdropBlur(20)
     .borderWidth({ bottom: 1 })
-    .borderColor('rgba(0, 0, 0, 0.03)')
+    .borderColor(DesignTokens.BORDER_SUBTLE)
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.TOP])
   }
 }

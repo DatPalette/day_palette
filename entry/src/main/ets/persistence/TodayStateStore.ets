@@ -1,7 +1,10 @@
 import { preferences } from '@kit.ArkData';
 import { common } from '@kit.AbilityKit';
+import { MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { parseTodayOutfitStateJson, stringifyTodayOutfitState } from '../model/TodayOutfitState';
+
+const SETTINGS_FLUSH_DEBOUNCE_MS: number = 180;
 
 /** 本地日历日 YYYY-MM-DD（用于跨日「昨日」快照）。 */
 function localYmdWithOffset(offsetDays: number): string {
@@ -31,12 +34,40 @@ const KEY_REDUCE_MOTION: string = 'reduce_motion_enabled';
 const KEY_NOISE_OVERLAY: string = 'noise_overlay_enabled';
 const KEY_MINI_PREVIEW_STYLE: string = 'mini_preview_style';
 
+let prefCache: preferences.Preferences | null = null;
+let prefCacheReady: boolean = false;
+let settingsFlushTimerId: number | null = null;
+
 function getPref(context: common.Context): preferences.Preferences | null {
+  if (prefCacheReady) {
+    return prefCache;
+  }
   try {
-    return preferences.getPreferencesSync(context, { name: PREF_NAME });
+    prefCache = preferences.getPreferencesSync(context, { name: PREF_NAME });
+    prefCacheReady = true;
+    return prefCache;
   } catch {
+    prefCache = null;
+    prefCacheReady = true;
     return null;
   }
+}
+
+function flushPrefNow(pref: preferences.Preferences): void {
+  pref.flush();
+}
+
+function scheduleSettingsPrefFlush(pref: preferences.Preferences): void {
+  if (settingsFlushTimerId !== null) {
+    clearTimeout(settingsFlushTimerId);
+  }
+  settingsFlushTimerId = setTimeout((): void => {
+    settingsFlushTimerId = null;
+    try {
+      flushPrefNow(pref);
+    } catch {
+    }
+  }, SETTINGS_FLUSH_DEBOUNCE_MS);
 }
 
 export function readTodayOutfitState(context: common.Context): TodayOutfitState | null {
@@ -63,7 +94,7 @@ export function writeTodayOutfitState(context: common.Context, state: TodayOutfi
     }
     pref.putSync(KEY_OUTFIT_JSON, stringifyTodayOutfitState(state));
     pref.putSync(KEY_OUTFIT_CALENDAR_DAY, todayLocalYmd());
-    pref.flush();
+    flushPrefNow(pref);
   } catch {
   }
 }
@@ -77,18 +108,6 @@ export function readTodayOutfitCalendarDay(context: common.Context): string {
     return pref.getSync(KEY_OUTFIT_CALENDAR_DAY, '') as string;
   } catch {
     return '';
-  }
-}
-
-export function writeTodayOutfitCalendarDay(context: common.Context, day: string): void {
-  try {
-    const pref: preferences.Preferences | null = getPref(context);
-    if (pref === null) {
-      return;
-    }
-    pref.putSync(KEY_OUTFIT_CALENDAR_DAY, day);
-    pref.flush();
-  } catch {
   }
 }
 
@@ -111,7 +130,7 @@ export function writeLastCalendarOpenDay(context: common.Context, day: string): 
       return;
     }
     pref.putSync(KEY_LAST_CALENDAR_DAY, day);
-    pref.flush();
+    flushPrefNow(pref);
   } catch {
   }
 }
@@ -124,7 +143,7 @@ export function writeYesterdayOutfitState(context: common.Context, state: TodayO
     }
     pref.putSync(KEY_YESTERDAY_OUTFIT_JSON, stringifyTodayOutfitState(state));
     pref.putSync(KEY_YESTERDAY_OUTFIT_CALENDAR_DAY, day);
-    pref.flush();
+    flushPrefNow(pref);
   } catch {
   }
 }
@@ -190,7 +209,7 @@ export function writeReduceMotionEnabled(context: common.Context, enabled: boole
       return;
     }
     pref.putSync(KEY_REDUCE_MOTION, enabled);
-    pref.flush();
+    scheduleSettingsPrefFlush(pref);
   } catch {
   }
 }
@@ -214,7 +233,7 @@ export function writeNoiseOverlayEnabled(context: common.Context, enabled: boole
       return;
     }
     pref.putSync(KEY_NOISE_OVERLAY, enabled);
-    pref.flush();
+    scheduleSettingsPrefFlush(pref);
   } catch {
   }
 }
@@ -231,14 +250,14 @@ export function readMiniPreviewStyleRaw(context: common.Context): string {
   }
 }
 
-export function writeMiniPreviewStyleRaw(context: common.Context, style: string): void {
+export function writeMiniPreviewStyleRaw(context: common.Context, style: MiniPreviewStyle): void {
   try {
     const pref: preferences.Preferences | null = getPref(context);
     if (pref === null) {
       return;
     }
-    pref.putSync(KEY_MINI_PREVIEW_STYLE, style);
-    pref.flush();
+    pref.putSync(KEY_MINI_PREVIEW_STYLE, parseMiniPreviewStyle(style));
+    scheduleSettingsPrefFlush(pref);
   } catch {
   }
 }

@@ -1,5 +1,6 @@
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { DesignTokens } from '../common/constants/DesignTokens';
+import { LayoutConstants } from '../common/constants/LayoutConstants';
 import { paletteExportSnapshotFromVm } from '../export/PaletteShareActions';
 import type { PaletteExportSnapshot } from '../export/PaletteShareActions';
 
@@ -65,14 +66,14 @@ export struct BottomActionsView {
       .width('100%')
       .padding({
         top: 16,
-        left: 24,
-        right: 24,
+        left: LayoutConstants.PAGE_HORIZONTAL_VP,
+        right: LayoutConstants.PAGE_HORIZONTAL_VP,
         bottom: 32 + this.bottomGestureInsetVp
       })
-      .backgroundColor('rgba(249, 248, 246, 0.75)')
+      .backgroundColor(DesignTokens.SURFACE_FROSTED)
       .backdropBlur(20)
       .borderWidth({ top: 1 })
-      .borderColor('rgba(0, 0, 0, 0.03)')
+      .borderColor(DesignTokens.BORDER_SUBTLE)
     }
     .width('100%')
     .backgroundColor(DesignTokens.BG_PAGE)
