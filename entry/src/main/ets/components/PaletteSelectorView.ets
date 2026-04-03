@@ -13,6 +13,10 @@ export struct PaletteSelectorView {
   onFineTune: () => void = () => {
   };
 
+  private actionPreviewColors(): string[] {
+    return this.vm.getHeroColorStrings();
+  }
+
   build() {
     Column() {
       Text(this.vm.getUiStrings().curatedTitle)
@@ -24,67 +28,6 @@ export struct PaletteSelectorView {
         .width('100%')
         .textAlign(TextAlign.Start)
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
-
-      Row({ space: 10 }) {
-        Column({ space: 2 }) {
-          Text(this.vm.getUiStrings().randomPalette)
-            .fontSize(13)
-            .fontWeight(FontWeight.Medium)
-            .fontColor(DesignTokens.TEXT_MAIN)
-          Text(this.vm.getUiStrings().randomPaletteHint)
-            .fontSize(9)
-            .fontColor(DesignTokens.TEXT_MUTED)
-            .maxLines(1)
-            .textOverflow({ overflow: TextOverflow.Ellipsis })
-        }
-        .alignItems(HorizontalAlign.Center)
-        .justifyContent(FlexAlign.Center)
-        .height(48)
-        .layoutWeight(1)
-        .backgroundColor(DesignTokens.SURFACE_CARD)
-        .borderRadius(24)
-        .shadow({ radius: 12, color: 'rgba(0, 0, 0, 0.03)', offsetY: 4 })
-        .onClick(() => {
-          this.onRandom();
-        })
-
-        Column() {
-          Text(this.vm.getUiStrings().yesterdayOutfit)
-            .fontSize(13)
-            .fontWeight(FontWeight.Medium)
-            .fontColor(DesignTokens.TEXT_MAIN)
-        }
-        .alignItems(HorizontalAlign.Center)
-        .justifyContent(FlexAlign.Center)
-        .height(48)
-        .padding({ left: 20, right: 20 })
-        .backgroundColor(DesignTokens.SURFACE_CARD)
-        .borderRadius(24)
-        .shadow({ radius: 12, color: 'rgba(0, 0, 0, 0.03)', offsetY: 4 })
-        .onClick(() => {
-          this.onYesterday();
-        })
-
-        Column() {
-          Text(this.vm.getUiStrings().fineTune)
-            .fontSize(13)
-            .fontWeight(FontWeight.Medium)
-            .fontColor(DesignTokens.TEXT_MAIN)
-        }
-        .alignItems(HorizontalAlign.Center)
-        .justifyContent(FlexAlign.Center)
-        .height(48)
-        .padding({ left: 20, right: 20 })
-        .backgroundColor(DesignTokens.SURFACE_CARD)
-        .borderRadius(24)
-        .shadow({ radius: 12, color: 'rgba(0, 0, 0, 0.03)', offsetY: 4 })
-        .onClick(() => {
-          this.onFineTune();
-        })
-      }
-      .width('100%')
-      .alignItems(VerticalAlign.Center)
-      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP, bottom: 16 })
 
       Scroll() {
         Row({ space: 16 }) {
@@ -146,6 +89,108 @@ export struct PaletteSelectorView {
       .scrollable(ScrollDirection.Horizontal)
       .scrollBar(BarState.Off)
       .width('100%')
+
+      Column({ space: 10 }) {
+        Button({ type: ButtonType.Normal, stateEffect: true }) {
+          Row({ space: 14 }) {
+            Column({ space: 4 }) {
+              Text(this.vm.getUiStrings().randomPalette)
+                .fontSize(15)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(DesignTokens.TEXT_MAIN)
+
+              Text(this.vm.getUiStrings().randomPaletteHint)
+                .fontSize(10)
+                .fontColor(DesignTokens.TEXT_MUTED)
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+            }
+            .layoutWeight(1)
+            .alignItems(HorizontalAlign.Start)
+
+            Column({ space: 8 }) {
+              Row() {
+                Row()
+                  .layoutWeight(3)
+                  .height('100%')
+                  .backgroundColor(this.actionPreviewColors()[0])
+                  .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
+                Row()
+                  .layoutWeight(2)
+                  .height('100%')
+                  .backgroundColor(this.actionPreviewColors()[1])
+                  .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
+                Row()
+                  .layoutWeight(1)
+                  .height('100%')
+                  .backgroundColor(this.actionPreviewColors()[2])
+                  .animation({ duration: this.vm.reduceMotion ? 1 : 600, curve: Curve.EaseInOut })
+              }
+              .width(84)
+              .height(12)
+              .borderRadius(2)
+              .clip(true)
+
+              Divider()
+                .strokeWidth(1)
+                .color('rgba(0, 0, 0, 0.06)')
+                .vertical(false)
+                .width(84)
+            }
+            .alignItems(HorizontalAlign.End)
+            .justifyContent(FlexAlign.Center)
+          }
+          .width('100%')
+          .padding({ left: 16, right: 16, top: 14, bottom: 14 })
+        }
+        .width('100%')
+        .backgroundColor(DesignTokens.SURFACE_CARD)
+        .borderRadius(2)
+        .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+        .shadow({ radius: 10, color: 'rgba(0, 0, 0, 0.02)', offsetY: 4 })
+        .onClick(() => {
+          this.onRandom();
+        })
+
+        Row({ space: 10 }) {
+          Button({ type: ButtonType.Normal, stateEffect: true }) {
+            Text(this.vm.getUiStrings().yesterdayOutfit)
+              .fontSize(13)
+              .fontWeight(FontWeight.Medium)
+              .fontColor(DesignTokens.TEXT_MAIN)
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+          }
+          .layoutWeight(1)
+          .height(44)
+          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .borderRadius(2)
+          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .onClick(() => {
+            this.onYesterday();
+          })
+
+          Button({ type: ButtonType.Normal, stateEffect: true }) {
+            Text(this.vm.getUiStrings().fineTune)
+              .fontSize(13)
+              .fontWeight(FontWeight.Medium)
+              .fontColor(DesignTokens.TEXT_MAIN)
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+          }
+          .layoutWeight(1)
+          .height(44)
+          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .borderRadius(2)
+          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .onClick(() => {
+            this.onFineTune();
+          })
+        }
+      }
+      .width('100%')
+      .alignItems(HorizontalAlign.Start)
+      .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP, top: 18, bottom: 16 })
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
