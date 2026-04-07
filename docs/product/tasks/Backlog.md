@@ -83,10 +83,10 @@
 
 ## 建议捞取顺序（非强制）
 
-1. **BL-PRD-01～04**（商业化闭环，与 PRD MVP 验收一致）  
-2. ~~**BL-BR-01、BL-BR-02**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
-3. ~~**iteration-03：BL-ENG-01 / 02、BL-DOC-01 / 02 / 03**~~ → 已纳入 [**iteration-03**](./iteration-03.md) · **Done**  
-4. **BL-BR-03**（精调主路径升级，可在 iteration-03 后单独立项）  
-5. ~~**BL-BR-04～06**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
-6. **iteration-04：BL-REL-01、BL-ADAPT-01 / 02、BL-BRAND-01 / 02**（先为上架、目标设备与品牌识别收敛基本盘，再继续功能扩展）  
+1. **iteration-04：BL-REL-01、BL-BRAND-02、BL-BRAND-01、BL-ADAPT-01 / 02**（先消化短链路上架风险与品牌基础问题，再补设备适配）  
+2. **BL-BR-03**（精调主路径升级，可在 iteration-04 后单独立项）  
+3. **BL-PRD-01～04**（商业化闭环；依赖链路长，待当前发布准备与基础体验收敛后再集中推进）  
+4. ~~**BL-BR-01、BL-BR-02**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
+5. ~~**iteration-03：BL-ENG-01 / 02、BL-DOC-01 / 02 / 03**~~ → 已纳入 [**iteration-03**](./iteration-03.md) · **Done**  
+6. ~~**BL-BR-04～06**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
 7. 其余按资源与版本节奏从本节与 §3 挑选  

@@ -46,4 +46,4 @@
 ## 6. 参考
 
 - 规划附录 B：`应用规划-今日穿搭色卡.md`  
-- PRD 验收：`../dev-docs/PRD.md` §7
+- PRD 验收：`../product/PRD.md` §7
