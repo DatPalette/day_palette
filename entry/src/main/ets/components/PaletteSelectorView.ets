@@ -10,8 +10,6 @@ export struct PaletteSelectorView {
   };
   onYesterday: () => void = () => {
   };
-  onSmartMatch: () => void = () => {
-  };
   onFineTune: () => void = () => {
   };
 
@@ -186,23 +184,6 @@ export struct PaletteSelectorView {
           .hitTestBehavior(this.yesterdayEnabled() ? HitTestMode.Default : HitTestMode.None)
           .onClick(() => {
             this.onYesterday();
-          })
-
-          Button({ type: ButtonType.Normal, stateEffect: true }) {
-            Text(this.vm.getUiStrings().smartMatch)
-              .fontSize(13)
-              .fontWeight(FontWeight.Medium)
-              .fontColor(DesignTokens.TEXT_MAIN)
-              .maxLines(1)
-              .textOverflow({ overflow: TextOverflow.Ellipsis })
-          }
-          .layoutWeight(1)
-          .height(42)
-          .backgroundColor(DesignTokens.SURFACE_CARD)
-          .borderRadius(2)
-          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
-          .onClick(() => {
-            this.onSmartMatch();
           })
 
           Button({ type: ButtonType.Normal, stateEffect: true }) {

@@ -27,7 +27,7 @@
 |-----|------|----------|---------|--------|-------------------|------|
 | BL-BR-01 | Task | P1 | **提升「随机、精调、昨日」入口视觉权重** | Brainstorming T-01 | 保存/分享不动；更易发现与点击；对齐设计系统 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-02 | Task | P1 | **「随机」文案改为「随机选」等** | Brainstorming T-02 | 中英文案与真实行为一致；`LocaleData` 等 | → [**iteration-02**](./iteration-02.md) · **Done** |
-| BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | → [**iteration-05**](./iteration-05.md) |
+| BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | Backlog（2026-04-07 回退：当前搭配质量与 UI 交互未达标，用户侧入口已屏蔽） |
 | BL-BR-04 | Task | P2 | **出图/分享色卡版式升级** | Brainstorming T-04 | 免费模板边界遵守 PRD | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-05 | Task | P2 | **Hero 区三色呈现优化** | Brainstorming T-05 | 比例/圆角/动效遵守「减少动效」 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-06 | Task | P2 | **顶栏微缩预览优化** | Brainstorming T-06 | 与主界面配色语言一致、可读 | → [**iteration-02**](./iteration-02.md) · **Done** |
@@ -43,6 +43,7 @@
 	- 数据：主色候选池分层、场景标签与安全等级字段、`LocaleData.ets -> JSON / catalog` 读取过渡。  
 	- 规则：第一版硬规则、软规则、排序与兜底、`Citywalk 拍照 / 公园出片 / 国风新中式` 三类场景策略。  
 	- UI：智能配主路径入口、结果卡片解释层、可展开完整微调、异常与空状态提示。  
+- `BL-BR-03` 已于 2026-04-07 暂停对外投放：保留已完成的数据与规则底座，但当前搭配质量与 UI 交互未达到上线标准，首页“扩展搭配”入口已先行屏蔽，后续继续留在 Backlog 评估恢复时机。  
 - `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。  
 - `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
 - 以上增补来源见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)、[`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md)、[`../strategy/conservative-smart-matching-strategy.md`](../strategy/conservative-smart-matching-strategy.md)。
