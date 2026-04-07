@@ -22,10 +22,9 @@
 
 当前特点：
 
-- `Occasion` 与 `Palette` 数据直接硬编码在 `LocaleData.ets` 中。  
-- 中英双语各维护一套 `occasions + palettes` 数据。  
-- `DayPaletteViewModel` 通过 `getLocaleBundle()` 直接读取这些数据。  
-- 当前还没有独立的 JSON 资源文件、数据加载器或远端覆盖层。
+- 历史真相源是 `LocaleData.ets` 中的硬编码 `Occasion + Palette`。  
+- 当前阶段 0 已开始引入本地 `rawfile` 结构化 JSON 与 `catalog` 加载层。  
+- `DayPaletteViewModel` 仍通过 `getLocaleBundle()` 消费数据，但 `LocaleData.ets` 已支持“优先读 catalog，失败再回退硬编码”。
 
 这意味着：
 
@@ -60,38 +59,43 @@
 
 ## 4. 建议的真实文件落点
 
-### 4.1 资源文件目录
+### 4.1 当前已落地资源目录
 
-建议新增目录：
+当前已落地目录：
 
 - `entry/src/main/resources/base/rawfile/palette-data/`
+- `entry/src/main/resources/base/rawfile/palette-data/locale/`
+- `entry/src/main/resources/base/rawfile/i18n/ui/`
 
-建议首批文件：
+当前已落地文件：
 
 - `entry/src/main/resources/base/rawfile/palette-data/base-colors.v1.json`  
 - `entry/src/main/resources/base/rawfile/palette-data/palettes.v1.json`  
 - `entry/src/main/resources/base/rawfile/palette-data/collections.v1.json`  
 - `entry/src/main/resources/base/rawfile/palette-data/locale/zh-CN.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/locale/en-US.v1.json`
+- `entry/src/main/resources/base/rawfile/palette-data/locale/en-US.v1.json`  
+- `entry/src/main/resources/base/rawfile/i18n/ui/zh-CN.v1.json`  
+- `entry/src/main/resources/base/rawfile/i18n/ui/en-US.v1.json`
 
 说明：
 
 - `base-colors / palettes / collections` 放结构化业务数据。  
-- `locale/*.json` 放显示文案，如场景 label/title、palette 名称/描述、collection 名称/描述。  
-- 这样可以避免未来继续维护两套完整的中英文 palette 实体。
+- `palette-data/locale/*.json` 只放**内容文案**，如场景 label/title、palette 名称与描述。  
+- `i18n/ui/*.json` 只放**纯 UI 文案**，如按钮、设置项、错误提示。  
+- 这样可以把产品界面文案与配色资产内容文案拆开，便于后续分别管理与远端覆盖。
 
 ### 4.2 ArkTS 类型与加载层
 
-建议后续新增目录：
+当前已落地目录：
 
 - `entry/src/main/ets/model/catalog/`
 
-建议文件：
+当前已落地文件：
 
-- `ColorCatalogTypes.ets`：定义 `BaseColorItem / PaletteItem / CollectionItem / LocaleCatalogText`  
-- `ColorCatalogLoader.ets`：读取 `rawfile` 下 JSON 并做基础校验  
-- `ColorCatalogRepository.ets`：向 `ViewModel` 暴露统一查询接口  
-- `ColorCatalogMapper.ets`：把 JSON 映射到当前 UI 需要的 `Occasion / Palette` 等结构
+- `ColorCatalogTypes.ets`：定义 `UiCatalogFile / BaseColorCatalogFile / PaletteCatalogFile / CollectionCatalogFile / LocaleContentCatalogFile`  
+- `ColorCatalogLoader.ets`：读取 `rawfile` 下 JSON 并做基础解析  
+- `ColorCatalogRepository.ets`：按语言组合 `base-colors + palettes + ui + locale-content` 形成 `LocaleBundle`  
+- `ColorCatalogMapper.ets`：把结构化资产映射回当前 UI 仍在使用的 `Occasion / Palette` 结构
 
 ---
 
@@ -106,12 +110,13 @@
 
 过渡期不强行重写 UI 组件，可以先保持 `ViewModel` 面向当前模型，新增一个“目录仓库 -> 当前 UI 模型”的映射层。
 
-建议映射方式：
+当前映射方式：
 
 1. `base-colors.v1.json` 提供颜色原子层。  
-2. `palettes.v1.json` 提供 `primaryColorId / secondaryColorId / accentColorId` 等结构。  
-3. `locale/*.json` 提供 `name / desc / label / title` 等显示文本。  
-4. `ColorCatalogMapper.ets` 最终把它们组装成当前 UI 仍可直接消费的：
+2. `palettes.v1.json` 提供 `primaryColorId / secondaryColorId / accentColorId`、标签和状态等结构。  
+3. `palette-data/locale/*.json` 提供场景与 palette 的内容文案。  
+4. `i18n/ui/*.json` 提供纯 UI 文案。  
+5. `ColorCatalogMapper.ets` 最终把它们组装成当前 UI 仍可直接消费的：
    - `Palette.colors = [primaryHex, secondaryHex, accentHex]`
    - `Occasion.label / title`
    - `Occasion.palettes`
@@ -128,12 +133,17 @@
 
 ### 6.1 阶段 0：纯本地资源
 
-运行时只读取 `rawfile/palette-data/*.json`。
+当前阶段 0 运行时读取：
+
+- `rawfile/palette-data/*.json`
+- `rawfile/palette-data/locale/*.json`
+- `rawfile/i18n/ui/*.json`
 
 特点：
 
 - 改数据仍需发版。  
-- 但已经摆脱 ArkTS 硬编码，后续迁移成本下降。
+- 但已经摆脱“所有内容都堆在 ArkTS 硬编码里”的旧形态。  
+- `LocaleData.ets` 当前保留 fallback，可在本地 catalog 读取失败时回退到原硬编码 bundle。
 
 ### 6.2 阶段 1：本地基础库 + 远端覆盖
 
@@ -162,7 +172,7 @@
 
 1. 先补类型文档和 JSON 资源结构。  
 2. 再把 `LocaleData.ets` 中的 palette 数据迁移到 `rawfile`。  
-3. 暂时保留 UI 文案在 `LocaleData.ets`，或同步拆到 `locale/*.json`。  
+3. 将纯 UI 文案与内容文案分层，避免混在同一 locale 文件里。  
 4. 新增加载器和映射层。  
 5. 等本地文件化稳定后，再决定是否引入远端覆盖。
 
@@ -174,21 +184,22 @@
 
 | 目标 | 当前位置 | 建议位置 |
 |------|----------|----------|
-| UI 文案 | `entry/src/main/ets/model/LocaleData.ets` | 短期保留；中期可迁到 `locale/*.json` |
-| 场景结构 | `entry/src/main/ets/model/LocaleData.ets` | `rawfile/palette-data/locale/*.json` + mapper |
-| 配色盘结构 | `entry/src/main/ets/model/LocaleData.ets` | `rawfile/palette-data/palettes.v1.json` |
-| 基础单色库 | 尚未存在 | `rawfile/palette-data/base-colors.v1.json` |
-| 专题合集 | 尚未存在 | `rawfile/palette-data/collections.v1.json` |
-| 数据加载逻辑 | `LocaleData.ets` 内直接返回 | `entry/src/main/ets/model/catalog/ColorCatalogLoader.ets` |
-| ViewModel 查询入口 | `getLocaleBundle()` | `ColorCatalogRepository + mapper` |
+| UI 文案 | `entry/src/main/ets/model/LocaleData.ets` 旧硬编码 | `rawfile/i18n/ui/*.json` |
+| 场景内容文案 | `entry/src/main/ets/model/LocaleData.ets` 旧硬编码 | `rawfile/palette-data/locale/*.json` |
+| 配色盘结构 | `entry/src/main/ets/model/LocaleData.ets` 旧硬编码 | `rawfile/palette-data/palettes.v1.json` |
+| 基础单色库 | 已落地 | `rawfile/palette-data/base-colors.v1.json` |
+| 专题合集 | 已落地 | `rawfile/palette-data/collections.v1.json` |
+| 数据加载逻辑 | `LocaleData.ets` 旧硬编码直返 | `entry/src/main/ets/model/catalog/ColorCatalogLoader.ets` |
+| ViewModel 查询入口 | `getLocaleBundle()` | `ColorCatalogRepository + mapper + LocaleData fallback` |
 
 ---
 
 ## 9. 暂定结论
 
-当前最合理的“真实数据文件方案”不是直接上 CMS，而是：
+当前已落地的阶段 0 方案是：
 
-- 先把 `LocaleData.ets` 中的硬编码 palette 数据迁移到 `rawfile/palette-data/*.json`。  
-- 通过 ArkTS 的 `catalog` 加载层映射回当前 UI 结构。  
-- 让本地 JSON 资源成为远端覆盖之前的稳定中间层。  
-- 等内容更新频率真的起来后，再决定是否做远端 JSON 覆盖或 CMS。
+- 将配色资产拆成 `base-colors / palettes / collections` 三层 JSON。  
+- 将纯 UI 文案与配色内容文案拆成两层本地化文件。  
+- 通过 ArkTS `catalog` 加载层映射回当前 UI 结构。  
+- 暂时保留 `LocaleData.ets` 作为 fallback，降低迁移风险。  
+- 等本地结构稳定后，再决定是否进入远端 JSON 覆盖。

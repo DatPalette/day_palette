@@ -61,9 +61,9 @@
 
 可整体塞进 `ext`，待功能立项再规范化。
 
-## 4. 结构化配色资产（规划）
+## 4. 结构化配色资产（已进入阶段 0）
 
-为支持专题策展、智能配和后续可能的数据远端覆盖，建议把配色数据从当前 `LocaleData.ets` 的硬编码结构，演进为三层资产：
+为支持专题策展、智能配和后续可能的数据远端覆盖，当前已开始把配色数据从 `LocaleData.ets` 的硬编码结构迁移为三层资产：
 
 ### 4.1 BaseColorItem
 
@@ -113,7 +113,7 @@
 }
 ```
 
-### 4.4 文件落点（建议）
+### 4.4 文件落点（当前已落地）
 
 - `entry/src/main/resources/base/rawfile/palette-data/base-colors.v1.json`  
 - `entry/src/main/resources/base/rawfile/palette-data/palettes.v1.json`  
@@ -121,11 +121,25 @@
 - `entry/src/main/resources/base/rawfile/palette-data/locale/zh-CN.v1.json`  
 - `entry/src/main/resources/base/rawfile/palette-data/locale/en-US.v1.json`
 
-### 4.5 兼容原则
+### 4.5 UI 文案与内容文案分层（当前已落地）
+
+纯 UI 国际化文案与配色内容文案当前已分开：
+
+- `entry/src/main/resources/base/rawfile/i18n/ui/zh-CN.v1.json`
+- `entry/src/main/resources/base/rawfile/i18n/ui/en-US.v1.json`
+
+这样可以保证：
+
+1. UI 设置项、按钮、错误提示与内容资产文案解耦。
+2. 后续远端覆盖可只更新内容层，不必默认动 UI 文案层。
+3. 内容管理和产品国际化可以分别演进。
+
+### 4.6 兼容原则
 
 1. 本地 `rawfile` 资源是默认真相源。  
 2. 即使后续支持远端 JSON 覆盖，结构也应与本地文件兼容。  
-3. 当前 UI 仍可通过 mapper 映射回 `Occasion / Palette` 旧模型，降低重构风险。
+3. 当前 UI 仍通过 `ColorCatalogMapper` 映射回 `Occasion / Palette` 旧模型，降低重构风险。  
+4. `LocaleData.ets` 当前保留 fallback bundle，用于 catalog 读取失败时回退。
 
 ## 5. 修订
 
@@ -133,3 +147,4 @@
 
 - 2026-04-03：新增“昨日”轻量快照槽位说明；明确不做按日历史，仅维护 today draft 与 yesterday snapshot。
 - 2026-04-07：补充配色资产三层模型与建议文件落点；为结构化 JSON 资源与后续远端覆盖预留边界。
+- 2026-04-07：阶段 0 开始落地 `base-colors / palettes / collections` 三层本地资源，并将 UI 文案从内容 locale 中拆分到 `rawfile/i18n/ui/*.json`。
