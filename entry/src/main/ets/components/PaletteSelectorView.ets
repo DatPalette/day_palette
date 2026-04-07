@@ -10,6 +10,8 @@ export struct PaletteSelectorView {
   };
   onYesterday: () => void = () => {
   };
+  onSmartMatch: () => void = () => {
+  };
   onFineTune: () => void = () => {
   };
 
@@ -187,6 +189,23 @@ export struct PaletteSelectorView {
           })
 
           Button({ type: ButtonType.Normal, stateEffect: true }) {
+            Text(this.vm.getUiStrings().smartMatch)
+              .fontSize(13)
+              .fontWeight(FontWeight.Medium)
+              .fontColor(DesignTokens.TEXT_MAIN)
+              .maxLines(1)
+              .textOverflow({ overflow: TextOverflow.Ellipsis })
+          }
+          .layoutWeight(1)
+          .height(42)
+          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .borderRadius(2)
+          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .onClick(() => {
+            this.onSmartMatch();
+          })
+
+          Button({ type: ButtonType.Normal, stateEffect: true }) {
             Text(this.vm.getUiStrings().fineTune)
               .fontSize(13)
               .fontWeight(FontWeight.Medium)
@@ -203,6 +222,7 @@ export struct PaletteSelectorView {
             this.onFineTune();
           })
         }
+
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)

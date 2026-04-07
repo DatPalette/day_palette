@@ -10,6 +10,7 @@ import { PaletteSelectorView } from '../components/PaletteSelectorView';
 import { BottomActionsView } from '../components/BottomActionsView';
 import { SettingsPanelView } from '../components/SettingsPanelView';
 import { FineTuneSheet } from '../components/FineTuneSheet';
+import { SmartMatchSheet } from '../components/SmartMatchSheet';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { LayoutConstants } from '../common/constants/LayoutConstants';
 import {
@@ -32,6 +33,7 @@ struct Index {
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
   @State fineTuneOpen: boolean = false;
+  @State smartMatchOpen: boolean = false;
   /** 底部导航指示条 / 手势区高度（vp），用于底栏内边距与主列表底部留白 */
   @State bottomGestureInsetVp: number = 0;
   private localeEventHandler: (() => void) | undefined = undefined;
@@ -234,6 +236,9 @@ struct Index {
                 this.showToastMsg(this.vm.getUiStrings().yesterdayEmpty);
               }
             },
+            onSmartMatch: () => {
+              this.smartMatchOpen = true;
+            },
             onFineTune: () => {
               this.fineTuneOpen = true;
             }
@@ -314,6 +319,20 @@ struct Index {
           .height('100%')
           .position({ top: 0, left: 0 })
           .zIndex(120)
+      }
+
+      if (this.smartMatchOpen) {
+        SmartMatchSheet({
+          vm: this.vm,
+          bottomGestureInsetVp: this.bottomGestureInsetVp,
+          onRequestClose: () => {
+            this.smartMatchOpen = false;
+          }
+        })
+          .width('100%')
+          .height('100%')
+          .position({ top: 0, left: 0 })
+          .zIndex(115)
       }
     }
     .width('100%')

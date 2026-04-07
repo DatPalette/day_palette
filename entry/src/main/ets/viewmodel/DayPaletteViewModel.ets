@@ -12,6 +12,7 @@ import type { Palette } from '../model/Palette';
 import type { PaletteColorProfile } from '../model/Palette';
 import { getSystemAppLanguage } from '../model/SystemLanguageResolver';
 import { buildSmartMatchCandidates, recommendSmartMatches } from '../model/smartmatch/SmartMatchEngine';
+import { preloadSmartMatchStrategy } from '../model/smartmatch/SmartMatchStrategyLoader';
 import type { SmartMatchCandidate, SmartMatchRecommendation } from '../model/smartmatch/SmartMatchTypes';
 import { DEFAULT_MINI_PREVIEW_STYLE, MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
@@ -67,7 +68,10 @@ export class DayPaletteViewModel {
   }
 
   async preloadLocaleCatalog(context: common.UIAbilityContext): Promise<void> {
-    await preloadLocaleBundles(context);
+    await Promise.all([
+      preloadLocaleBundles(context),
+      preloadSmartMatchStrategy(context)
+    ]);
     this.catalogRefreshTick += 1;
     this.applyResolvedLocale(this.currentLang, true);
   }

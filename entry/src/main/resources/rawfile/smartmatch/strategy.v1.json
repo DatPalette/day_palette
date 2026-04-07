@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-07T00:00:00Z",
+  "templates": {
+    "sceneMatch": {
+      "zh": "这套更适合{occasion}，整体偏{mood}。",
+      "en": "This set fits {occasion} with a {mood} feel."
+    },
+    "layerBalance": {
+      "zh": "辅色负责稳定层次，点缀色只做少量提气。",
+      "en": "The secondary holds the structure while the accent stays restrained."
+    },
+    "safeResult": {
+      "zh": "这套更稳妥，不容易出错。",
+      "en": "This option stays safer and easier to wear."
+    },
+    "styleHint": {
+      "zh": "整体更靠近{styleHint}这一路线。",
+      "en": "The overall direction leans closer to {styleHint}."
+    }
+  },
+  "fallbackScene": {
+    "tabooFamilies": [],
+    "mood": {
+      "zh": "稳妥耐看",
+      "en": "safe and wearable"
+    }
+  },
+  "scenes": {
+    "workday": {
+      "tabooFamilies": ["orange", "red", "purple"],
+      "mood": {
+        "zh": "稳妥利落",
+        "en": "polished and steady"
+      }
+    },
+    "weekend": {
+      "tabooFamilies": [],
+      "mood": {
+        "zh": "轻松有气色",
+        "en": "light and easy"
+      }
+    },
+    "outdoor": {
+      "tabooFamilies": ["purple", "red"],
+      "mood": {
+        "zh": "轻盈自然",
+        "en": "airy and natural"
+      }
+    },
+    "dinner": {
+      "tabooFamilies": ["green"],
+      "mood": {
+        "zh": "克制有层次",
+        "en": "layered and restrained"
+      }
+    }
+  }
+}

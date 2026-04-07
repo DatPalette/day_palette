@@ -39,6 +39,13 @@ export interface UiStrings {
   randomPalette: string;
   /** 副文案：说明行为边界，字号更小，与主文案同列展示。 */
   randomPaletteHint: string;
+  smartMatch: string;
+  smartMatchTitle: string;
+  smartMatchHint: string;
+  smartMatchApply: string;
+  smartMatchApplied: string;
+  smartMatchEmpty: string;
+  smartMatchSource: string;
   yesterdayOutfit: string;
   fineTune: string;
   fineTuneTitle: string;

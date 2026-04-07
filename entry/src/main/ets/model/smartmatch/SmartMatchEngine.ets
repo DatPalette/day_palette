@@ -1,6 +1,13 @@
 import { AppLanguage } from '../AppLanguage';
 import type { Collection } from '../Collection';
 import type { Palette, PaletteColorProfile } from '../Palette';
+import { getSmartMatchStrategy } from './SmartMatchStrategyLoader';
+import type {
+  SmartMatchLocalizedText,
+  SmartMatchSceneStrategy,
+  SmartMatchStrategyFile,
+  SmartMatchTemplateReplacement
+} from './SmartMatchStrategyTypes';
 import type {
   SmartMatchCandidate,
   SmartMatchInput,
@@ -16,48 +23,49 @@ interface ScoredCandidate {
 
 const DEFAULT_SAFETY_PREFERENCE: string = 'balanced';
 
+function getDefaultLocalizedText(zh: string, en: string): SmartMatchLocalizedText {
+  return { zh, en };
+}
+
+function getFallbackSceneStrategy(): SmartMatchSceneStrategy {
+  return {
+    tabooFamilies: [],
+    mood: getDefaultLocalizedText('稳妥耐看', 'safe and wearable')
+  };
+}
+
+function getStrategy(): SmartMatchStrategyFile | null {
+  return getSmartMatchStrategy();
+}
+
+function resolveLocalizedText(lang: AppLanguage, text: SmartMatchLocalizedText): string {
+  return lang === AppLanguage.ZH ? text.zh : text.en;
+}
+
+function applyTemplate(template: string, replacements: SmartMatchTemplateReplacement[]): string {
+  let result: string = template;
+  for (let i = 0; i < replacements.length; i++) {
+    const replacement: SmartMatchTemplateReplacement = replacements[i];
+    const token: string = `{${replacement.key}}`;
+    result = result.replace(token, replacement.value);
+  }
+  return result;
+}
+
+function getSceneStrategy(occasionId: string): SmartMatchSceneStrategy {
+  const strategy: SmartMatchStrategyFile | null = getStrategy();
+  if (strategy === null) {
+    return getFallbackSceneStrategy();
+  }
+  return strategy.scenes[occasionId] ?? strategy.fallbackScene;
+}
+
 function getOccasionTabooFamilies(occasionId: string): string[] {
-  if (occasionId === 'workday') {
-    return ['orange', 'red', 'purple'];
-  }
-  if (occasionId === 'outdoor') {
-    return ['purple', 'red'];
-  }
-  if (occasionId === 'dinner') {
-    return ['green'];
-  }
-  return [];
+  return getSceneStrategy(occasionId).tabooFamilies;
 }
 
 function getOccasionMood(lang: AppLanguage, occasionId: string): string {
-  if (lang === AppLanguage.ZH) {
-    if (occasionId === 'workday') {
-      return '稳妥利落';
-    }
-    if (occasionId === 'weekend') {
-      return '轻松有气色';
-    }
-    if (occasionId === 'outdoor') {
-      return '轻盈自然';
-    }
-    if (occasionId === 'dinner') {
-      return '克制有层次';
-    }
-    return '稳妥耐看';
-  }
-  if (occasionId === 'workday') {
-    return 'polished and steady';
-  }
-  if (occasionId === 'weekend') {
-    return 'light and easy';
-  }
-  if (occasionId === 'outdoor') {
-    return 'airy and natural';
-  }
-  if (occasionId === 'dinner') {
-    return 'layered and restrained';
-  }
-  return 'safe and wearable';
+  return resolveLocalizedText(lang, getSceneStrategy(occasionId).mood);
 }
 
 function normalizePaletteTags(tags?: string[]): string[] {
@@ -114,6 +122,17 @@ function isRejectedByHardRules(input: SmartMatchInput, candidate: SmartMatchCand
 }
 
 function buildSceneReason(input: SmartMatchInput): SmartMatchReason {
+  const strategy: SmartMatchStrategyFile | null = getStrategy();
+  if (strategy !== null) {
+    const replacements: SmartMatchTemplateReplacement[] = [
+      { key: 'occasion', value: input.occasionLabel },
+      { key: 'mood', value: getOccasionMood(input.lang, input.occasionId) }
+    ];
+    return {
+      code: 'scene_match',
+      text: applyTemplate(resolveLocalizedText(input.lang, strategy.templates.sceneMatch), replacements)
+    };
+  }
   if (input.lang === AppLanguage.ZH) {
     return {
       code: 'scene_match',
@@ -127,6 +146,13 @@ function buildSceneReason(input: SmartMatchInput): SmartMatchReason {
 }
 
 function buildLayerReason(lang: AppLanguage): SmartMatchReason {
+  const strategy: SmartMatchStrategyFile | null = getStrategy();
+  if (strategy !== null) {
+    return {
+      code: 'layer_balance',
+      text: resolveLocalizedText(lang, strategy.templates.layerBalance)
+    };
+  }
   if (lang === AppLanguage.ZH) {
     return {
       code: 'layer_balance',
@@ -140,6 +166,13 @@ function buildLayerReason(lang: AppLanguage): SmartMatchReason {
 }
 
 function buildSafeReason(lang: AppLanguage): SmartMatchReason {
+  const strategy: SmartMatchStrategyFile | null = getStrategy();
+  if (strategy !== null) {
+    return {
+      code: 'safe_result',
+      text: resolveLocalizedText(lang, strategy.templates.safeResult)
+    };
+  }
   if (lang === AppLanguage.ZH) {
     return {
       code: 'safe_result',
@@ -153,6 +186,16 @@ function buildSafeReason(lang: AppLanguage): SmartMatchReason {
 }
 
 function buildStyleReason(lang: AppLanguage, styleHint: string): SmartMatchReason {
+  const strategy: SmartMatchStrategyFile | null = getStrategy();
+  if (strategy !== null) {
+    const replacements: SmartMatchTemplateReplacement[] = [
+      { key: 'styleHint', value: styleHint }
+    ];
+    return {
+      code: 'style_hint',
+      text: applyTemplate(resolveLocalizedText(lang, strategy.templates.styleHint), replacements)
+    };
+  }
   if (lang === AppLanguage.ZH) {
     return {
       code: 'style_hint',
