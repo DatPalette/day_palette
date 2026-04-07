@@ -170,7 +170,7 @@ entry/src/main/ets/
 
 下一阶段建议演进为：
 
-1. 把 palette 相关结构化数据迁移到 `entry/src/main/resources/base/rawfile/palette-data/*.json`。  
+1. 把 palette 相关结构化数据迁移到 `entry/src/main/resources/rawfile/palette-data/*.json`。  
 2. 在 `entry/src/main/ets/model/catalog/` 下新增加载器、仓库与 mapper，把 JSON 映射回当前 UI 仍可消费的 `Occasion / Palette` 结构。  
 3. 先完成“硬编码 ArkTS -> 本地 JSON 资源”的文件化，再决定是否进入“本地基础库 + 远端 JSON 覆盖”。
 

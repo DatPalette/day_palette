@@ -220,23 +220,25 @@ const ZH_BUNDLE: LocaleBundle = {
   occasions: ZH_OCCASIONS
 };
 
-const loadedBundles: Partial<Record<AppLanguage, LocaleBundle>> = {};
+const loadedBundles: Map<AppLanguage, LocaleBundle> = new Map<AppLanguage, LocaleBundle>();
 
 export async function preloadLocaleBundles(context: common.UIAbilityContext): Promise<void> {
-  const [zh, en] = await Promise.all([
+  const results = await Promise.all([
     loadLocaleBundleFromCatalog(context, AppLanguage.ZH),
     loadLocaleBundleFromCatalog(context, AppLanguage.EN)
   ]);
+  const zh: LocaleBundle | null = results[0];
+  const en: LocaleBundle | null = results[1];
   if (zh !== null) {
-    loadedBundles[AppLanguage.ZH] = zh;
+    loadedBundles.set(AppLanguage.ZH, zh);
   }
   if (en !== null) {
-    loadedBundles[AppLanguage.EN] = en;
+    loadedBundles.set(AppLanguage.EN, en);
   }
 }
 
 export function getLocaleBundle(lang: AppLanguage): LocaleBundle {
-  const loaded: LocaleBundle | undefined = loadedBundles[lang];
+  const loaded: LocaleBundle | undefined = loadedBundles.get(lang);
   if (loaded !== undefined) {
     return loaded;
   }

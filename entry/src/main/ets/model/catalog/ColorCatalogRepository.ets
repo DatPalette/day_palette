@@ -16,12 +16,16 @@ export async function loadLocaleBundleFromCatalog(
     return cached;
   }
 
-  const [baseColorCatalog, paletteFile, uiFile, localeFile] = await Promise.all([
+  const results = await Promise.all([
     loadBaseColorCatalog(context),
     loadPaletteCatalog(context),
     loadUiCatalog(context, lang),
     loadLocaleCatalog(context, lang)
   ]);
+  const baseColorCatalog = results[0];
+  const paletteFile = results[1];
+  const uiFile = results[2];
+  const localeFile = results[3];
   if (baseColorCatalog === null || paletteFile === null || uiFile === null || localeFile === null) {
     return null;
   }

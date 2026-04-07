@@ -63,19 +63,19 @@
 
 当前已落地目录：
 
-- `entry/src/main/resources/base/rawfile/palette-data/`
-- `entry/src/main/resources/base/rawfile/palette-data/locale/`
-- `entry/src/main/resources/base/rawfile/i18n/ui/`
+- `entry/src/main/resources/rawfile/palette-data/`
+- `entry/src/main/resources/rawfile/palette-data/locale/`
+- `entry/src/main/resources/rawfile/i18n/ui/`
 
 当前已落地文件：
 
-- `entry/src/main/resources/base/rawfile/palette-data/base-colors.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/palettes.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/collections.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/locale/zh-CN.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/locale/en-US.v1.json`  
-- `entry/src/main/resources/base/rawfile/i18n/ui/zh-CN.v1.json`  
-- `entry/src/main/resources/base/rawfile/i18n/ui/en-US.v1.json`
+- `entry/src/main/resources/rawfile/palette-data/base-colors.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/palettes.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/collections.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/locale/zh-CN.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/locale/en-US.v1.json`  
+- `entry/src/main/resources/rawfile/i18n/ui/zh-CN.v1.json`  
+- `entry/src/main/resources/rawfile/i18n/ui/en-US.v1.json`
 
 说明：
 

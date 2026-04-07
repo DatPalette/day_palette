@@ -115,18 +115,18 @@
 
 ### 4.4 文件落点（当前已落地）
 
-- `entry/src/main/resources/base/rawfile/palette-data/base-colors.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/palettes.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/collections.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/locale/zh-CN.v1.json`  
-- `entry/src/main/resources/base/rawfile/palette-data/locale/en-US.v1.json`
+- `entry/src/main/resources/rawfile/palette-data/base-colors.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/palettes.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/collections.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/locale/zh-CN.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/locale/en-US.v1.json`
 
 ### 4.5 UI 文案与内容文案分层（当前已落地）
 
 纯 UI 国际化文案与配色内容文案当前已分开：
 
-- `entry/src/main/resources/base/rawfile/i18n/ui/zh-CN.v1.json`
-- `entry/src/main/resources/base/rawfile/i18n/ui/en-US.v1.json`
+- `entry/src/main/resources/rawfile/i18n/ui/zh-CN.v1.json`
+- `entry/src/main/resources/rawfile/i18n/ui/en-US.v1.json`
 
 这样可以保证：
 
