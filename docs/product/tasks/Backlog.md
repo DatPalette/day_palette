@@ -31,7 +31,7 @@
 | BL-BR-04 | Task | P2 | **出图/分享色卡版式升级** | Brainstorming T-04 | 免费模板边界遵守 PRD | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-05 | Task | P2 | **Hero 区三色呈现优化** | Brainstorming T-05 | 比例/圆角/动效遵守「减少动效」 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-06 | Task | P2 | **顶栏微缩预览优化** | Brainstorming T-06 | 与主界面配色语言一致、可读 | → [**iteration-02**](./iteration-02.md) · **Done** |
-| BL-BR-07 | Epic | P2 | **预置套组与场合扩容（目标百套+分期）** | Brainstorming T-07 | 内容生产节奏与 Pro 包边界 |
+| BL-BR-07 | Epic | P2 | **预置套组与场合扩容（目标百套+分期）** | Brainstorming T-07 | 首批专题方向、`Collection` 结构映射、内容扩容节奏与 Pro 包边界明确 |
 | BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 | → [**iteration-05**](./iteration-05.md) |
 | BL-BR-09 | Epic | P3 | **壁纸周边（非渐变/渐变/高级渐变 IAP）** | Brainstorming T-09 | 与 PRD 商业边界复核后立项 |
 | BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | → [**iteration-05**](./iteration-05.md) |
@@ -67,6 +67,26 @@
 |-----|------|------|---------|
 | BL-BR-07A | Collection | 首批专题策展落地 | 完成 `Citywalk 拍照 / 公园出片 / 国风新中式` 三个专题的基调、封面、palette 清单与说明文案 |
 | BL-BR-07B | Asset | 专题与 palette 关联规则 | 明确专题标签、排序、封面与复用边界，确保可映射到 `Collection` 数据结构 |
+
+建议验收：
+
+- 三个首批专题都具备可落库的 `Collection` 定义，而不是只停留在命名或方向描述。
+- 每个专题都至少明确：`nameZh/nameEn`、`themeType`、`descriptionZh`、`paletteIds`、`coverPaletteId`、`isPro`、`releaseMode`、`status`。
+- 每个专题都要补齐用于检索与复用的 `occasionTags/styleTags`，并与对应 `Palette` 的标签体系保持一致。
+- 允许一个 `Palette` 复用到多个专题，但同一发布周期内要控制重复曝光，避免三个专题看起来只是换标题。
+
+建议的 `Collection` 映射：
+
+| 专题方向 | 建议 `themeType` | 关键标签方向 | 最低落库要求 |
+|-----|------|------|---------|
+| `Citywalk 拍照` | `scene` | `occasionTags` 以城市漫游 / 轻拍照语义为主，`styleTags` 偏都市、清爽 | 至少有 1 个封面 palette 和 1 组可发布 `paletteIds` |
+| `公园出片` | `scene` | `occasionTags` 以户外 / 公园语义为主，`styleTags` 偏自然、轻盈 | 至少有 1 个封面 palette 和 1 组可发布 `paletteIds` |
+| `国风新中式` | `style` | `styleTags` 以东方、克制、新中式语义为主，必要时再补 `occasionTags` | 至少有 1 个封面 palette 和 1 组可发布 `paletteIds` |
+
+字段参考：
+
+- `Collection` 字段草表见 [`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md) §10.3。
+- 三层资产与 `CollectionItem` 结构示意见 [`../../architecture/data-model.md`](../../architecture/data-model.md) §4。
 
 ---
 
