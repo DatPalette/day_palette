@@ -25,7 +25,7 @@
 
 ## Git 提交规范
 
-为方便 **Cursor / Copilot / Codex / 其他 Agent** 统一遵守，本仓库约定提交时遵循以下规则；若 `.cursor/rules/git-commit-workflow.mdc` 存在更完整版本，以该文件为细则来源。
+为方便 **Cursor / Copilot / Codex / 其他 Agent** 统一遵守，本仓库约定提交时遵循以下规则；仓库公开版文档见 [`docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md`](docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md)，若 `.cursor/rules/git-commit-workflow.mdc` 存在更完整版本，以该文件为细则来源。
 
 - 用户明确要求“提交 / commit”后，先看 `git status`、`git diff` 与 `git diff --cached`，确认范围、无意外文件、无调试残留。  
 - 按**可独立回滚**拆分 commit；若同一轮同时改 `docs/` 与 `entry/`，默认优先 **先文档、后代码**。  
