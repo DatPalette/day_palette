@@ -2,11 +2,11 @@
   "string": [
     {
       "name": "module_desc",
-      "value": "module description"
+      "value": "Main application module for DayPalette."
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "Opens DayPalette and shows today's palette experience."
     },
     {
       "name": "EntryAbility_label",
@@ -26,11 +26,11 @@
     },
     {
       "name": "TodayOutfitFormAbility_label",
-      "value": "DayPalette form"
+      "value": "DayPalette widget"
     },
     {
       "name": "TodayOutfitFormAbility_desc",
-      "value": "Service widget for today's outfit colors"
+      "value": "Home screen widget for today's saved palette."
     }
   ]
 }
