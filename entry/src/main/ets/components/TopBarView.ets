@@ -37,7 +37,7 @@ export struct TopBarView {
       Row() {
         // 左侧：展开态日期 / 收缩态标题（同位叠放切换）
         Stack({ alignContent: Alignment.Start }) {
-          Text(this.vm.getUiStrings().date)
+          Text(this.vm.getTopBarDateLabel())
             .fontSize(22)
             .fontWeight(FontWeight.Medium)
             .fontColor(DesignTokens.TEXT_MAIN)

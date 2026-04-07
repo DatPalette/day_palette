@@ -60,6 +60,8 @@ export class DayPaletteViewModel {
   miniPreviewStyle: MiniPreviewStyle = DEFAULT_MINI_PREVIEW_STYLE;
   /** 本地 catalog 资源加载完成后递增，用于触发 UI 刷新。 */
   catalogRefreshTick: number = 0;
+  /** 当前系统日历日（YYYY-MM-DD），用于驱动 TopBar 日期展示。 */
+  currentCalendarDay: string = todayLocalYmd();
 
   private persistContext: common.UIAbilityContext | null = null;
 
@@ -82,6 +84,25 @@ export class DayPaletteViewModel {
 
   getUiStrings(): UiStrings {
     return this.getLocaleBundle().ui;
+  }
+
+  getTopBarDateLabel(): string {
+    const parts: string[] = this.currentCalendarDay.split('-');
+    if (parts.length !== 3) {
+      return this.getUiStrings().date;
+    }
+    const year: number = Number(parts[0]);
+    const month: number = Number(parts[1]);
+    const day: number = Number(parts[2]);
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+      return this.getUiStrings().date;
+    }
+    if (this.currentLang === AppLanguage.ZH) {
+      return `${year}年${month}月${day}日`;
+    }
+    const monthLabels: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthLabel: string = monthLabels[month - 1] ?? month.toString().padStart(2, '0');
+    return `${monthLabel} ${day.toString().padStart(2, '0')}, ${year}`;
   }
 
   getCollections(): Collection[] {
@@ -289,10 +310,11 @@ export class DayPaletteViewModel {
   }
 
   refreshCalendarDayBoundary(): void {
+    this.currentCalendarDay = todayLocalYmd();
     if (this.persistContext === null) {
       return;
     }
-    rollCalendarDayAndMaybeSnapshotYesterday(this.persistContext, todayLocalYmd());
+    rollCalendarDayAndMaybeSnapshotYesterday(this.persistContext, this.currentCalendarDay);
   }
 
   loadAccessibilityFromStorage(context: common.UIAbilityContext): void {
@@ -461,6 +483,7 @@ export class DayPaletteViewModel {
   /** 从本地恢复手动覆盖并应用当前有效语言（应在首屏 build 前调用）。 */
   loadLanguageFromStorage(context: common.UIAbilityContext): void {
     this.manualLanguage = readLanguageOverride(context);
+    this.currentCalendarDay = todayLocalYmd();
     const effective: AppLanguage = this.manualLanguage ?? getSystemAppLanguage();
     this.applyResolvedLocale(effective);
   }

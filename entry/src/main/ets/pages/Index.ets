@@ -36,6 +36,7 @@ struct Index {
   @State bottomGestureInsetVp: number = 0;
   private localeEventHandler: (() => void) | undefined = undefined;
   private appForegroundHandler: (() => void) | undefined = undefined;
+  private midnightRefreshTimerId: number | null = null;
   private bottomWindowRef: window.Window | undefined = undefined;
   private avoidAreaChangeHandler = (data: window.AvoidAreaOptions): void => {
     if (data.type === window.AvoidAreaType.TYPE_SYSTEM ||
@@ -60,10 +61,12 @@ struct Index {
     };
     this.appForegroundHandler = (): void => {
       this.vm.refreshCalendarDayBoundary();
+      this.scheduleMidnightRefresh();
     };
     ctx.eventHub.on(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
     ctx.eventHub.on(APP_FOREGROUND_EVENT, this.appForegroundHandler);
     this.attachBottomGestureInsetListener(ctx);
+    this.scheduleMidnightRefresh();
   }
 
   aboutToDisappear(): void {
@@ -77,6 +80,27 @@ struct Index {
       this.appForegroundHandler = undefined;
     }
     this.detachBottomGestureInsetListener();
+    this.clearMidnightRefreshTimer();
+  }
+
+  private clearMidnightRefreshTimer(): void {
+    if (this.midnightRefreshTimerId !== null) {
+      clearTimeout(this.midnightRefreshTimerId);
+      this.midnightRefreshTimerId = null;
+    }
+  }
+
+  private scheduleMidnightRefresh(): void {
+    this.clearMidnightRefreshTimer();
+    const now: Date = new Date();
+    const nextMidnight: Date = new Date(now.getTime());
+    nextMidnight.setHours(24, 0, 0, 0);
+    const delayMs: number = Math.max(1000, nextMidnight.getTime() - now.getTime() + 50);
+    this.midnightRefreshTimerId = setTimeout((): void => {
+      this.midnightRefreshTimerId = null;
+      this.vm.refreshCalendarDayBoundary();
+      this.scheduleMidnightRefresh();
+    }, delayMs);
   }
 
   private applyBottomGestureInsetFromWindow(win: window.Window): void {
