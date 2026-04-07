@@ -77,3 +77,8 @@
 - 已新增隐私政策底稿：[privacy-policy.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/privacy-policy.md)。
 - 已新增商店素材清单底稿：[app-store-assets-checklist.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/app-store-assets-checklist.md)。
 - 已修正发布检查文档中的旧 PRD 引用路径，并补入上述两份发布文档入口。
+
+## 8. 收口说明
+
+- 本轮自检到此按“短链路清理”目标收口，不继续扩展为完整提审准备。
+- 需要依赖大量功能完成后再判断的事项，如最终截图、宽屏验收、商店商业化材料，统一回到 Backlog，待后续功能开发基本结束后再集中处理。
