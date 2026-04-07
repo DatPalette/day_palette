@@ -61,25 +61,75 @@
 
 可整体塞进 `ext`，待功能立项再规范化。
 
-## 4. JSON 资源结构（示例）
+## 4. 结构化配色资产（规划）
 
-**套组条目 `PaletteItem`**（示意）：
+为支持专题策展、智能配和后续可能的数据远端覆盖，建议把配色数据从当前 `LocaleData.ets` 的硬编码结构，演进为三层资产：
+
+### 4.1 BaseColorItem
 
 ```json
 {
-  "id": "oat_milk",
-  "name": "燕麦奶咖",
-  "colors": ["#C4A484", "#8B6914", "#F5F0E8"],
-  "occasionIds": ["commute", "casual"],
-  "tier": "free"
+  "id": "bc_0001",
+  "hex": "#CBB7A1",
+  "nameZh": "雾杏",
+  "tone": "warm",
+  "lightnessLevel": "light",
+  "saturationLevel": "low",
+  "colorFamily": "beige",
+  "isNeutralCore": true,
+  "status": "approved"
 }
 ```
 
-- `tier`: `free` | `pro`  
-- 随机/筛选：先 `filter(occasion)` 再 `filter(tier)`。
+### 4.2 PaletteItem
+
+```json
+{
+  "id": "pl_0101",
+  "slug": "mist-city-morning",
+  "primaryColorId": "bc_0001",
+  "secondaryColorId": "bc_0008",
+  "accentColorId": "bc_0021",
+  "occasionId": "citywalk",
+  "safetyLevel": "safe",
+  "fitPhotoScenario": true,
+  "sourceType": "curated",
+  "isPro": false,
+  "status": "published"
+}
+```
+
+### 4.3 CollectionItem
+
+```json
+{
+  "id": "col_0001",
+  "themeType": "scene",
+  "paletteIds": ["pl_0101", "pl_0102"],
+  "coverPaletteId": "pl_0101",
+  "isPro": false,
+  "releaseMode": "permanent",
+  "status": "published"
+}
+```
+
+### 4.4 文件落点（建议）
+
+- `entry/src/main/resources/base/rawfile/palette-data/base-colors.v1.json`  
+- `entry/src/main/resources/base/rawfile/palette-data/palettes.v1.json`  
+- `entry/src/main/resources/base/rawfile/palette-data/collections.v1.json`  
+- `entry/src/main/resources/base/rawfile/palette-data/locale/zh-CN.v1.json`  
+- `entry/src/main/resources/base/rawfile/palette-data/locale/en-US.v1.json`
+
+### 4.5 兼容原则
+
+1. 本地 `rawfile` 资源是默认真相源。  
+2. 即使后续支持远端 JSON 覆盖，结构也应与本地文件兼容。  
+3. 当前 UI 仍可通过 mapper 映射回 `Occasion / Palette` 旧模型，降低重构风险。
 
 ## 5. 修订
 
 随 PRD 与实现变更更新本表，并在 PRD 修订记录中交叉注明。
 
 - 2026-04-03：新增“昨日”轻量快照槽位说明；明确不做按日历史，仅维护 today draft 与 yesterday snapshot。
+- 2026-04-07：补充配色资产三层模型与建议文件落点；为结构化 JSON 资源与后续远端覆盖预留边界。

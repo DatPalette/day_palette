@@ -164,8 +164,21 @@ entry/src/main/ets/
 - 若后续引入真正的 Store/EventBus 分层，应在本文中明确替换当前 `Index + ViewModel + Preferences` 的边界描述。  
 - 若导出模板继续扩展，应补一份单独的“导出渲染子系统”说明文档。
 
-## 9. 参考
+## 9. 配色数据文件化演进（规划）
+
+当前配色与场景数据仍硬编码在 [../../entry/src/main/ets/model/LocaleData.ets](../../entry/src/main/ets/model/LocaleData.ets) 中，`DayPaletteViewModel` 通过 `getLocaleBundle()` 直接消费。
+
+下一阶段建议演进为：
+
+1. 把 palette 相关结构化数据迁移到 `entry/src/main/resources/base/rawfile/palette-data/*.json`。  
+2. 在 `entry/src/main/ets/model/catalog/` 下新增加载器、仓库与 mapper，把 JSON 映射回当前 UI 仍可消费的 `Occasion / Palette` 结构。  
+3. 先完成“硬编码 ArkTS -> 本地 JSON 资源”的文件化，再决定是否进入“本地基础库 + 远端 JSON 覆盖”。
+
+对应规划详见 [palette-data-file-scheme.md](./palette-data-file-scheme.md)。
+
+## 10. 参考
 
 - PRD：[`../product/PRD.md`](../product/PRD.md)  
 - 数据模型：[`./data-model.md`](./data-model.md)  
 - 设计系统：[`../design/design-system.md`](../design/design-system.md)
+- 配色数据文件方案：[`./palette-data-file-scheme.md`](./palette-data-file-scheme.md)
