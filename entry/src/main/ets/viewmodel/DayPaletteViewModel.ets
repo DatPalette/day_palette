@@ -3,6 +3,7 @@ import { DesignTokens } from '../common/constants/DesignTokens';
 import { refreshTrackedTodayOutfitForms } from '../formability/TodayOutfitFormSync';
 import { hexToRgb888 } from '../export/HexColor';
 import { AppLanguage } from '../model/AppLanguage';
+import type { Collection } from '../model/Collection';
 import { readLanguageOverride, writeLanguageOverride } from '../model/LanguagePreferenceStore';
 import { getLocaleBundle, preloadLocaleBundles } from '../model/LocaleData';
 import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
@@ -74,6 +75,26 @@ export class DayPaletteViewModel {
 
   getUiStrings(): UiStrings {
     return this.getLocaleBundle().ui;
+  }
+
+  getCollections(): Collection[] {
+    return this.getLocaleBundle().collections;
+  }
+
+  getCollectionsForOccasion(occasionId: string): Collection[] {
+    const collections: Collection[] = this.getCollections();
+    const result: Collection[] = [];
+    for (let i = 0; i < collections.length; i++) {
+      const item: Collection = collections[i];
+      if (item.occasionTags.includes(occasionId)) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
+
+  getCollectionsForActiveOccasion(): Collection[] {
+    return this.getCollectionsForOccasion(this.activeOccasionId);
   }
 
   getOccasions(): Occasion[] {

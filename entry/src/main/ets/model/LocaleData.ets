@@ -161,6 +161,7 @@ const EN_BUNDLE: LocaleBundle = {
     themeLight: 'Light',
     themeDark: 'Dark'
   },
+  collections: [],
   occasions: EN_OCCASIONS
 };
 
@@ -217,6 +218,7 @@ const ZH_BUNDLE: LocaleBundle = {
     themeLight: '浅色',
     themeDark: '深色'
   },
+  collections: [],
   occasions: ZH_OCCASIONS
 };
 
