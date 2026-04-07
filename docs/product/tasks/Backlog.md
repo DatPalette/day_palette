@@ -39,10 +39,26 @@
 
 ### 2.1 Brainstorming-02 / 策略文档增补备注
 
-- `BL-BR-03` 当前建议继续细化为：智能配候选池建设、第一版硬/软规则引擎、`Citywalk 拍照 / 公园出片 / 国风新中式` 三类场景策略、结果解释文案模板。  
+- `BL-BR-03` 当前继续细化为三组实现任务：  
+	- 数据：主色候选池分层、场景标签与安全等级字段、`LocaleData.ets -> JSON / catalog` 读取过渡。  
+	- 规则：第一版硬规则、软规则、排序与兜底、`Citywalk 拍照 / 公园出片 / 国风新中式` 三类场景策略。  
+	- UI：智能配主路径入口、结果卡片解释层、可展开完整微调、异常与空状态提示。  
 - `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。  
 - `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
 - 以上增补来源见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)、[`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md)、[`../strategy/conservative-smart-matching-strategy.md`](../strategy/conservative-smart-matching-strategy.md)。
+
+### 2.2 BL-BR-03 实现切片备忘
+
+| 子项 | 分类 | 目标 | 交付摘要 |
+|-----|------|------|---------|
+| BL-BR-03A | Data | 建立智能配输入数据骨架 | 补齐主色候选池结构、色彩安全等级、场景与专题标签字段 |
+| BL-BR-03B | Data | 建立数据加载过渡层 | 设计 `LocaleData.ets` 到 `rawfile/palette-data/*.json` / `catalog` 的兼容读取路径 |
+| BL-BR-03C | Rules | 实现第一版硬规则 | 明确禁配、低饱和保护、亮度跨度、场景黑白名单与兜底策略 |
+| BL-BR-03D | Rules | 实现第一版软规则与排序 | 定义 tone 权重、场景偏好、主题加分、结果排序与去重 |
+| BL-BR-03E | Rules | 建立场景策略模板 | 完成 `Citywalk 拍照 / 公园出片 / 国风新中式` 三类策略配置 |
+| BL-BR-03F | UI | 接入智能配主路径 | 在精调主流程中提供“选主色 -> 智能补全”的低负担入口 |
+| BL-BR-03G | UI | 设计结果解释层 | 为推荐结果提供短解释、原因标签、失败兜底与空状态提示 |
+| BL-BR-03H | UI | 保留完整微调能力 | 智能配结果可继续手动微调，且不打断现有精调链路 |
 
 ---
 
