@@ -1,4 +1,6 @@
+import type { common } from '@kit.AbilityKit';
 import { AppLanguage } from './AppLanguage';
+import { loadLocaleBundleFromCatalog } from './catalog/ColorCatalogRepository';
 import type { LocaleBundle } from './LocaleTypes';
 import type { Occasion } from './Occasion';
 import type { Palette } from './Palette';
@@ -218,7 +220,26 @@ const ZH_BUNDLE: LocaleBundle = {
   occasions: ZH_OCCASIONS
 };
 
+const loadedBundles: Partial<Record<AppLanguage, LocaleBundle>> = {};
+
+export async function preloadLocaleBundles(context: common.UIAbilityContext): Promise<void> {
+  const [zh, en] = await Promise.all([
+    loadLocaleBundleFromCatalog(context, AppLanguage.ZH),
+    loadLocaleBundleFromCatalog(context, AppLanguage.EN)
+  ]);
+  if (zh !== null) {
+    loadedBundles[AppLanguage.ZH] = zh;
+  }
+  if (en !== null) {
+    loadedBundles[AppLanguage.EN] = en;
+  }
+}
+
 export function getLocaleBundle(lang: AppLanguage): LocaleBundle {
+  const loaded: LocaleBundle | undefined = loadedBundles[lang];
+  if (loaded !== undefined) {
+    return loaded;
+  }
   if (lang === AppLanguage.ZH) {
     return ZH_BUNDLE;
   }

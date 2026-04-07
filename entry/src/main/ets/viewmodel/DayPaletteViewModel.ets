@@ -4,7 +4,7 @@ import { refreshTrackedTodayOutfitForms } from '../formability/TodayOutfitFormSy
 import { hexToRgb888 } from '../export/HexColor';
 import { AppLanguage } from '../model/AppLanguage';
 import { readLanguageOverride, writeLanguageOverride } from '../model/LanguagePreferenceStore';
-import { getLocaleBundle } from '../model/LocaleData';
+import { getLocaleBundle, preloadLocaleBundles } from '../model/LocaleData';
 import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
 import type { Occasion } from '../model/Occasion';
 import type { Palette } from '../model/Palette';
@@ -53,11 +53,19 @@ export class DayPaletteViewModel {
   noiseOverlay: boolean = false;
   /** 顶栏微缩预览样式。 */
   miniPreviewStyle: MiniPreviewStyle = DEFAULT_MINI_PREVIEW_STYLE;
+  /** 本地 catalog 资源加载完成后递增，用于触发 UI 刷新。 */
+  catalogRefreshTick: number = 0;
 
   private persistContext: common.UIAbilityContext | null = null;
 
   setPersistContext(ctx: common.UIAbilityContext): void {
     this.persistContext = ctx;
+  }
+
+  async preloadLocaleCatalog(context: common.UIAbilityContext): Promise<void> {
+    await preloadLocaleBundles(context);
+    this.catalogRefreshTick += 1;
+    this.applyResolvedLocale(this.currentLang, true);
   }
 
   getLocaleBundle(): LocaleBundle {
@@ -382,11 +390,13 @@ export class DayPaletteViewModel {
     return this.manualLanguage === null;
   }
 
-  private applyResolvedLocale(lang: AppLanguage): void {
-    if (this.currentLang === lang) {
+  private applyResolvedLocale(lang: AppLanguage, force: boolean = false): void {
+    if (this.currentLang === lang && !force) {
       return;
     }
-    this.currentLang = lang;
+    if (this.currentLang !== lang) {
+      this.currentLang = lang;
+    }
     const occ = this.getActiveOccasion();
     if (occ === undefined) {
       this.activeOccasionId = 'workday';

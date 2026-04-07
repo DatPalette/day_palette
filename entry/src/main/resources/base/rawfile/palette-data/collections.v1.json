@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-07T00:00:00Z",
+  "items": [
+    {
+      "id": "col_0001",
+      "nameZh": "温柔通勤",
+      "nameEn": "Gentle Commute",
+      "themeType": "scene",
+      "descriptionZh": "适合工作日通勤与低风险正式场合的稳定配色。",
+      "paletteIds": ["w1", "w2", "w3", "w4", "w5"],
+      "coverPaletteId": "w1",
+      "occasionTags": ["workday"],
+      "styleTags": ["urban", "commute"],
+      "isPro": false,
+      "releaseMode": "permanent",
+      "status": "published"
+    },
+    {
+      "id": "col_0002",
+      "nameZh": "周末约会",
+      "nameEn": "Weekend Date",
+      "themeType": "scene",
+      "descriptionZh": "适合约会、野餐和轻松出门的柔和明快配色。",
+      "paletteIds": ["we1", "we2", "we3", "we4"],
+      "coverPaletteId": "we1",
+      "occasionTags": ["weekend"],
+      "styleTags": ["soft", "romantic"],
+      "isPro": false,
+      "releaseMode": "permanent",
+      "status": "published"
+    },
+    {
+      "id": "col_0003",
+      "nameZh": "清风户外",
+      "nameEn": "Outdoor Breeze",
+      "themeType": "scene",
+      "descriptionZh": "适合公园、步道和轻运动场景的自然呼吸感配色。",
+      "paletteIds": ["o1", "o2", "o3", "o4"],
+      "coverPaletteId": "o1",
+      "occasionTags": ["outdoor"],
+      "styleTags": ["nature", "sport"],
+      "isPro": false,
+      "releaseMode": "permanent",
+      "status": "published"
+    },
+    {
+      "id": "col_0004",
+      "nameZh": "晚宴流光",
+      "nameEn": "Evening Glow",
+      "themeType": "scene",
+      "descriptionZh": "适合晚餐、派对和夜间氛围场合的克制亮点配色。",
+      "paletteIds": ["d1", "d2", "d3", "d4"],
+      "coverPaletteId": "d1",
+      "occasionTags": ["dinner"],
+      "styleTags": ["elegant", "minimal"],
+      "isPro": false,
+      "releaseMode": "permanent",
+      "status": "published"
+    }
+  ]
+}

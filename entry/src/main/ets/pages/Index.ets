@@ -53,6 +53,7 @@ struct Index {
     this.vm.loadLanguageFromStorage(ctx);
     this.vm.loadAccessibilityFromStorage(ctx);
     this.vm.loadTodayOutfitFromStorage();
+    void this.vm.preloadLocaleCatalog(ctx);
     this.localeEventHandler = (): void => {
       const host = this.getUIContext().getHostContext() as common.UIAbilityContext;
       this.vm.refreshLocaleIfFollowingSystem(host);
