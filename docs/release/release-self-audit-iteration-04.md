@@ -21,8 +21,8 @@
 
 | ID | 问题 | 当前现状 | 建议动作 |
 |----|------|----------|----------|
-| REL-BLOCK-01 | 应用基础信息仍有占位值 | [AppScope/app.json5](/Users/wuxinbo/Documents/Personal/day_palette/AppScope/app.json5#L4) 中 `vendor` 仍为 `example`；[entry/src/main/resources/base/element/string.json](/Users/wuxinbo/Documents/Personal/day_palette/entry/src/main/resources/base/element/string.json#L4) 与 [entry/src/main/resources/base/element/string.json](/Users/wuxinbo/Documents/Personal/day_palette/entry/src/main/resources/base/element/string.json#L8) 中描述文案仍是 `module description` / `description` 占位文本。 | 补齐真实开发者信息、模块描述、Ability 描述，避免提审素材和应用信息显得未完成。 |
-| REL-BLOCK-02 | 隐私政策文件缺失 | 仓库内未发现 `privacy` / `policy` 相关文件；PRD 也把隐私政策列为未来需补项。 | 补一份可上架使用的隐私政策文案与托管路径，并保证和权限用途说明一致。 |
+| REL-BLOCK-01 | 应用基础信息仍有占位值 | 已于本轮整改：`vendor`、模块描述、Ability 描述与 Form 描述占位值已替换为可发布文本。 | 后续只需在名称最终定稿后复核显示文本，不再视为当前阻塞。 |
+| REL-BLOCK-02 | 隐私政策文件缺失 | 已于本轮新增 [privacy-policy.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/privacy-policy.md)。 | 后续需要补“外部可访问链接或最终承载位置”，但本地文案底稿已建立。 |
 | REL-BLOCK-03 | 发布素材与品牌资源仍未成型 | [background.png](/Users/wuxinbo/Documents/Personal/day_palette/AppScope/resources/base/media/background.png) 仍是蓝底；[foreground.png](/Users/wuxinbo/Documents/Personal/day_palette/AppScope/resources/base/media/foreground.png) 仍是默认四宫格样式，不符合当前产品品牌；同时仓库中未见统一的商店素材清单。 | 先完成名称、图标与素材清单收敛，让后续提审资源不再处于默认工程状态。 |
 
 ---
@@ -32,8 +32,9 @@
 | ID | 问题 | 当前现状 | 建议动作 |
 |----|------|----------|----------|
 | REL-FIX-01 | 应用展示名当前只有英文 | [AppScope/resources/base/element/string.json](/Users/wuxinbo/Documents/Personal/day_palette/AppScope/resources/base/element/string.json#L4) 中 `app_name` 为 `DayPalette`。当前中文品牌名“今日配色”主要存在于文档，不在应用主资源里统一收敛。 | 与 BL-BRAND-02 一起确定最终展示名策略，决定是否保留英文展示名，或在中文环境下切换为中文名。 |
-| REL-FIX-02 | 权限文案还不够“提审说明化” | 当前只声明保存图片到相册用途，代码里对权限失败路径说明较多，但发布文档还未形成统一外部口径。 | 在发布文档中单独写清“为何需要相册写入权限、何时申请、拒绝后如何降级”。 |
+| REL-FIX-02 | 权限文案还不够“提审说明化” | 已新增 [privacy-policy.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/privacy-policy.md)，但仍需在最终上架页补齐外部展示口径。 | 后续将隐私政策落到最终提审使用的公开地址，并与权限说明页对齐。 |
 | REL-FIX-03 | 平板 / 宽屏提审素材还不能现在关闭 | 设备类型已声明 `phone` / `tablet`，但真正的大屏截图与适配验收还依赖 `BL-ADAPT-01 / 02`。 | 暂记为观察项，等适配任务推进后再回到发布清单中关闭。 |
+| REL-FIX-04 | 商店素材包尚未建档 | 已新增 [app-store-assets-checklist.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/app-store-assets-checklist.md) 作为素材清单底稿，但实际素材仍待补齐。 | 在名称、图标和适配完成后逐项补素材并关闭此项。 |
 
 ---
 
@@ -69,3 +70,10 @@
 2. 再收敛品牌项：应用名称与图标，避免商店字段和应用内展示分裂。
 3. 然后推进手机 / 平板适配，待 `BL-ADAPT-01 / 02` 产出后补大屏提审素材。
 4. 商业化与 IAP 继续留在 Backlog，不纳入本轮短链路整改关闭条件。
+
+## 7. 本轮已完成整改
+
+- 已修正应用基础信息中的明显占位值：`vendor`、模块描述、Ability 描述、Form 描述。
+- 已新增隐私政策底稿：[privacy-policy.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/privacy-policy.md)。
+- 已新增商店素材清单底稿：[app-store-assets-checklist.md](/Users/wuxinbo/Documents/Personal/day_palette/docs/release/app-store-assets-checklist.md)。
+- 已修正发布检查文档中的旧 PRD 引用路径，并补入上述两份发布文档入口。
