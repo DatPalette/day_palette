@@ -392,6 +392,53 @@ export class DayPaletteViewModel {
     return [DesignTokens.DEFAULT_MAIN, DesignTokens.DEFAULT_SEC, DesignTokens.DEFAULT_ACC];
   }
 
+  getActivePaletteBaseColors(): string[] {
+    const pal: Palette | undefined = this.getActivePalette();
+    if (pal !== undefined && pal.colors.length >= 3) {
+      return pal.colors;
+    }
+    return [DesignTokens.DEFAULT_MAIN, DesignTokens.DEFAULT_SEC, DesignTokens.DEFAULT_ACC];
+  }
+
+  getFineTuneCandidateHexes(roleIndex: number, maxResults: number = 12): string[] {
+    const result: string[] = [];
+    const pushUnique = (hex: string): void => {
+      const normalized: string = hex.trim().toLowerCase();
+      if (normalized.length === 0) {
+        return;
+      }
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].toLowerCase() === normalized) {
+          return;
+        }
+      }
+      result.push(hex.trim());
+    };
+
+    const currentColors: string[] = this.getHeroColorStrings();
+    if (roleIndex >= 0 && roleIndex < currentColors.length) {
+      pushUnique(currentColors[roleIndex]);
+    }
+
+    const baseColors: string[] = this.getActivePaletteBaseColors();
+    if (roleIndex >= 0 && roleIndex < baseColors.length) {
+      pushUnique(baseColors[roleIndex]);
+    }
+
+    const palettes: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+    for (let i = 0; i < palettes.length; i++) {
+      const colors: string[] = palettes[i].colors;
+      if (roleIndex >= 0 && roleIndex < colors.length) {
+        pushUnique(colors[roleIndex]);
+      }
+      if (result.length >= maxResults) {
+        break;
+      }
+    }
+
+    return result.slice(0, maxResults);
+  }
+
   setFineTuneHex(mainHex: string, secHex: string, accHex: string): boolean {
     if (hexToRgb888(mainHex) === null || hexToRgb888(secHex) === null || hexToRgb888(accHex) === null) {
       return false;

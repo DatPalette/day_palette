@@ -54,7 +54,10 @@ function getPref(context: common.Context): preferences.Preferences | null {
 }
 
 function flushPrefNow(pref: preferences.Preferences): void {
-  pref.flush();
+  try {
+    pref.flush();
+  } catch {
+  }
 }
 
 function scheduleSettingsPrefFlush(pref: preferences.Preferences): void {

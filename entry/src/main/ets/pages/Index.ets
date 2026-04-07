@@ -1,5 +1,6 @@
 import { common } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
+import { LengthMetrics } from '@kit.ArkUI';
 import { APP_FOREGROUND_EVENT, LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
 import { getBottomGestureBarHeightPx } from '../common/window/NavigationIndicatorInset';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
@@ -239,6 +240,19 @@ struct Index {
     return this.vm.getHeroColorStrings().join('|');
   }
 
+  @Builder
+  private fineTuneSheetBuilder() {
+    FineTuneSheet({
+      vm: this.vm,
+      syncToken: this.fineTuneSyncToken(),
+      bottomGestureInsetVp: this.bottomGestureInsetVp,
+      onRequestClose: () => {
+        this.fineTuneOpen = false;
+      }
+    })
+      .width('100%')
+  }
+
   build() {
     Stack({ alignContent: Alignment.TopStart }) {
       Scroll(this.scroller) {
@@ -325,24 +339,23 @@ struct Index {
           }))
       }
 
-      if (this.fineTuneOpen) {
-        FineTuneSheet({
-          vm: this.vm,
-          syncToken: this.fineTuneSyncToken(),
-          bottomGestureInsetVp: this.bottomGestureInsetVp,
-          onRequestClose: () => {
-            this.fineTuneOpen = false;
-          }
-        })
-          .width('100%')
-          .height('100%')
-          .position({ top: 0, left: 0 })
-          .zIndex(120)
-      }
     }
     .width('100%')
     .height('100%')
     .backgroundColor(DesignTokens.BG_PAGE)
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
+    .bindSheet($$this.fineTuneOpen, this.fineTuneSheetBuilder(), {
+      height: SheetSize.FIT_CONTENT,
+      preferType: SheetType.BOTTOM,
+      dragBar: true,
+      showClose: false,
+      backgroundColor: DesignTokens.SURFACE_CARD,
+      maskColor: 'rgba(0, 0, 0, 0.30)',
+      keyboardAvoidMode: SheetKeyboardAvoidMode.TRANSLATE_AND_SCROLL,
+      radius: LengthMetrics.vp(28),
+      onDisappear: () => {
+        this.fineTuneOpen = false;
+      }
+    })
   }
 }
