@@ -36,6 +36,7 @@
 | BL-BR-09 | Epic | P3 | **壁纸周边（非渐变/渐变/高级渐变 IAP）** | Brainstorming T-09 | 与 PRD 商业边界复核后立项 |
 | BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | → [**iteration-05**](./iteration-05.md) |
 | BL-BR-11 | Task | P2 | **场景命名与“今天的故事”文案收敛** | Brainstorming-02 | 收敛“随便走走的一天”等场景标题与情绪语义，不新增前置决策层 | → [**iteration-05**](./iteration-05.md) |
+| BL-UX-01 | Task | P1 | **精调能力升级与交互方案设计** | 口头 / 当前体验盘点 | 明确用户可改颜色范围、交互形式、确认/回退逻辑与更友好的操作路径 | → [**iteration-05**](./iteration-05.md) |
 
 ### 2.1 Brainstorming-02 / 策略文档增补备注
 
@@ -106,6 +107,7 @@
 
 | Key | Type | Priority | Summary | Source | Notes |
 |-----|------|----------|---------|--------|-------|
+| BL-BUG-01 | Task | P1 | TopBar 日期与系统日期不同步修复 | 口头 | 保证顶栏日期与系统日期、时区、前后台切换和跨天刷新一致 | → [**iteration-05**](./iteration-05.md) |
 | BL-XXX-1 | Task | P1 | 随机选交互优化 | 口头 | 目前的随机选，当配色盘很多的时候，看不到随机选中的配色盘 |
 
 ---
