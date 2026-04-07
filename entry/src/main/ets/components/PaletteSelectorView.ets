@@ -214,7 +214,6 @@ export struct PaletteSelectorView {
   }
 
   private paletteList(): Palette[] {
-    const occ = this.vm.getActiveOccasion();
-    return occ !== undefined ? occ.palettes : [];
+    return this.vm.getRecommendedPalettesForActiveOccasion();
   }
 }

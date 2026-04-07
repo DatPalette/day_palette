@@ -105,12 +105,48 @@ export class DayPaletteViewModel {
     return this.getOccasions().find((o: Occasion) => o.id === this.activeOccasionId);
   }
 
-  getActivePalette(): Palette | undefined {
-    const occ = this.getActiveOccasion();
-    if (!occ) {
-      return undefined;
+  getRecommendedPalettesForOccasion(occasionId: string): Palette[] {
+    const occ: Occasion | undefined = this.getOccasions().find((item: Occasion) => item.id === occasionId);
+    if (occ === undefined) {
+      return [];
     }
-    return occ.palettes.find((p: Palette) => p.id === this.activePaletteId);
+    const collections: Collection[] = this.getCollectionsForOccasion(occasionId);
+    if (collections.length === 0) {
+      return occ.palettes;
+    }
+
+    const recommended: Palette[] = [];
+    const seenPaletteIds: string[] = [];
+    for (let i = 0; i < collections.length; i++) {
+      const collection: Collection = collections[i];
+      for (let j = 0; j < collection.palettes.length; j++) {
+        const palette: Palette = collection.palettes[j];
+        if (seenPaletteIds.includes(palette.id)) {
+          continue;
+        }
+        seenPaletteIds.push(palette.id);
+        recommended.push(palette);
+      }
+    }
+
+    for (let i = 0; i < occ.palettes.length; i++) {
+      const palette: Palette = occ.palettes[i];
+      if (seenPaletteIds.includes(palette.id)) {
+        continue;
+      }
+      seenPaletteIds.push(palette.id);
+      recommended.push(palette);
+    }
+
+    return recommended;
+  }
+
+  getRecommendedPalettesForActiveOccasion(): Palette[] {
+    return this.getRecommendedPalettesForOccasion(this.activeOccasionId);
+  }
+
+  getActivePalette(): Palette | undefined {
+    return this.getRecommendedPalettesForActiveOccasion().find((p: Palette) => p.id === this.activePaletteId);
   }
 
   /**
@@ -156,12 +192,12 @@ export class DayPaletteViewModel {
     if (this.activeOccasionId === occasionId) {
       return;
     }
-    const occ = this.getOccasions().find((o: Occasion) => o.id === occasionId);
-    if (!occ || occ.palettes.length === 0) {
+    const recommended: Palette[] = this.getRecommendedPalettesForOccasion(occasionId);
+    if (recommended.length === 0) {
       return;
     }
     this.activeOccasionId = occasionId;
-    this.activePaletteId = occ.palettes[0].id;
+    this.activePaletteId = recommended[0].id;
     this.customHex = null;
     this.flushTodayOutfitToStorage();
   }
@@ -170,11 +206,11 @@ export class DayPaletteViewModel {
     if (this.activePaletteId === paletteId) {
       return;
     }
-    const occ = this.getActiveOccasion();
-    if (!occ) {
+    const recommended: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+    if (recommended.length === 0) {
       return;
     }
-    const exists = occ.palettes.some((p: Palette) => p.id === paletteId);
+    const exists = recommended.some((p: Palette) => p.id === paletteId);
     if (!exists) {
       return;
     }
@@ -243,12 +279,12 @@ export class DayPaletteViewModel {
 
   /** 当前场合下从预置套组中随机选一套（不生成裸 RGB）。 */
   randomPaletteInActiveOccasion(): void {
-    const occ: Occasion | undefined = this.getActiveOccasion();
-    if (occ === undefined || occ.palettes.length === 0) {
+    const recommended: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+    if (recommended.length === 0) {
       return;
     }
-    const idx: number = Math.floor(Math.random() * occ.palettes.length);
-    this.activePaletteId = occ.palettes[idx].id;
+    const idx: number = Math.floor(Math.random() * recommended.length);
+    this.activePaletteId = recommended[idx].id;
     this.customHex = null;
     this.flushTodayOutfitToStorage();
   }
@@ -353,15 +389,16 @@ export class DayPaletteViewModel {
     const occ: Occasion | undefined = this.getOccasions().find((o: Occasion) => o.id === this.activeOccasionId);
     if (occ === undefined) {
       this.activeOccasionId = 'workday';
-      const o2: Occasion | undefined = this.getActiveOccasion();
-      if (o2 !== undefined && o2.palettes.length > 0) {
-        this.activePaletteId = o2.palettes[0].id;
+      const fallbackPalettes: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+      if (fallbackPalettes.length > 0) {
+        this.activePaletteId = fallbackPalettes[0].id;
       }
       return;
     }
-    const pal: Palette | undefined = occ.palettes.find((p: Palette) => p.id === this.activePaletteId);
-    if (pal === undefined && occ.palettes.length > 0) {
-      this.activePaletteId = occ.palettes[0].id;
+    const recommended: Palette[] = this.getRecommendedPalettesForOccasion(occ.id);
+    const pal: Palette | undefined = recommended.find((p: Palette) => p.id === this.activePaletteId);
+    if (pal === undefined && recommended.length > 0) {
+      this.activePaletteId = recommended[0].id;
     }
     const resolved: Palette | undefined = this.getActivePalette();
     if (resolved !== undefined && resolved.colors.length >= 3) {
@@ -421,15 +458,16 @@ export class DayPaletteViewModel {
     const occ = this.getActiveOccasion();
     if (occ === undefined) {
       this.activeOccasionId = 'workday';
-      const o = this.getActiveOccasion();
-      if (o !== undefined && o.palettes.length > 0) {
-        this.activePaletteId = o.palettes[0].id;
+      const fallbackPalettes: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+      if (fallbackPalettes.length > 0) {
+        this.activePaletteId = fallbackPalettes[0].id;
       }
       return;
     }
-    const pal = occ.palettes.find((p: Palette) => p.id === this.activePaletteId);
-    if (pal === undefined && occ.palettes.length > 0) {
-      this.activePaletteId = occ.palettes[0].id;
+    const recommended: Palette[] = this.getRecommendedPalettesForOccasion(occ.id);
+    const pal = recommended.find((p: Palette) => p.id === this.activePaletteId);
+    if (pal === undefined && recommended.length > 0) {
+      this.activePaletteId = recommended[0].id;
     }
   }
 }
