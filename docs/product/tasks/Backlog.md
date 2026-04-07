@@ -19,7 +19,7 @@
 
 ---
 
-## 2. 头脑风暴落地（[`../Brainstorming.md`](../Brainstorming.md)）
+## 2. 头脑风暴落地（[`../brainstorming/Brainstorming-01.md`](../brainstorming/Brainstorming-01.md)）
 
 已拍板方向见 Brainstorming「已拍板方向」；任务 ID 与原文 **T-xx** 一致。
 
