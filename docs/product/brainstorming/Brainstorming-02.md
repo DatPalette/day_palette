@@ -595,3 +595,8 @@ DayPalette 不应该把自己讲成“配色工具”，而更适合讲成：
 - PRD 补充项  
 - Backlog 新 Epic / Story  
 - 单独策略文档（如“专题策展方向草案”“智能配保守版策略草案”）
+
+当前已落下的延伸文档：
+
+- [`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md)  
+- [`../strategy/conservative-smart-matching-strategy.md`](../strategy/conservative-smart-matching-strategy.md)
