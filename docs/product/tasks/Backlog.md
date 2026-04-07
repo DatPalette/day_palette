@@ -27,13 +27,22 @@
 |-----|------|----------|---------|--------|-------------------|------|
 | BL-BR-01 | Task | P1 | **提升「随机、精调、昨日」入口视觉权重** | Brainstorming T-01 | 保存/分享不动；更易发现与点击；对齐设计系统 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-02 | Task | P1 | **「随机」文案改为「随机选」等** | Brainstorming T-02 | 中英文案与真实行为一致；`LocaleData` 等 | → [**iteration-02**](./iteration-02.md) · **Done** |
-| BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | Backlog |
+| BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | → [**iteration-05**](./iteration-05.md) |
 | BL-BR-04 | Task | P2 | **出图/分享色卡版式升级** | Brainstorming T-04 | 免费模板边界遵守 PRD | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-05 | Task | P2 | **Hero 区三色呈现优化** | Brainstorming T-05 | 比例/圆角/动效遵守「减少动效」 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-06 | Task | P2 | **顶栏微缩预览优化** | Brainstorming T-06 | 与主界面配色语言一致、可读 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-07 | Epic | P2 | **预置套组与场合扩容（目标百套+分期）** | Brainstorming T-07 | 内容生产节奏与 Pro 包边界 |
-| BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 |
+| BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 | → [**iteration-05**](./iteration-05.md) |
 | BL-BR-09 | Epic | P3 | **壁纸周边（非渐变/渐变/高级渐变 IAP）** | Brainstorming T-09 | 与 PRD 商业边界复核后立项 |
+| BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | → [**iteration-05**](./iteration-05.md) |
+| BL-BR-11 | Task | P2 | **场景命名与“今天的故事”文案收敛** | Brainstorming-02 | 收敛“随便走走的一天”等场景标题与情绪语义，不新增前置决策层 | → [**iteration-05**](./iteration-05.md) |
+
+### 2.1 Brainstorming-02 / 策略文档增补备注
+
+- `BL-BR-03` 当前建议继续细化为：智能配候选池建设、第一版硬/软规则引擎、`Citywalk 拍照 / 公园出片 / 国风新中式` 三类场景策略、结果解释文案模板。  
+- `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。  
+- `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
+- 以上增补来源见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)、[`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md)、[`../strategy/conservative-smart-matching-strategy.md`](../strategy/conservative-smart-matching-strategy.md)。
 
 ---
 
@@ -85,10 +94,12 @@
 ## 建议捞取顺序（非强制）
 
 1. **BL-BR-03**（精调主路径升级，可作为恢复功能开发后的优先项）  
-2. **BL-ADAPT-01 / 02、BL-BRAND-01 / 02**（待主要功能开发告一段落后，再集中处理设备适配与品牌收敛）  
-3. **BL-REL-02**（接近提审前，集中完成最终自检与素材收口）  
-4. **BL-PRD-01～04**（商业化闭环；依赖链路长，待当前发布准备与基础体验收敛后再集中推进）  
-5. ~~**BL-BR-01、BL-BR-02**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
-6. ~~**iteration-03：BL-ENG-01 / 02、BL-DOC-01 / 02 / 03**~~ → 已纳入 [**iteration-03**](./iteration-03.md) · **Done**  
-7. ~~**BL-BR-04～06**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
-8. 其余按资源与版本节奏从本节与 §3 挑选  
+2. **iteration-05：BL-BR-08 / 10 / 11**（先把数据更新机制、内容维护流程和场景文案收敛清楚，再进入更大规模内容扩展）  
+3. **BL-ADAPT-01 / 02、BL-BRAND-01 / 02**（待主要功能开发告一段落后，再集中处理设备适配与品牌收敛）  
+4. **BL-REL-02**（接近提审前，集中完成最终自检与素材收口）  
+5. **BL-PRD-01～04**（商业化闭环；依赖链路长，待当前发布准备与基础体验收敛后再集中推进）  
+6. ~~**BL-BR-01、BL-BR-02**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
+7. ~~**iteration-03：BL-ENG-01 / 02、BL-DOC-01 / 02 / 03**~~ → 已纳入 [**iteration-03**](./iteration-03.md) · **Done**  
+8. ~~**BL-BR-04～06**~~ → 已纳入 [**iteration-02**](./iteration-02.md)  
+9. `BL-BR-07` 当前暂不进入迭代，待内容扩展依据与生产节奏更清晰后再启动  
+10. 其余按资源与版本节奏从本节与 §3 挑选  
