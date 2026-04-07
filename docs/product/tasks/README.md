@@ -30,7 +30,7 @@
 ## 与权威文档的关系
 
 - 需求真相源仍以 [`../PRD.md`](../PRD.md) 为准；本目录为**执行与排期视图**。
-- 头脑风暴与已拍板方向见 [`../brainstorming/Brainstorming-01.md`](../brainstorming/Brainstorming-01.md)；落地任务以 **Backlog 中的 Key** 为准（避免双处改状态）。
+- 头脑风暴与已拍板方向见 [`../brainstorming/Brainstorming-01.md`](../brainstorming/Brainstorming-01.md)；护城河 / 用户 / 价值与付费讨论见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)；落地任务以 **Backlog 中的 Key** 为准（避免双处改状态）。
 
 ## 当前索引
 
