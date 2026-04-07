@@ -41,7 +41,7 @@
 |-----|------|----------|---------|--------|-------------------|
 | BL-BR-03 | Story | P2 | **智能配候选池建设（core safe / occasion safe / accent expressive）** | Strategy / Smart Matching | 建立三层候选池；来源于已审核色彩资产 |
 | BL-BR-03 | Story | P2 | **智能配第一版规则引擎** | Strategy / Smart Matching | 明确硬规则、软规则、排序流程与禁用组合列表 |
-| BL-BR-03 | Task | P2 | **按场景的智能配策略 v1** | Brainstorming-02 / Smart Matching | 完成 Citywalk / 公园 / 新中式三类场景规则与解释文案模板 |
+| BL-BR-03 | Task | P2 | **按现有场景的智能配策略 v1** | Brainstorming-02 / Smart Matching | 围绕当前 app 既有场景补齐规则与解释模板，不承接专题策展方向 |
 | BL-BR-03 | Task | P2 | **智能配结果解释层文案模板** | Strategy / Smart Matching | 每套结果有简短可解释说明，增强用户信任 |
 
 ### 2.3 并入 `BL-BR-08`：运营侧内容管理方案调研与选型

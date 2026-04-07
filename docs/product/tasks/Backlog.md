@@ -41,10 +41,10 @@
 
 - `BL-BR-03` 当前继续细化为三组实现任务：  
 	- 数据：主色候选池分层、场景标签与安全等级字段、`LocaleData.ets -> JSON / catalog` 读取过渡。  
-	- 规则：第一版硬规则、软规则、排序与兜底、`Citywalk 拍照 / 公园出片 / 国风新中式` 三类场景策略。  
+	- 规则：第一版硬规则、软规则、排序与兜底，以及围绕现有 app 场景的解释模板与口径收敛。  
 	- UI：智能配主路径入口、结果卡片解释层、可展开完整微调、异常与空状态提示。  
 - `BL-BR-03` 已于 2026-04-07 暂停对外投放：保留已完成的数据与规则底座，但当前搭配质量与 UI 交互未达到上线标准，首页“扩展搭配”入口已先行屏蔽，后续继续留在 Backlog 评估恢复时机。  
-- `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。  
+- `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。首批专题方向明确收敛为 `Citywalk 拍照 / 公园出片 / 国风新中式`，不再归入 `BL-BR-03` 的场景策略范围。  
 - `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
 - 以上增补来源见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)、[`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md)、[`../strategy/conservative-smart-matching-strategy.md`](../strategy/conservative-smart-matching-strategy.md)。
 
@@ -56,10 +56,17 @@
 | BL-BR-03B | Data | 建立数据加载过渡层 | 设计 `LocaleData.ets` 到 `rawfile/palette-data/*.json` / `catalog` 的兼容读取路径 |
 | BL-BR-03C | Rules | 实现第一版硬规则 | 明确禁配、低饱和保护、亮度跨度、场景黑白名单与兜底策略 |
 | BL-BR-03D | Rules | 实现第一版软规则与排序 | 定义 tone 权重、场景偏好、主题加分、结果排序与去重 |
-| BL-BR-03E | Rules | 建立场景策略模板 | 完成 `Citywalk 拍照 / 公园出片 / 国风新中式` 三类策略配置 |
+| BL-BR-03E | Rules | 建立场景策略模板 | 围绕现有 app 场景建立策略配置与解释模板，不承接专题策展方向 |
 | BL-BR-03F | UI | 接入智能配主路径 | 在精调主流程中提供“选主色 -> 智能补全”的低负担入口 |
 | BL-BR-03G | UI | 设计结果解释层 | 为推荐结果提供短解释、原因标签、失败兜底与空状态提示 |
 | BL-BR-03H | UI | 保留完整微调能力 | 智能配结果可继续手动微调，且不打断现有精调链路 |
+
+### 2.3 BL-BR-07 首批专题方向备忘
+
+| 子项 | 分类 | 目标 | 交付摘要 |
+|-----|------|------|---------|
+| BL-BR-07A | Collection | 首批专题策展落地 | 完成 `Citywalk 拍照 / 公园出片 / 国风新中式` 三个专题的基调、封面、palette 清单与说明文案 |
+| BL-BR-07B | Asset | 专题与 palette 关联规则 | 明确专题标签、排序、封面与复用边界，确保可映射到 `Collection` 数据结构 |
 
 ---
 
