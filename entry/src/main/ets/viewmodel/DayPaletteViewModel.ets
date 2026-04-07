@@ -9,7 +9,10 @@ import { getLocaleBundle, preloadLocaleBundles } from '../model/LocaleData';
 import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
 import type { Occasion } from '../model/Occasion';
 import type { Palette } from '../model/Palette';
+import type { PaletteColorProfile } from '../model/Palette';
 import { getSystemAppLanguage } from '../model/SystemLanguageResolver';
+import { buildSmartMatchCandidates, recommendSmartMatches } from '../model/smartmatch/SmartMatchEngine';
+import type { SmartMatchCandidate, SmartMatchRecommendation } from '../model/smartmatch/SmartMatchTypes';
 import { DEFAULT_MINI_PREVIEW_STYLE, MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { DEFAULT_TEMPLATE_ID } from '../model/TodayOutfitState';
@@ -147,6 +150,41 @@ export class DayPaletteViewModel {
 
   getActivePalette(): Palette | undefined {
     return this.getRecommendedPalettesForActiveOccasion().find((p: Palette) => p.id === this.activePaletteId);
+  }
+
+  getSmartMatchCandidatesForActiveOccasion(): SmartMatchCandidate[] {
+    return buildSmartMatchCandidates(this.getRecommendedPalettesForActiveOccasion(), this.getCollectionsForActiveOccasion());
+  }
+
+  getSmartMatchRecommendationsForActivePalette(maxResults: number = 3): SmartMatchRecommendation[] {
+    const activePalette: Palette | undefined = this.getActivePalette();
+    const activeOccasion: Occasion | undefined = this.getActiveOccasion();
+    const primary: PaletteColorProfile | undefined = activePalette?.primaryProfile;
+    if (activePalette === undefined || activeOccasion === undefined || primary === undefined) {
+      return [];
+    }
+    const candidates: SmartMatchCandidate[] = this.getSmartMatchCandidatesForActiveOccasion();
+    let recommendations: SmartMatchRecommendation[] = recommendSmartMatches({
+      lang: this.currentLang,
+      occasionId: activeOccasion.id,
+      occasionLabel: activeOccasion.label,
+      primary: primary,
+      safetyPreference: 'balanced',
+      styleHint: activePalette.styleTags !== undefined && activePalette.styleTags.length > 0 ? activePalette.styleTags[0] : undefined,
+      excludedPaletteId: activePalette.id
+    }, candidates, maxResults);
+    if (recommendations.length === 0) {
+      recommendations = recommendSmartMatches({
+        lang: this.currentLang,
+        occasionId: activeOccasion.id,
+        occasionLabel: activeOccasion.label,
+        primary: primary,
+        safetyPreference: 'balanced',
+        styleHint: activePalette.styleTags !== undefined && activePalette.styleTags.length > 0 ? activePalette.styleTags[0] : undefined,
+        excludedPaletteId: undefined
+      }, candidates, maxResults);
+    }
+    return recommendations;
   }
 
   /**

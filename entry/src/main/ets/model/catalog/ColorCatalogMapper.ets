@@ -2,7 +2,7 @@ import { AppLanguage } from '../AppLanguage';
 import type { Collection } from '../Collection';
 import type { LocaleBundle } from '../LocaleTypes';
 import type { Occasion } from '../Occasion';
-import type { Palette } from '../Palette';
+import type { Palette, PaletteColorProfile } from '../Palette';
 import type {
   BaseColorCatalogFile,
   BaseColorCatalogItem,
@@ -14,6 +14,25 @@ import type {
   PaletteCatalogFile,
   UiCatalogFile
 } from './ColorCatalogTypes';
+
+function normalizeTags(tags?: string[]): string[] {
+  return tags ?? [];
+}
+
+function mapPaletteColorProfile(item: BaseColorCatalogItem): PaletteColorProfile {
+  return {
+    id: item.id,
+    hex: item.hex,
+    tone: item.tone,
+    lightnessLevel: item.lightnessLevel,
+    saturationLevel: item.saturationLevel,
+    colorFamily: item.colorFamily,
+    isNeutralCore: item.isNeutralCore,
+    styleTags: normalizeTags(item.styleTags),
+    occasionTags: normalizeTags(item.occasionTags),
+    seasonTags: normalizeTags(item.seasonTags)
+  };
+}
 
 function mapPaletteFromCatalog(
   paletteId: string,
@@ -36,7 +55,18 @@ function mapPaletteFromCatalog(
     id: colorItem.id,
     name: textItem.name,
     desc: textItem.desc,
-    colors: [primaryColor.hex, secondaryColor.hex, accentColor.hex]
+    colors: [primaryColor.hex, secondaryColor.hex, accentColor.hex],
+    occasionId: colorItem.occasionId,
+    safetyLevel: colorItem.safetyLevel,
+    moodTags: normalizeTags(colorItem.moodTags),
+    styleTags: normalizeTags(colorItem.styleTags),
+    seasonTags: normalizeTags(colorItem.seasonTags),
+    sourceType: colorItem.sourceType,
+    sourceCollectionIds: normalizeTags(colorItem.sourceCollectionIds),
+    fitPhotoScenario: colorItem.fitPhotoScenario,
+    primaryProfile: mapPaletteColorProfile(primaryColor),
+    secondaryProfile: mapPaletteColorProfile(secondaryColor),
+    accentProfile: mapPaletteColorProfile(accentColor)
   };
 }
 
@@ -135,6 +165,7 @@ export function mapCatalogToLocaleBundle(
       themeType: item.themeType,
       coverPaletteId: item.coverPaletteId,
       occasionTags: item.occasionTags ?? [],
+      styleTags: item.styleTags ?? [],
       palettes: palettes
     });
   }

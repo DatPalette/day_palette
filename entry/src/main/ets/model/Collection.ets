@@ -7,5 +7,6 @@ export interface Collection {
   themeType: string;
   coverPaletteId: string;
   occasionTags: string[];
+  styleTags: string[];
   palettes: Palette[];
 }
