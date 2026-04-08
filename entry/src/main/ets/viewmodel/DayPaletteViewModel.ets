@@ -439,11 +439,27 @@ export class DayPaletteViewModel {
     return result.slice(0, maxResults);
   }
 
+  hasActivePaletteFineTune(): boolean {
+    if (this.customHex === null || this.customHex.length < 3) {
+      return false;
+    }
+    const baseColors: string[] = this.getActivePaletteBaseColors();
+    return this.customHex[0].trim().toLowerCase() !== baseColors[0].trim().toLowerCase() ||
+      this.customHex[1].trim().toLowerCase() !== baseColors[1].trim().toLowerCase() ||
+      this.customHex[2].trim().toLowerCase() !== baseColors[2].trim().toLowerCase();
+  }
+
   setFineTuneHex(mainHex: string, secHex: string, accHex: string): boolean {
     if (hexToRgb888(mainHex) === null || hexToRgb888(secHex) === null || hexToRgb888(accHex) === null) {
       return false;
     }
-    this.customHex = [mainHex.trim(), secHex.trim(), accHex.trim()];
+    const nextColors: string[] = [mainHex.trim(), secHex.trim(), accHex.trim()];
+    const baseColors: string[] = this.getActivePaletteBaseColors();
+    const sameAsBase: boolean =
+      nextColors[0].toLowerCase() === baseColors[0].trim().toLowerCase() &&
+      nextColors[1].toLowerCase() === baseColors[1].trim().toLowerCase() &&
+      nextColors[2].toLowerCase() === baseColors[2].trim().toLowerCase();
+    this.customHex = sameAsBase ? null : nextColors;
     this.flushTodayOutfitToStorage();
     return true;
   }

@@ -316,6 +316,11 @@ export struct FineTuneSheet {
             });
             return;
           }
+          this.getUIContext().getPromptAction().showToast({
+            message: this.vm.hasActivePaletteFineTune()
+              ? this.vm.getUiStrings().fineTuneAppliedToast
+              : this.vm.getUiStrings().fineTuneResetToast
+          });
           this.onRequestClose();
         })
     }

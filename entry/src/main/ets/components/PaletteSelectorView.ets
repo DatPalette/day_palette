@@ -40,19 +40,19 @@ export struct PaletteSelectorView {
               Row() {
                 Row()
                   .layoutWeight(3)
-                  .height(pal.id === this.vm.activePaletteId ? 10 : 8)
+                  .height(8)
                   .backgroundColor(pal.colors[0])
-                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.9)
+                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.78)
                 Row()
                   .layoutWeight(2)
-                  .height(pal.id === this.vm.activePaletteId ? 10 : 8)
+                  .height(8)
                   .backgroundColor(pal.colors[1])
-                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.9)
+                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.78)
                 Row()
                   .layoutWeight(1)
-                  .height(pal.id === this.vm.activePaletteId ? 10 : 8)
+                  .height(8)
                   .backgroundColor(pal.colors[2])
-                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.9)
+                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.78)
               }
               .width('100%')
               .borderRadius(2)
@@ -63,7 +63,7 @@ export struct PaletteSelectorView {
                 offsetX: 0,
                 offsetY: pal.id === this.vm.activePaletteId ? 3 : 0
               })
- 
+
               Column({ space: 4 }) {
                 Text(pal.name)
                   .fontSize(13)
@@ -83,19 +83,18 @@ export struct PaletteSelectorView {
             .alignItems(HorizontalAlign.Start)
             .justifyContent(FlexAlign.SpaceBetween)
             .padding(16)
-            .backgroundColor(pal.id === this.vm.activePaletteId ? DesignTokens.SURFACE_SELECTED : DesignTokens.SURFACE_CARD)
+            .backgroundColor(pal.id === this.vm.activePaletteId ? '#fcfcfb' : DesignTokens.SURFACE_CARD)
             .borderRadius(2)
             .border({
               width: 1,
-              color: pal.id === this.vm.activePaletteId ? DesignTokens.BORDER_SELECTED : DesignTokens.BORDER_COLOR
+              color: pal.id === this.vm.activePaletteId ? 'rgba(26, 26, 26, 0.18)' : DesignTokens.BORDER_COLOR
             })
             .shadow({
-              radius: pal.id === this.vm.activePaletteId ? 16 : 6,
-              color: pal.id === this.vm.activePaletteId ? DesignTokens.SHADOW_SELECTED : 'rgba(0, 0, 0, 0.015)',
+              radius: pal.id === this.vm.activePaletteId ? 14 : 6,
+              color: pal.id === this.vm.activePaletteId ? 'rgba(0, 0, 0, 0.04)' : 'rgba(0, 0, 0, 0.015)',
               offsetX: 0,
-              offsetY: pal.id === this.vm.activePaletteId ? 8 : 3
+              offsetY: pal.id === this.vm.activePaletteId ? 6 : 3
             })
-            .scale({ x: pal.id === this.vm.activePaletteId ? 1.01 : 1, y: pal.id === this.vm.activePaletteId ? 1.01 : 1 })
             .onClick(() => {
               this.vm.selectPalette(pal.id);
             })

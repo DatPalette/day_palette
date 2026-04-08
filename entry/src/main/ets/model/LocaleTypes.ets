@@ -57,6 +57,9 @@ export interface UiStrings {
   fineTuneUndo: string;
   fineTuneAdvanced: string;
   fineTuneAdvancedHint: string;
+  fineTuneEdited: string;
+  fineTuneAppliedToast: string;
+  fineTuneResetToast: string;
   yesterdayEmpty: string;
   exportTemplateLabel: string;
   templateEditorial: string;
