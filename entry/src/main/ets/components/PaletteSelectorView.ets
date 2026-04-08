@@ -21,6 +21,10 @@ export struct PaletteSelectorView {
     return this.vm.canApplyYesterdayOutfit();
   }
 
+  private fineTuneActive(): boolean {
+    return this.vm.hasActivePaletteFineTune();
+  }
+
   build() {
     Column() {
       Text(this.vm.getUiStrings().curatedTitle)
@@ -196,18 +200,48 @@ export struct PaletteSelectorView {
           })
 
           Button({ type: ButtonType.Normal, stateEffect: true }) {
-            Text(this.vm.getUiStrings().fineTune)
-              .fontSize(13)
-              .fontWeight(FontWeight.Medium)
-              .fontColor(DesignTokens.TEXT_MAIN)
-              .maxLines(1)
-              .textOverflow({ overflow: TextOverflow.Ellipsis })
+            if (this.fineTuneActive()) {
+              Row({ space: 8 }) {
+                Text(this.vm.getUiStrings().fineTune)
+                  .layoutWeight(1)
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(DesignTokens.TEXT_MAIN)
+                  .maxLines(1)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+                  .textAlign(TextAlign.Start)
+
+                Text(this.vm.getUiStrings().fineTuneEdited)
+                  .fontSize(9)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor('rgba(0, 0, 0, 0.62)')
+                  .padding({ left: 6, right: 6, top: 2, bottom: 2 })
+                  .backgroundColor('rgba(255, 255, 255, 0.72)')
+                  .borderRadius(999)
+                  .border({ width: 1, color: 'rgba(0, 0, 0, 0.05)' })
+              }
+              .width('100%')
+              .alignItems(VerticalAlign.Center)
+            } else {
+              Text(this.vm.getUiStrings().fineTune)
+                .fontSize(13)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(DesignTokens.TEXT_MAIN)
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                .width('100%')
+                .textAlign(TextAlign.Center)
+            }
           }
           .layoutWeight(1)
           .height(42)
-          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .padding({ left: 12, right: 12 })
+          .backgroundColor(this.fineTuneActive() ? 'rgba(0, 0, 0, 0.025)' : DesignTokens.SURFACE_CARD)
           .borderRadius(2)
-          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .border({
+            width: 1,
+            color: this.fineTuneActive() ? 'rgba(26, 26, 26, 0.12)' : DesignTokens.BORDER_COLOR
+          })
           .onClick(() => {
             this.onFineTune();
           })

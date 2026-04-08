@@ -123,7 +123,26 @@ export struct FineTuneSheet {
     return this.activeRoleHex().trim().toLowerCase() === hex.trim().toLowerCase();
   }
 
+  private canResetToPalette(): boolean {
+    const current: string[] = this.currentColors();
+    const base: string[] = this.basePaletteColors();
+    return current[0].trim().toLowerCase() !== base[0].trim().toLowerCase() ||
+      current[1].trim().toLowerCase() !== base[1].trim().toLowerCase() ||
+      current[2].trim().toLowerCase() !== base[2].trim().toLowerCase();
+  }
+
+  private hasPendingApplyChanges(): boolean {
+    const current: string[] = this.currentColors();
+    const applied: string[] = this.vm.getHeroColorStrings();
+    return current[0].trim().toLowerCase() !== applied[0].trim().toLowerCase() ||
+      current[1].trim().toLowerCase() !== applied[1].trim().toLowerCase() ||
+      current[2].trim().toLowerCase() !== applied[2].trim().toLowerCase();
+  }
+
   private resetToPalette(): void {
+    if (!this.canResetToPalette()) {
+      return;
+    }
     const base: string[] = this.basePaletteColors();
     this.pushHistory();
     this.mainHex = base[0];
@@ -290,6 +309,8 @@ export struct FineTuneSheet {
 
         Button(this.vm.getUiStrings().fineTuneReset)
           .layoutWeight(1)
+          .enabled(this.canResetToPalette())
+          .opacity(this.canResetToPalette() ? 1 : 0.45)
           .height(44)
           .backgroundColor(DesignTokens.SURFACE_SUBTLE)
           .fontColor('#4f4f4f')
@@ -304,11 +325,16 @@ export struct FineTuneSheet {
 
       Button(this.vm.getUiStrings().fineTuneApply)
         .width('100%')
+        .enabled(this.hasPendingApplyChanges())
+        .opacity(this.hasPendingApplyChanges() ? 1 : 0.45)
         .height(52)
         .backgroundColor(DesignTokens.TEXT_MAIN)
         .fontColor(DesignTokens.TEXT_ON_INVERSE)
         .borderRadius(2)
         .onClick(() => {
+          if (!this.hasPendingApplyChanges()) {
+            return;
+          }
           const ok: boolean = this.vm.setFineTuneHex(this.mainHex, this.secHex, this.accHex);
           if (!ok) {
             this.getUIContext().getPromptAction().showToast({
