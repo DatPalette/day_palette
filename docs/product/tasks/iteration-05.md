@@ -67,6 +67,7 @@
 - 精调弹层已从页面内手搓全屏遮罩，切换为 ArkUI 系统 `bindSheet`；当前由系统处理蒙层、开合动画、外部点击关闭与键盘避让，已移除“mask 跟着整块面板生硬平移”的旧表现。
 - 为支撑新精调交互，ViewModel 已补 `getActivePaletteBaseColors()` 与 `getFineTuneCandidateHexes()`，当前候选色来源于：当前显示色、当前套组基色、当前场景推荐 palette 的同角色颜色。
 - 本轮同步补齐了新的精调文案键：`fineTuneSuggested / fineTuneManual / fineTuneUndo`，并在中英文内置文案中落地。
+- 精调面板随后又完成了一轮视觉与交互收敛：`HEX` 输入已降级为默认折叠的“高级输入”，次级按钮改为等宽、弱强调样式；主界面 palette 卡、精调角色卡和推荐色圆点的选中态已从“黑色粗边框”调整为更轻的描边、微弱抬升与 ring/glow 反馈。
 - 为避免已缓存或远端下发的旧 locale bundle 缺字段导致首页启动闪退，`LocaleData.ets` 已改为对 UI 文案做逐字段安全回退；缺字段或空字符串时自动退回内置默认文案。
 - `TodayStateStore.ets` 已补 `pref.flush()` 的异常兜底，避免 ArkTS 对可能抛错调用给出告警时阻断编译。
 - 本轮处理过的编译 / 运行问题已清零：包括 ArkTS 对对象 spread、indexed access type、`bindSheet.radius` 裸数字类型，以及旧 locale bundle 缺字段导致的运行时 `TypeError`。
@@ -217,6 +218,7 @@
 
 - 已完成首版交互原型：三角色切换 + 推荐色候选 + 手动 HEX + 撤销 + 恢复套组色 + 应用。
 - 当前弹层实现已从自绘遮罩改为 ArkUI 系统 `bindSheet`，用于改善蒙层和开合动画的一致性。
+- 已完成第二轮界面收敛：默认隐藏高级输入，补齐次级操作按钮版式，并统一主界面与精调面板的选中态语言。
 - 运行时与编译兼容问题已完成修复，当前待补的是交互体验验证，而不是基础可用性修复。
 
 
