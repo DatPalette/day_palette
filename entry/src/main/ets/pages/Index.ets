@@ -30,6 +30,7 @@ import type {
 struct Index {
   @State vm: DayPaletteViewModel = new DayPaletteViewModel();
   private scroller: Scroller = new Scroller();
+  @State paletteRevealRequestToken: number = 0;
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
   @State fineTuneOpen: boolean = false;
@@ -263,8 +264,10 @@ struct Index {
           OccasionSelectorView({ vm: this.vm })
           PaletteSelectorView({
             vm: this.vm,
+            revealRequestToken: this.paletteRevealRequestToken,
             onRandom: () => {
               this.vm.randomPaletteInActiveOccasion();
+              this.paletteRevealRequestToken += 1;
             },
             onYesterday: () => {
               const ok: boolean = this.vm.applyYesterdayOutfitFromStorage();

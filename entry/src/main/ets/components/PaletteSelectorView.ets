@@ -6,12 +6,16 @@ import { LayoutConstants } from '../common/constants/LayoutConstants';
 @Component
 export struct PaletteSelectorView {
   @ObjectLink vm: DayPaletteViewModel;
+  @Watch('onRevealRequestChanged') @Prop revealRequestToken: number = 0;
   onRandom: () => void = () => {
   };
   onYesterday: () => void = () => {
   };
   onFineTune: () => void = () => {
   };
+  private paletteScroller: Scroller = new Scroller();
+  @State private emphasizedPaletteId: string = '';
+  private emphasizedTimerId: number | null = null;
 
   private actionPreviewColors(): string[] {
     return this.vm.getHeroColorStrings();
@@ -23,6 +27,35 @@ export struct PaletteSelectorView {
 
   private fineTuneActive(): boolean {
     return this.vm.hasActivePaletteFineTune();
+  }
+
+  private onRevealRequestChanged(): void {
+    this.revealActivePalette();
+  }
+
+  private revealActivePalette(): void {
+    const palettes: Palette[] = this.paletteList();
+    const activeIndex: number = palettes.findIndex((pal: Palette) => pal.id === this.vm.activePaletteId);
+    if (activeIndex < 0) {
+      return;
+    }
+    this.paletteScroller.scrollTo({
+      xOffset: activeIndex * 156,
+      yOffset: 0,
+      animation: { duration: this.vm.reduceMotion ? 1 : 420, curve: Curve.EaseInOut }
+    });
+    this.emphasizePalette(this.vm.activePaletteId);
+  }
+
+  private emphasizePalette(paletteId: string): void {
+    this.emphasizedPaletteId = paletteId;
+    if (this.emphasizedTimerId !== null) {
+      clearTimeout(this.emphasizedTimerId);
+    }
+    this.emphasizedTimerId = setTimeout((): void => {
+      this.emphasizedPaletteId = '';
+      this.emphasizedTimerId = null;
+    }, this.vm.reduceMotion ? 40 : 820);
   }
 
   build() {
@@ -37,7 +70,7 @@ export struct PaletteSelectorView {
         .textAlign(TextAlign.Start)
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
 
-      Scroll() {
+      Scroll(this.paletteScroller) {
         Row({ space: 16 }) {
           ForEach(this.paletteList(), (pal: Palette) => {
             Column() {
@@ -87,18 +120,25 @@ export struct PaletteSelectorView {
             .alignItems(HorizontalAlign.Start)
             .justifyContent(FlexAlign.SpaceBetween)
             .padding(16)
-            .backgroundColor(pal.id === this.vm.activePaletteId ? '#fcfcfb' : DesignTokens.SURFACE_CARD)
+            .backgroundColor(pal.id === this.vm.activePaletteId
+              ? (pal.id === this.emphasizedPaletteId ? '#ffffff' : '#fcfcfb')
+              : DesignTokens.SURFACE_CARD)
             .borderRadius(2)
             .border({
               width: 1,
-              color: pal.id === this.vm.activePaletteId ? 'rgba(26, 26, 26, 0.18)' : DesignTokens.BORDER_COLOR
+              color: pal.id === this.vm.activePaletteId
+                ? (pal.id === this.emphasizedPaletteId ? 'rgba(26, 26, 26, 0.26)' : 'rgba(26, 26, 26, 0.18)')
+                : DesignTokens.BORDER_COLOR
             })
             .shadow({
-              radius: pal.id === this.vm.activePaletteId ? 14 : 6,
-              color: pal.id === this.vm.activePaletteId ? 'rgba(0, 0, 0, 0.04)' : 'rgba(0, 0, 0, 0.015)',
+              radius: pal.id === this.vm.activePaletteId ? (pal.id === this.emphasizedPaletteId ? 18 : 14) : 6,
+              color: pal.id === this.vm.activePaletteId
+                ? (pal.id === this.emphasizedPaletteId ? 'rgba(0, 0, 0, 0.06)' : 'rgba(0, 0, 0, 0.04)')
+                : 'rgba(0, 0, 0, 0.015)',
               offsetX: 0,
-              offsetY: pal.id === this.vm.activePaletteId ? 6 : 3
+              offsetY: pal.id === this.vm.activePaletteId ? (pal.id === this.emphasizedPaletteId ? 8 : 6) : 3
             })
+            .animation({ duration: this.vm.reduceMotion ? 1 : 520, curve: Curve.EaseInOut })
             .onClick(() => {
               this.vm.selectPalette(pal.id);
             })
