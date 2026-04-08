@@ -14,6 +14,9 @@ export class DesignTokens {
   static readonly BORDER_SUBTLE: string = 'rgba(0, 0, 0, 0.03)';
   static readonly SHADOW_SOFT: string = 'rgba(0, 0, 0, 0.06)';
   static readonly SURFACE_CARD: string = '#ffffff';
+  static readonly SURFACE_SELECTED: string = 'rgba(255, 255, 255, 0.98)';
+  static readonly BORDER_SELECTED: string = 'rgba(26, 26, 26, 0.16)';
+  static readonly SHADOW_SELECTED: string = 'rgba(0, 0, 0, 0.05)';
   /** 原型默认三色（未选中具体 palette 时的占位，与 --c-main/sec/acc 初值一致） */
   static readonly DEFAULT_MAIN: string = '#E8D8D3';
   static readonly DEFAULT_SEC: string = '#C5B9B6';

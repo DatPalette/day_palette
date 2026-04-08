@@ -149,15 +149,27 @@ export struct FineTuneSheet {
 
             Row()
               .width('100%')
-              .height(12)
+              .height(index === this.activeRoleIndex ? 14 : 12)
               .backgroundColor(this.displayHex(this.currentColors()[index], this.basePaletteColors()[index]))
               .borderRadius(2)
+              .shadow({
+                radius: index === this.activeRoleIndex ? 6 : 0,
+                color: index === this.activeRoleIndex ? 'rgba(0, 0, 0, 0.035)' : 'rgba(0, 0, 0, 0)',
+                offsetX: 0,
+                offsetY: index === this.activeRoleIndex ? 2 : 0
+              })
           }
           .layoutWeight(1)
           .padding({ left: 12, right: 12, top: 12, bottom: 12 })
-          .backgroundColor(index === this.activeRoleIndex ? DesignTokens.SURFACE_CARD : DesignTokens.SURFACE_SUBTLE)
+          .backgroundColor(index === this.activeRoleIndex ? DesignTokens.SURFACE_SELECTED : DesignTokens.SURFACE_SUBTLE)
           .borderRadius(2)
-          .border({ width: 1, color: index === this.activeRoleIndex ? DesignTokens.TEXT_MAIN : DesignTokens.BORDER_COLOR })
+          .border({ width: 1, color: index === this.activeRoleIndex ? DesignTokens.BORDER_SELECTED : DesignTokens.BORDER_SUBTLE })
+          .shadow({
+            radius: index === this.activeRoleIndex ? 14 : 0,
+            color: index === this.activeRoleIndex ? DesignTokens.SHADOW_SELECTED : 'rgba(0, 0, 0, 0)',
+            offsetX: 0,
+            offsetY: index === this.activeRoleIndex ? 6 : 0
+          })
           .onClick(() => {
             this.activeRoleIndex = index;
           })
@@ -176,17 +188,30 @@ export struct FineTuneSheet {
           Row({ space: 10 }) {
             ForEach(this.candidateHexes(), (hex: string) => {
               Column({ space: 6 }) {
-                Row()
-                  .width(44)
-                  .height(44)
-                  .backgroundColor(hex)
-                  .borderRadius(22)
-                  .border({ width: this.isSelectedCandidate(hex) ? 2 : 1, color: this.isSelectedCandidate(hex) ? DesignTokens.TEXT_MAIN : DesignTokens.BORDER_COLOR })
-                  .shadow({ radius: this.isSelectedCandidate(hex) ? 10 : 0, color: DesignTokens.SHADOW_SOFT, offsetY: 3 })
+                Row() {
+                  Row()
+                    .width(this.isSelectedCandidate(hex) ? 36 : 40)
+                    .height(this.isSelectedCandidate(hex) ? 36 : 40)
+                    .backgroundColor(hex)
+                    .borderRadius(this.isSelectedCandidate(hex) ? 18 : 20)
+                    .border({ width: this.isSelectedCandidate(hex) ? 1 : 0, color: 'rgba(255, 255, 255, 0.75)' })
+                }
+                .width(this.isSelectedCandidate(hex) ? 52 : 50)
+                .height(this.isSelectedCandidate(hex) ? 52 : 50)
+                .justifyContent(FlexAlign.Center)
+                .backgroundColor(this.isSelectedCandidate(hex) ? 'rgba(255, 255, 255, 0.92)' : Color.Transparent)
+                .borderRadius(this.isSelectedCandidate(hex) ? 26 : 25)
+                .border({ width: 1, color: this.isSelectedCandidate(hex) ? 'rgba(26, 26, 26, 0.12)' : 'rgba(0, 0, 0, 0.04)' })
+                .shadow({
+                  radius: this.isSelectedCandidate(hex) ? 16 : 0,
+                  color: this.isSelectedCandidate(hex) ? 'rgba(0, 0, 0, 0.06)' : 'rgba(0, 0, 0, 0)',
+                  offsetX: 0,
+                  offsetY: this.isSelectedCandidate(hex) ? 6 : 0
+                })
 
                 Text(hex.toUpperCase())
                   .fontSize(9)
-                  .fontColor(this.isSelectedCandidate(hex) ? DesignTokens.TEXT_MAIN : DesignTokens.TEXT_MUTED)
+                  .fontColor(this.isSelectedCandidate(hex) ? '#4f4f4f' : DesignTokens.TEXT_MUTED)
                   .maxLines(1)
               }
               .width(52)
@@ -195,6 +220,7 @@ export struct FineTuneSheet {
               })
             }, (hex: string) => `${this.activeRoleIndex}_${hex}`)
           }
+          .padding({ top: 4, bottom: 6 })
         }
         .scrollable(ScrollDirection.Horizontal)
         .scrollBar(BarState.Off)
