@@ -17,8 +17,8 @@
 | Key | Type | Priority | Summary | Status | Acceptance（摘要） |
 |-----|------|----------|---------|--------|-------------------|
 | BL-BR-03 | Story | P2 | 精调：「智能配」主路径 + 可展开完整微调 | Backlog | 已完成部分数据/规则底座，但因当前搭配质量与 UI 交互未达标，2026-04-07 起暂停对外投放并屏蔽首页入口 |
-| BL-BR-08 | Task | P3 | 运营侧内容管理方案调研与选型 | In Progress | 已收敛出“Web 管理端 + GitHub 数据包 + App 导入脚本”的前期运营载体；待补管理端信息架构与审核清单 |
-| BL-BR-10 | Story | P2 | 配色数据更新机制设计（内置 / 远端覆盖 / CMS） | In Progress | 已明确前期以内置数据包发布为主，先稳定导出/导入链路，再评估远端覆盖 |
+| BL-BR-08 | Task | P3 | 运营侧内容管理方案调研与选型 | In Progress | 已从“Web 管理端”进一步收敛为“预览优先的配色策展工作台”方向；首版建议独立新开本地 Web 工程，先完成预览、筛选、对比、状态沉淀 |
+| BL-BR-10 | Story | P2 | 配色数据更新机制设计（内置 / 远端覆盖 / CMS） | In Progress | 已明确前期以内置数据包发布为主；中期建议形成“资产仓库 source/bundle -> 工作台 -> App 导入脚本”的分层链路，再评估 GitHub 资产仓库接入 |
 | BL-BR-11 | Task | P2 | 灵感入口与场景文案收敛 | Done | 已完成产品方案、PRD 回流、UI 结构草案与首页首版实现；当前按完成态关闭 |
 | BL-UX-01 | Task | P1 | 精调能力升级与交互方案设计 | Done | 已完成交互方案收敛、代码原型实现与本轮验收回填；当前按完成态关闭 |
 | BL-BUG-01 | Task | P1 | TopBar 日期与系统日期不同步修复 | Done | 已改为基于系统当前日历日动态格式化，并补前后台与跨午夜刷新链路 |
@@ -82,6 +82,11 @@
 - 当前随机选的列表联动实现基于固定卡片宽度与间距计算偏移；对每个场景未来扩展到几十至上百个 palette 仍可支撑，当前不需要为此额外引入更重的虚拟列表方案。
 - `BL-BR-11` 已完成收口：灵感入口已完成任务重命名、PRD 回流、产品方案与 UI 草案沉淀，并在首页完成首版内联实现、日级稳定轮换候选池、文案降预期与展开动画收敛。
 - 经本轮确认，`BL-UX-01` 已完成：当前精调能力按既定边界交付，不再继续保留为“方案 + 原型”状态。
+- `BL-BR-08` 与 `BL-BR-10` 本轮形成新的阶段性结论：对即将进入“多场景 + 每场景几十到上百个配色盘”的内容运营阶段，最值得优先建设的不是传统 Web 后台，而是**预览优先的配色策展工作台**。
+- 当前建议已从“独立 Web 管理端 + GitHub 数据包 + App 导入脚本”进一步收敛为：**先新开独立工作台工程，首版按本地 Web 工具实现，重点解决批量预览、筛选、对比、状态沉淀，再补 bundle 构建与远端资产仓库衔接。**
+- 工作台首版推荐边界已明确：优先做 `总览 / 批量预览 / 对比 / 入选与淘汰管理 / 详情 / 发布前检查` 六类页面；优先沉淀 `reviewStatus / curationScore / rejectionReason / reviewNotes / isSelected` 等运营字段。
+- 技术方案已形成首版建议：建议新开 `daypalette-palette-workbench` 独立工程，采用 `React + Vite + TypeScript + Node.js scripts + pnpm`；远端资产建议单独抽为 `daypalette-color-assets` 仓库，移动端继续只消费 `bundle/current/`。
+- 本轮已补齐以下配套文档，供下一步继续推进时直接接手：`palette-curation-workbench-mvp-plan.md`、`palette-curation-workbench-wireframes.md`、`palette-curation-workbench-fields-and-state-machine.md`、`palette-curation-workbench-technical-implementation.md`。
 
 ## 明日接手建议（跨设备继续）
 
@@ -110,6 +115,8 @@
 - 方案文档需明确：缓存、签名或版本字段、失败回退、离线降级、兼容老版本客户端的边界。
 - 与当前 `LocaleData.ets` 的真实实现对照，产出“从硬编码迁移到文件化资源”的过渡路线。
 - 低成本技术方案与部署对比详见 [../../architecture/low-cost-remote-json-stage1-plan.md](../../architecture/low-cost-remote-json-stage1-plan.md)。
+- 结合 2026-04-09 的新结论，前期正式发布源仍以 App 内置 bundle 为准；但中期数据链路应开始按 `source/ -> workbench -> bundle/current/ -> App 导入脚本` 设计，避免未来资产规模上来后再次推翻。
+- 远端 GitHub 资产仓库当前不作为首版前提，而作为第二阶段接入项；首版先跑通本地 source 数据、校验和 bundle 构建闭环。
 
 **交付物**
 
@@ -131,7 +138,9 @@
 - 先把“编辑态 / 发布态 / 审核态”三段流程写清，再决定是否需要工具。
 - 编辑态优先看结构化表格；发布态优先看仓库内 JSON；工具选型只作为后续增强项。
 - 审核口径需覆盖：命名一致性、场景适配、色彩风险、资产重复度。
-- 当前进一步收敛为：以前期独立 Web 管理端作为主要编辑载体，管理端导出结构化 JSON 数据包，GitHub 作为版本化真相源，App 侧通过导入脚本同步资源并随版本发布。
+- 当前进一步收敛为：以前期**预览优先的配色策展工作台**作为主要工作载体，而不是传统表单后台。
+- 工具形态当前建议为：先新开独立本地 Web 工程，优先实现批量预览、筛选、对比、状态标记与发布前检查；编辑与发布能力作为第二优先级补齐。
+- GitHub 资产仓库继续保留为中期目标，用于承载 `source / bundle / schema / manifest`；但首版工具不强依赖远端仓库，先跑通本地工作区闭环。
 
 **交付物**
 
@@ -145,7 +154,12 @@
 - 运营当前可直接维护的核心文件为 `entry/src/main/resources/rawfile/smartmatch/strategy.v1.json`。
 - 已补首版运营指导文档：[../strategy/extended-pairing-ops-guide.md](../strategy/extended-pairing-ops-guide.md)，用于说明可修改字段、审核边界与发布动作。
 - 已补配色资产运营整体方案：[../strategy/color-asset-operations-plan.md](../strategy/color-asset-operations-plan.md)，将前期运营载体收敛为“Web 管理端 + GitHub 数据包 + App 导入脚本”。
-- 后续仍需补齐两项落地物：管理端信息架构细稿，以及正式审核清单模板。
+- 2026-04-09 新增阶段性收敛：
+  - 已补配色策展工作台 MVP 方案：[../strategy/palette-curation-workbench-mvp-plan.md](../strategy/palette-curation-workbench-mvp-plan.md)。
+  - 已补页面线框与交互草案：[../strategy/palette-curation-workbench-wireframes.md](../strategy/palette-curation-workbench-wireframes.md)。
+  - 已补运营字段与状态机文档：[../strategy/palette-curation-workbench-fields-and-state-machine.md](../strategy/palette-curation-workbench-fields-and-state-machine.md)。
+  - 已补技术实现方案：[../../architecture/palette-curation-workbench-technical-implementation.md](../../architecture/palette-curation-workbench-technical-implementation.md)。
+- 后续仍需补齐的落地物已从“传统管理端信息架构”转为：数据 schema 草案、工作台工程初始化方案，以及面向实现的迭代拆分。
 
 
 ### BL-BR-11 · 灵感入口与场景文案收敛
