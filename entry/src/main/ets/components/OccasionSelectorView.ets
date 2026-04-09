@@ -7,6 +7,8 @@ import { LayoutConstants } from '../common/constants/LayoutConstants';
 @Component
 export struct OccasionSelectorView {
   @ObjectLink vm: DayPaletteViewModel;
+  topMarginVp: number = LayoutConstants.OCCASION_TOP_MARGIN_VP;
+  bottomMarginVp: number = LayoutConstants.OCCASION_BOTTOM_MARGIN_VP;
 
   build() {
     Column() {
@@ -55,6 +57,6 @@ export struct OccasionSelectorView {
     .width('100%')
     .alignItems(HorizontalAlign.Start)
     .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP, right: LayoutConstants.PAGE_HORIZONTAL_VP })
-    .margin({ top: LayoutConstants.OCCASION_TOP_MARGIN_VP, bottom: LayoutConstants.OCCASION_BOTTOM_MARGIN_VP })
+    .margin({ top: this.topMarginVp, bottom: this.bottomMarginVp })
   }
 }

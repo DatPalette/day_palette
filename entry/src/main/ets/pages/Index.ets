@@ -6,6 +6,7 @@ import { getBottomGestureBarHeightPx } from '../common/window/NavigationIndicato
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { TopBarView } from '../components/TopBarView';
 import { HeroDisplayView } from '../components/HeroDisplayView';
+import { InspirationEntryView } from '../components/InspirationEntryView';
 import { OccasionSelectorView } from '../components/OccasionSelectorView';
 import { PaletteSelectorView } from '../components/PaletteSelectorView';
 import { BottomActionsView } from '../components/BottomActionsView';
@@ -261,7 +262,17 @@ struct Index {
           Blank()
             .height(LayoutConstants.SCROLL_TOP_INSET_VP)
           HeroDisplayView({ vm: this.vm })
-          OccasionSelectorView({ vm: this.vm })
+          InspirationEntryView({
+            vm: this.vm,
+            onApplied: () => {
+              this.paletteRevealRequestToken += 1;
+            }
+          })
+          OccasionSelectorView({
+            vm: this.vm,
+            topMarginVp: 20,
+            bottomMarginVp: 26
+          })
           PaletteSelectorView({
             vm: this.vm,
             revealRequestToken: this.paletteRevealRequestToken,

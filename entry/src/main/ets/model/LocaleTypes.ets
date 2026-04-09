@@ -39,6 +39,12 @@ export interface UiStrings {
   randomPalette: string;
   /** 副文案：说明行为边界，字号更小，与主文案同列展示。 */
   randomPaletteHint: string;
+  inspirationEntryEyebrow: string;
+  inspirationEntryTitle: string;
+  inspirationEntryHint: string;
+  inspirationSectionTitle: string;
+  inspirationSectionHint: string;
+  inspirationCollapse: string;
   smartMatch: string;
   smartMatchTitle: string;
   smartMatchHint: string;

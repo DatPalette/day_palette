@@ -62,6 +62,8 @@ export class DayPaletteViewModel {
   catalogRefreshTick: number = 0;
   /** 当前系统日历日（YYYY-MM-DD），用于驱动 TopBar 日期展示。 */
   currentCalendarDay: string = todayLocalYmd();
+  /** 首页灵感入口展开状态。 */
+  inspirationExpanded: boolean = false;
 
   private persistContext: common.UIAbilityContext | null = null;
 
@@ -173,6 +175,111 @@ export class DayPaletteViewModel {
     return this.getRecommendedPalettesForOccasion(this.activeOccasionId);
   }
 
+  private getOccasionForPaletteId(paletteId: string): Occasion | undefined {
+    const occasions: Occasion[] = this.getOccasions();
+    for (let i = 0; i < occasions.length; i++) {
+      const occasion: Occasion = occasions[i];
+      const palettes: Palette[] = this.getRecommendedPalettesForOccasion(occasion.id);
+      for (let j = 0; j < palettes.length; j++) {
+        if (palettes[j].id === paletteId) {
+          return occasion;
+        }
+      }
+    }
+    return undefined;
+  }
+
+  private getPaletteByIdAcrossOccasions(paletteId: string): Palette | undefined {
+    const occasions: Occasion[] = this.getOccasions();
+    for (let i = 0; i < occasions.length; i++) {
+      const palettes: Palette[] = this.getRecommendedPalettesForOccasion(occasions[i].id);
+      for (let j = 0; j < palettes.length; j++) {
+        if (palettes[j].id === paletteId) {
+          return palettes[j];
+        }
+      }
+    }
+    return undefined;
+  }
+
+  toggleInspirationExpanded(): void {
+    this.inspirationExpanded = !this.inspirationExpanded;
+  }
+
+  collapseInspirationExpanded(): void {
+    if (!this.inspirationExpanded) {
+      return;
+    }
+    this.inspirationExpanded = false;
+  }
+
+  getInspirationPalettes(maxResults: number = 4): Palette[] {
+    const result: Palette[] = [];
+    const seenIds: string[] = [];
+    const pushUnique = (palette: Palette | undefined): void => {
+      if (palette === undefined || seenIds.includes(palette.id)) {
+        return;
+      }
+      seenIds.push(palette.id);
+      result.push(palette);
+    };
+
+    const occasions: Occasion[] = this.getOccasions();
+    for (let i = 0; i < occasions.length; i++) {
+      const palettes: Palette[] = this.getRecommendedPalettesForOccasion(occasions[i].id);
+      for (let j = 0; j < palettes.length; j++) {
+        const palette: Palette = palettes[j];
+        if (palette.safetyLevel !== undefined && palette.safetyLevel === 'experimental') {
+          continue;
+        }
+        pushUnique(palette);
+        if (result.length >= maxResults) {
+          break;
+        }
+      }
+    }
+
+    if (result.length <= maxResults) {
+      return result;
+    }
+
+    const daySeed: string = this.currentCalendarDay;
+    const ranked: Palette[] = result.slice().sort((left: Palette, right: Palette): number => {
+      const leftScore: number = this.hashInspirationKey(`${daySeed}:${left.id}`);
+      const rightScore: number = this.hashInspirationKey(`${daySeed}:${right.id}`);
+      if (leftScore !== rightScore) {
+        return leftScore - rightScore;
+      }
+      return left.id.localeCompare(right.id);
+    });
+    return ranked.slice(0, maxResults);
+  }
+
+  private hashInspirationKey(input: string): number {
+    let hash: number = 0;
+    for (let i = 0; i < input.length; i++) {
+      hash = (hash * 131 + input.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+  }
+
+  applyInspirationPalette(paletteId: string): boolean {
+    const occasion: Occasion | undefined = this.getOccasionForPaletteId(paletteId);
+    const palette: Palette | undefined = this.getPaletteByIdAcrossOccasions(paletteId);
+    if (occasion === undefined || palette === undefined) {
+      return false;
+    }
+    const changed: boolean = this.activeOccasionId !== occasion.id || this.activePaletteId !== palette.id || this.customHex !== null;
+    this.activeOccasionId = occasion.id;
+    this.activePaletteId = palette.id;
+    this.customHex = null;
+    this.inspirationExpanded = false;
+    if (changed) {
+      this.flushTodayOutfitToStorage();
+    }
+    return true;
+  }
+
   getActivePalette(): Palette | undefined {
     return this.getRecommendedPalettesForActiveOccasion().find((p: Palette) => p.id === this.activePaletteId);
   }
@@ -262,6 +369,7 @@ export class DayPaletteViewModel {
     this.activeOccasionId = occasionId;
     this.activePaletteId = recommended[0].id;
     this.customHex = null;
+    this.inspirationExpanded = false;
     this.flushTodayOutfitToStorage();
   }
 
@@ -279,6 +387,7 @@ export class DayPaletteViewModel {
     }
     this.activePaletteId = paletteId;
     this.customHex = null;
+    this.inspirationExpanded = false;
     this.flushTodayOutfitToStorage();
   }
 
@@ -350,6 +459,7 @@ export class DayPaletteViewModel {
     const idx: number = Math.floor(Math.random() * recommended.length);
     this.activePaletteId = recommended[idx].id;
     this.customHex = null;
+    this.inspirationExpanded = false;
     this.flushTodayOutfitToStorage();
   }
 
