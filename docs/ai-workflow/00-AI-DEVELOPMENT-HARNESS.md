@@ -3,6 +3,8 @@
 本文档是 **Vibe coding / Agent 驱动开发** 的单一入口：说明需求如何落盘、设计系统如何长期约束 AI、鸿蒙工程范式与目录结构，以及 **AGENTS.md**、**Cursor Rules**、**Skills** 三者的分工与用法。
 
 > 自 2026-04-20 起，跨仓共享的业务流程、设计语言与仓库边界已开始收口到 [`../../../daypalette-docs/`](../../../daypalette-docs/README.md)。本仓 `docs/` 继续保留 HarmonyOS 客户端实现说明与必要补充；若遇到共享规则与本仓文档重复，优先更新 `daypalette-docs`，再回写本仓映射。
+>
+> **AI 协作通用模型**（三层结构、需求落盘原则、Skills 角色、Prompt 工作流通用原则）已收口到 [`../../../daypalette-docs/ai-workflow/collaboration-model.md`](../../../daypalette-docs/ai-workflow/collaboration-model.md)。本文以下章节是 **HarmonyOS 客户端的具体落盘矩阵、目录结构与 Skills 映射**，与共享版互为补充。
 
 ---
 
