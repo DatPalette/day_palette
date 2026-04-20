@@ -118,8 +118,20 @@
 - `entry/src/main/resources/rawfile/palette-data/base-colors.v1.json`  
 - `entry/src/main/resources/rawfile/palette-data/palettes.v1.json`  
 - `entry/src/main/resources/rawfile/palette-data/collections.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/manifest.json`  
 - `entry/src/main/resources/rawfile/palette-data/locale/zh-CN.v1.json`  
 - `entry/src/main/resources/rawfile/palette-data/locale/en-US.v1.json`
+
+编辑态与策展态当前开始补第二阶段仓库落点：
+
+- `daypalette-color-assets/source/current/base-colors.v1.json`
+- `daypalette-color-assets/source/current/palettes.v1.json`
+- `daypalette-color-assets/source/current/collections.v1.json`
+- `daypalette-color-assets/source/current/curation-state.v1.json`
+- `daypalette-color-assets/bundle/current/base-colors.v1.json`
+- `daypalette-color-assets/bundle/current/palettes.v1.json`
+- `daypalette-color-assets/bundle/current/collections.v1.json`
+- `daypalette-color-assets/bundle/current/manifest.json`
 
 ### 4.5 UI 文案与内容文案分层（当前已落地）
 
@@ -136,10 +148,11 @@
 
 ### 4.6 兼容原则
 
-1. 本地 `rawfile` 资源是默认真相源。  
-2. 即使后续支持远端 JSON 覆盖，结构也应与本地文件兼容。  
+1. 当前 App 运行时默认消费本地 `rawfile` bundle；工作台与资产仓库则维护更接近编辑态的 source 数据。  
+2. 即使后续支持远端 JSON 覆盖，结构也应与 `source/current/` 与 App `rawfile` 资源兼容。  
 3. 当前 UI 仍通过 `ColorCatalogMapper` 映射回 `Occasion / Palette` 旧模型，降低重构风险。  
-4. `LocaleData.ets` 当前保留 fallback bundle，用于 catalog 读取失败时回退。
+4. `LocaleData.ets` 当前保留 fallback bundle，用于 catalog 读取失败时回退。  
+5. `curation-state.v1.json` 属于工作台运营层状态，不直接参与 App UI 渲染，但会影响 bundle 生成边界与发布候选筛选。
 
 ## 5. 修订
 
@@ -148,3 +161,4 @@
 - 2026-04-03：新增“昨日”轻量快照槽位说明；明确不做按日历史，仅维护 today draft 与 yesterday snapshot。
 - 2026-04-07：补充配色资产三层模型与建议文件落点；为结构化 JSON 资源与后续远端覆盖预留边界。
 - 2026-04-07：阶段 0 开始落地 `base-colors / palettes / collections` 三层本地资源，并将 UI 文案从内容 locale 中拆分到 `rawfile/i18n/ui/*.json`。
+- 2026-04-17：补充独立资产仓库 `daypalette-color-assets` 的 `source/current` 与 `bundle/current` 落点，并记录 `manifest.json` 与 `curation-state.v1.json` 的职责边界。

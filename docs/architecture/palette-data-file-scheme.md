@@ -1,5 +1,8 @@
 # 配色数据文件方案 · 从 LocaleData 到结构化资源
 
+> 配色内容系统总览与资产生命周期，当前请优先阅读 [`../../../daypalette-docs/product/content-system-overview.md`](../../../daypalette-docs/product/content-system-overview.md) 与 [`../../../daypalette-docs/operations/color-asset-lifecycle.md`](../../../daypalette-docs/operations/color-asset-lifecycle.md)。
+> 本文件只保留 `day_palette` 仓库内的 **rawfile 落点、catalog 映射与 fallback 兼容说明**，避免与顶层共享文档重复维护。
+
 ## 1. 文档目的
 
 本文用于把 Brainstorming-02 和策略文档中的字段、JSON 结构，映射到 DayPalette 当前项目里的**真实文件方案**。

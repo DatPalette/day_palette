@@ -1,10 +1,11 @@
 # 配色资产运营技术架构方案
 
-> 本文当前作为技术细化参考保留。若需要统一查看产品、技术、迁移与 AI 分步执行方案，请优先阅读 [../product/strategy/color-asset-unified-master-plan.md](../product/strategy/color-asset-unified-master-plan.md)。
+> 当前多仓边界与真相源分工已收口到 [`../../../daypalette-docs/architecture/repository-boundaries.md`](../../../daypalette-docs/architecture/repository-boundaries.md)。
+> 本文保留为 **早期技术推演与历史方案备忘**：主要记录 monorepo / package / local bridge 的演进思路。若与当前已落地实现冲突，以 `daypalette-docs` 共享边界文档与本仓 [`architecture.md`](./architecture.md) 为准。
 
 ## 1. 文档目的
 
-本文用于把 DayPalette 配色资产运营方案，从“产品与流程层”继续下钻到“工程结构、模块职责、数据状态、发布链路”层面。
+本文用于把 DayPalette 配色资产运营方案，从“产品与流程层”继续下钻到“工程结构、模块职责、数据状态、发布链路”层面，但当前更适合作为历史方案与备用演进参考，而不是跨仓真相源。
 
 本文重点回答以下问题：
 

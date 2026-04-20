@@ -1,6 +1,9 @@
 # DayPalette 设计系统（Design System）
 
-本文档从 [`../mockups/daypalette-premium-mockup.html`](../mockups/daypalette-premium-mockup.html) 抽取**可复用的设计语言与工程令牌**。后续开发新界面、新模块时，应以本文件为规范；HTML 原型仅作像素级对照与疑难细节参考，不必每次改 HTML。
+> 跨移动端与 Web 的共享设计语言，当前已收口到 [`../../../daypalette-docs/design/shared-design-language.md`](../../../daypalette-docs/design/shared-design-language.md)。
+> 本文件从当前起主要记录 **HarmonyOS 客户端实现映射**：ArkUI 页面、尺寸、组件形态与像素级补充；若要修改共享品牌气质、排版角色、语义色层或动效节奏，应优先更新顶层共享文档，再回写本文件。
+
+本文档在 [`../mockups/daypalette-premium-mockup.html`](../mockups/daypalette-premium-mockup.html) 与共享设计语言文档的基础上，补充 DayPalette App 的工程令牌与实现细节。HTML 原型仅作像素级对照与疑难细节参考，不必每次改 HTML。
 
 ---
 

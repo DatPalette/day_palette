@@ -166,13 +166,14 @@ entry/src/main/ets/
 
 ## 9. 配色数据文件化演进（规划）
 
-当前配色与场景数据仍硬编码在 [../../entry/src/main/ets/model/LocaleData.ets](../../entry/src/main/ets/model/LocaleData.ets) 中，`DayPaletteViewModel` 通过 `getLocaleBundle()` 直接消费。
+当前 App 运行时消费的 palette 数据主入口已位于 `entry/src/main/resources/rawfile/palette-data/*.json`，`DayPaletteViewModel` 通过 catalog 加载链路消费；`LocaleData.ets` 当前主要保留 fallback bundle 与兼容回退职责。
 
 下一阶段建议演进为：
 
-1. 把 palette 相关结构化数据迁移到 `entry/src/main/resources/rawfile/palette-data/*.json`。  
-2. 在 `entry/src/main/ets/model/catalog/` 下新增加载器、仓库与 mapper，把 JSON 映射回当前 UI 仍可消费的 `Occasion / Palette` 结构。  
-3. 先完成“硬编码 ArkTS -> 本地 JSON 资源”的文件化，再决定是否进入“本地基础库 + 远端 JSON 覆盖”。
+1. 继续把 App 仓库中的 `entry/src/main/resources/rawfile/palette-data/*.json` 视为移动端消费态资源，而不是内容编辑态真相源。  
+2. 编辑态与策展态开始外移到独立资产链路：`daypalette-color-assets/source/current/` 保存 source JSON，`daypalette-color-assets/bundle/current/` 保存消费态 bundle。  
+3. `daypalette-palette-workbench` 负责读取 source、维护 `curation-state.v1.json`、执行 validate/build-bundle，并通过导入脚本把 bundle 回灌到 App `rawfile/palette-data/`。  
+4. 在 `entry/src/main/ets/model/catalog/` 下继续通过加载器、仓库与 mapper，把 JSON 映射回当前 UI 仍可消费的 `Occasion / Palette` 结构；后续再决定是否进入“本地基础库 + 远端 JSON 覆盖”。
 
 对应规划详见 [palette-data-file-scheme.md](./palette-data-file-scheme.md)。
 

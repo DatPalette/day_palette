@@ -2,6 +2,8 @@
 
 本文档是 **Vibe coding / Agent 驱动开发** 的单一入口：说明需求如何落盘、设计系统如何长期约束 AI、鸿蒙工程范式与目录结构，以及 **AGENTS.md**、**Cursor Rules**、**Skills** 三者的分工与用法。
 
+> 自 2026-04-20 起，跨仓共享的业务流程、设计语言与仓库边界已开始收口到 [`../../../daypalette-docs/`](../../../daypalette-docs/README.md)。本仓 `docs/` 继续保留 HarmonyOS 客户端实现说明与必要补充；若遇到共享规则与本仓文档重复，优先更新 `daypalette-docs`，再回写本仓映射。
+
 ---
 
 ## 1. 三层协作模型
@@ -27,6 +29,7 @@
 
 | 变更类型 | 落盘文件 | 写什么 |
 |----------|-----------|--------|
+| 跨项目共享的业务流程、资产生命周期、仓库边界、共享设计语言 | [`../../../daypalette-docs/`](../../../daypalette-docs/README.md) 下对应文档 | 先更新共享规则层，再回写本仓实现映射。 |
 | 功能范围、用户故事、验收标准、版本里程碑 | [`../product/PRD.md`](../product/PRD.md) | 新增/改章节；必要时在文内增加「变更记录」小节（日期 + 摘要）。 |
 | 视觉令牌、组件形态、动效、间距圆角 | [`../design/design-system.md`](../design/design-system.md) | 改令牌表或组件节；文末注明与 HTML 原型是否已同步。 |
 | 模块边界、Kit 选用、数据流 | [`../architecture/architecture.md`](../architecture/architecture.md) | 更新模块图或表格。 |
@@ -41,9 +44,10 @@
 
 ## 3. 设计系统治理（长期约束 AI）
 
-- [`../design/design-system.md`](../design/design-system.md) 是 **默认 UI 规范**；Agent 实现新页面时 **必须** 引用其中的色、字、间距、圆角、动效、毛玻璃规则。  
+- [`../../../daypalette-docs/design/shared-design-language.md`](../../../daypalette-docs/design/shared-design-language.md) 是 **跨端共享设计语言**；涉及品牌气质、语义色角色、排版角色、动效节奏时先改这里。  
+- [`../design/design-system.md`](../design/design-system.md) 是 **HarmonyOS 客户端实现映射**；Agent 实现新页面时 **必须** 引用其中的 ArkUI 落地尺寸、组件形态与像素级补充。  
 - **微调频率低**：每次调整设计系统，应在同一 PR/提交中说明「影响面」（哪些界面/组件）。  
-- **与原型不一致**：以 HTML 校准像素 → 更新设计系统 → 再写代码；禁止长期「代码与设计系统两套真理」。  
+- **与原型不一致**：以 HTML 校准像素 → 先判断属于共享设计语言还是 App 实现映射 → 更新对应文档 → 再写代码；禁止长期「代码与文档两套真理」。  
 - 在 Prompt 中可固定附带：`@day-palette/docs/design/design-system.md`（路径随工作区根调整）。
 
 ---
@@ -119,6 +123,7 @@ day-palette/
 
 `@day-palette/AGENTS.md`  
 `@day-palette/docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md`  
+`@daypalette-docs/design/shared-design-language.md`  
 `@day-palette/docs/design/design-system.md`  
 `@day-palette/docs/product/PRD.md`
 
