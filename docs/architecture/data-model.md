@@ -63,77 +63,26 @@
 
 ## 4. 结构化配色资产（已进入阶段 0）
 
-为支持专题策展、智能配和后续可能的数据远端覆盖，当前已开始把配色数据从 `LocaleData.ets` 的硬编码结构迁移为三层资产：
+跨仓共享的三层资产结构、字段草表、source / bundle 边界与资产生命周期，当前请优先阅读：
 
-### 4.1 BaseColorItem
+- [`../../../daypalette-docs/product/color-asset-library.md`](../../../daypalette-docs/product/color-asset-library.md)
+- [`../../../daypalette-docs/product/content-system-overview.md`](../../../daypalette-docs/product/content-system-overview.md)
+- [`../../../daypalette-docs/operations/color-asset-lifecycle.md`](../../../daypalette-docs/operations/color-asset-lifecycle.md)
 
-```json
-{
-  "id": "bc_0001",
-  "hex": "#CBB7A1",
-  "nameZh": "雾杏",
-  "tone": "warm",
-  "lightnessLevel": "light",
-  "saturationLevel": "low",
-  "colorFamily": "beige",
-  "isNeutralCore": true,
-  "status": "approved"
-}
-```
+本文件只保留 `day_palette` 仓库内仍需要说明的运行时映射与兼容原则。
 
-### 4.2 PaletteItem
+### 4.1 App 运行时 bundle 落点
 
-```json
-{
-  "id": "pl_0101",
-  "slug": "mist-city-morning",
-  "primaryColorId": "bc_0001",
-  "secondaryColorId": "bc_0008",
-  "accentColorId": "bc_0021",
-  "occasionId": "citywalk",
-  "safetyLevel": "safe",
-  "fitPhotoScenario": true,
-  "sourceType": "curated",
-  "isPro": false,
-  "status": "published"
-}
-```
+当前移动端消费态资源位于：
 
-### 4.3 CollectionItem
-
-```json
-{
-  "id": "col_0001",
-  "themeType": "scene",
-  "paletteIds": ["pl_0101", "pl_0102"],
-  "coverPaletteId": "pl_0101",
-  "isPro": false,
-  "releaseMode": "permanent",
-  "status": "published"
-}
-```
-
-### 4.4 文件落点（当前已落地）
-
-- `entry/src/main/resources/rawfile/palette-data/base-colors.v1.json`  
-- `entry/src/main/resources/rawfile/palette-data/palettes.v1.json`  
-- `entry/src/main/resources/rawfile/palette-data/collections.v1.json`  
-- `entry/src/main/resources/rawfile/palette-data/manifest.json`  
-- `entry/src/main/resources/rawfile/palette-data/locale/zh-CN.v1.json`  
+- `entry/src/main/resources/rawfile/palette-data/base-colors.v1.json`
+- `entry/src/main/resources/rawfile/palette-data/palettes.v1.json`
+- `entry/src/main/resources/rawfile/palette-data/collections.v1.json`
+- `entry/src/main/resources/rawfile/palette-data/manifest.json`
+- `entry/src/main/resources/rawfile/palette-data/locale/zh-CN.v1.json`
 - `entry/src/main/resources/rawfile/palette-data/locale/en-US.v1.json`
 
-编辑态与策展态当前开始补第二阶段仓库落点：
-
-- `daypalette-color-assets/source/current/base-colors.v1.json`
-- `daypalette-color-assets/source/current/palettes.v1.json`
-- `daypalette-color-assets/source/current/collections.v1.json`
-- `daypalette-color-assets/source/current/curation-state.v1.json`
-- `daypalette-color-assets/bundle/current/base-colors.v1.json`
-- `daypalette-color-assets/bundle/current/palettes.v1.json`
-- `daypalette-color-assets/bundle/current/collections.v1.json`
-- `daypalette-color-assets/bundle/current/manifest.json`
-
-### 4.5 UI 文案与内容文案分层（当前已落地）
+### 4.2 UI 文案与内容文案分层
 
 纯 UI 国际化文案与配色内容文案当前已分开：
 
@@ -146,12 +95,12 @@
 2. 后续远端覆盖可只更新内容层，不必默认动 UI 文案层。
 3. 内容管理和产品国际化可以分别演进。
 
-### 4.6 兼容原则
+### 4.3 App 侧兼容原则
 
-1. 当前 App 运行时默认消费本地 `rawfile` bundle；工作台与资产仓库则维护更接近编辑态的 source 数据。  
-2. 即使后续支持远端 JSON 覆盖，结构也应与 `source/current/` 与 App `rawfile` 资源兼容。  
-3. 当前 UI 仍通过 `ColorCatalogMapper` 映射回 `Occasion / Palette` 旧模型，降低重构风险。  
-4. `LocaleData.ets` 当前保留 fallback bundle，用于 catalog 读取失败时回退。  
+1. 当前 App 运行时默认消费本地 `rawfile` bundle；工作台与资产仓库维护更接近编辑态的 source 数据。
+2. 即使后续支持远端 JSON 覆盖，运行时结构也应与 App 当前 `rawfile` bundle 兼容，避免维护第二套 mapper。
+3. 当前 UI 仍通过 `ColorCatalogMapper` 映射回 `Occasion / Palette` 旧模型，降低重构风险。
+4. `LocaleData.ets` 当前保留 fallback bundle，用于 catalog 读取失败时回退。
 5. `curation-state.v1.json` 属于工作台运营层状态，不直接参与 App UI 渲染，但会影响 bundle 生成边界与发布候选筛选。
 
 ## 5. 修订
@@ -162,3 +111,4 @@
 - 2026-04-07：补充配色资产三层模型与建议文件落点；为结构化 JSON 资源与后续远端覆盖预留边界。
 - 2026-04-07：阶段 0 开始落地 `base-colors / palettes / collections` 三层本地资源，并将 UI 文案从内容 locale 中拆分到 `rawfile/i18n/ui/*.json`。
 - 2026-04-17：补充独立资产仓库 `daypalette-color-assets` 的 `source/current` 与 `bundle/current` 落点，并记录 `manifest.json` 与 `curation-state.v1.json` 的职责边界。
+- 2026-04-20：将跨仓共享的资产结构、source / bundle 边界与生命周期说明上收至 `daypalette-docs`，本文件改为保留 App 运行时落点与兼容原则。

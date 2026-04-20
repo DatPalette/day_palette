@@ -126,7 +126,7 @@
   - `阶段 1 正式低成本版`：优先使用**对象存储直出静态 JSON**，而不是先做服务端系统。
 - 方案文档需明确：缓存、签名或版本字段、失败回退、离线降级、兼容老版本客户端的边界。
 - 与当前 `LocaleData.ets` 的真实实现对照，产出“从硬编码迁移到文件化资源”的过渡路线。
-- 低成本技术方案与部署对比详见 [../../architecture/low-cost-remote-json-stage1-plan.md](../../architecture/low-cost-remote-json-stage1-plan.md)。
+- 低成本技术方案与部署对比详见 [`daypalette-docs/operations/remote-json-rollout-plan.md`](../../../../daypalette-docs/operations/remote-json-rollout-plan.md)；客户端接入补充见 [../../architecture/low-cost-remote-json-stage1-plan.md](../../architecture/low-cost-remote-json-stage1-plan.md)。
 - 结合 2026-04-09 的新结论，前期正式发布源仍以 App 内置 bundle 为准；但中期数据链路应开始按 `source/ -> workbench -> bundle/current/ -> App 导入脚本` 设计，避免未来资产规模上来后再次推翻。
 - 远端 GitHub 资产仓库当前不作为首版前提，而作为第二阶段接入项；首版先跑通本地 source 数据、校验和 bundle 构建闭环。
 
