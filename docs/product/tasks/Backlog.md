@@ -49,7 +49,7 @@
 - `BL-BR-03` 已于 2026-04-07 暂停对外投放：保留已完成的数据与规则底座，但当前搭配质量与 UI 交互未达到上线标准，首页“扩展搭配”入口已先行屏蔽，后续继续留在 Backlog 评估恢复时机。  
 - `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。首批专题方向明确收敛为 `Citywalk 拍照 / 公园出片 / 国风新中式`，不再归入 `BL-BR-03` 的场景策略范围。  
 - `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
-- 以上增补来源见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md) 与 [`../strategy/README.md`](../strategy/README.md)；如需继续下钻，再按索引进入对应主文档。
+- 以上增补来源见 [`daypalette-docs/product/strategy/moat-and-monetization.md`](../../../../daypalette-docs/product/strategy/moat-and-monetization.md) 与 [`../strategy/README.md`](../strategy/README.md)；如需继续下钻，再按索引进入对应主文档。
 
 ### 2.2 BL-BR-03 实现切片备忘
 
@@ -88,7 +88,7 @@
 
 字段参考：
 
-- `Collection` 字段草表见 [`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md) §10.3。
+- `Collection` 字段草表见 [`daypalette-docs/product/color-asset-library.md`](../../../../daypalette-docs/product/color-asset-library.md) §10.3。
 - 三层资产与 `CollectionItem` 结构示意见 [`../../architecture/data-model.md`](../../architecture/data-model.md) §4。
 
 ---

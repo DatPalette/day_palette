@@ -1,16 +1,21 @@
 # DayPalette Strategy 文档索引
 
-本目录当前只保留少量主文档，其余已并入主文档或转入 `archive/`。
+本目录是 DayPalette 在 App 仓侧保留的策略文档索引。**部分主文档已提升到顶层共享文档仓** [`daypalette-docs`](../../../../daypalette-docs/README.md)，本文用作跨仓导航。
 
-## 当前主文档
+## 已迁出到 daypalette-docs（共享层）
+
+| 文档 | 共享层位置 | 本仓状态 |
+|------|-----------|----------|
+| 配色资产运营统一主文档 | [`daypalette-docs/product/color-asset-master-plan.md`](../../../../daypalette-docs/product/color-asset-master-plan.md) | 本目录保留同名 stub 指向共享层 |
+| 配色资产库结构与命名 | [`daypalette-docs/product/color-asset-library.md`](../../../../daypalette-docs/product/color-asset-library.md) | 本目录保留同名 stub 指向共享层 |
+
+## 仍在本仓维护
 
 | 文档 | 作用 |
 |------|------|
-| [color-asset-unified-master-plan.md](./color-asset-unified-master-plan.md) | 配色资产体系的总入口，负责统一背景、目标、技术路线与执行阶段。 |
-| [color-asset-library-plan.md](./color-asset-library-plan.md) | 配色资产三层结构、字段草表、JSON 示例与命名规则。 |
-| [conservative-smart-matching-strategy.md](./conservative-smart-matching-strategy.md) | 智能配第一阶段的策略边界、规则体系与运营维护说明。 |
-| [inspiration-entry.md](./inspiration-entry.md) | “灵感入口”功能的产品判断、UI 结构与最小实现清单。 |
-| [palette-curation-workbench.md](./palette-curation-workbench.md) | 配色策展工作台的定位、页面结构、运营字段、状态机与分阶段实现建议。 |
+| [conservative-smart-matching-strategy.md](./conservative-smart-matching-strategy.md) | 智能配第一阶段的策略边界、规则体系与运营维护说明（后续可能进一步提升）。 |
+| [inspiration-entry.md](./inspiration-entry.md) | 「灵感入口」功能的产品判断、UI 结构与最小实现清单（App 端 UX，留在本仓）。 |
+| [palette-curation-workbench.md](./palette-curation-workbench.md) | 配色策展工作台的定位、页面结构、运营字段、状态机（产品规格部分将在后续轮次提升到共享层）。 |
 
 ## 已归档文档
 
