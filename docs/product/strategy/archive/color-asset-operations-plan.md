@@ -629,6 +629,6 @@ GitHub 当前承担三类职责：
 - 它不依赖额外预算。
 - 它为后续远端覆盖保留了升级空间。
 
-对应的工程级技术架构详见：[../../architecture/color-asset-monorepo-architecture.md](../../architecture/color-asset-monorepo-architecture.md)。
+对应的工程级历史架构详见：[../../architecture/archive/color-asset-monorepo-architecture.md](../../architecture/archive/color-asset-monorepo-architecture.md)；当前有效边界与链路请优先阅读 `daypalette-docs` 下的共享文档。
 
 因此，后续 `BL-BR-08` 和 `BL-BR-10` 的推进，都应围绕这套“管理端 + GitHub 数据包 + App 导入脚本”的组合来展开，而不是继续停留在抽象的“运营 / 数据更新机制”层面。
