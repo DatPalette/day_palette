@@ -1,3 +1,55 @@
+# Git 提交流程（day_palette 仓库映射）
+
+> 共享真相源已收口到 [`../../../../daypalette-docs/operations/git-commit-workflow.md`](../../../../daypalette-docs/operations/git-commit-workflow.md)。
+> 本文只保留 `day_palette` 仓库的**特例与指针**，避免与共享版重复维护。
+
+- 面向对象：Cursor、Copilot、Codex、手动命令行提交者。
+- 适用场景：用户明确要求「提交 / commit / 提代码」时。
+- 实现细则：若 [`.cursor/rules/git-commit-workflow.mdc`](../../.cursor/rules/git-commit-workflow.mdc) 存在更完整版本，由它承担工具落地细节；本文只声明仓库共识与特例。
+
+---
+
+## 1. 基本规范
+
+请优先阅读共享版 [`git-commit-workflow.md`](../../../../daypalette-docs/operations/git-commit-workflow.md)，本仓直接采用其中：
+
+- §1 提交前必看
+- §2 按可独立回滚拆分 commit
+- §3.1 默认风格 `emoji + TYPE: 中文描述`
+- §4 暂存纪律
+- §5 执行边界
+- §6 跨仓变更协作
+
+---
+
+## 2. day_palette 特例
+
+仅在共享版基础上补充以下与 HarmonyOS 工程相关的约束。
+
+### 2.1 文档优先
+
+若同一轮迭代既改 `docs/` 又改 `entry/`，默认 **先文档、后代码** 拆成两个 commit：先 `📖 DOC:`，再 `📦 NEW:` / `👌 IMPROVE:` / `🐛 FIX:`。
+
+### 2.2 鸿蒙工程默认不提交
+
+下列内容默认不进版本库；若已存在 `.gitignore`，**不要** `git add -f`：
+
+- `entry/build/`、`entry/.hvigor/`、`entry/.preview/`
+- `oh_modules/`
+- 本地签名 / 证书 / `*.p7b` / `*.cer` / `*.p12`
+- 个人 IDE 状态（`.idea/workspace.xml` 等）
+
+### 2.3 与跨仓发布的衔接
+
+当本仓的 commit 是为了承接 assets / workbench 的资产更新（例如导入 bundle、刷新 catalog），主题里建议带与 source 提交一致的中文短语（例如「春日通勤专题」），方便跨仓串联，详见共享版 §6。
+
+---
+
+## 3. 与本仓其他文档的关系
+
+- 仓库级 AI 行为约束：[`../../AGENTS.md`](../../AGENTS.md)
+- AI 开发总控规则：[`00-AI-DEVELOPMENT-HARNESS.md`](./00-AI-DEVELOPMENT-HARNESS.md)
+- 工具私有规则：[`.cursor/rules/git-commit-workflow.mdc`](../../.cursor/rules/git-commit-workflow.mdc)
 # Git 提交流程（仓库公开版）
 
 本文是 DayPalette 仓库内公开可见的 Git 提交流程说明，供不同 AI Agent、协作者和后续维护者共用。

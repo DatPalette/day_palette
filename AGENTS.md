@@ -27,27 +27,17 @@
 
 ## Git 提交规范
 
-为方便 **Cursor / Copilot / Codex / 其他 Agent** 统一遵守，本仓库约定提交时遵循以下规则；仓库公开版文档见 [`docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md`](docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md)，若 `.cursor/rules/git-commit-workflow.mdc` 存在更完整版本，以该文件为细则来源。
+跨仓共享真相源：[`../daypalette-docs/operations/git-commit-workflow.md`](../daypalette-docs/operations/git-commit-workflow.md)。本仓使用其中**默认风格**（`emoji + TYPE: 中文描述`）。
 
-- 用户明确要求“提交 / commit”后，先看 `git status`、`git diff` 与 `git diff --cached`，确认范围、无意外文件、无调试残留。  
-- 按**可独立回滚**拆分 commit；若同一轮同时改 `docs/` 与 `entry/`，默认优先 **先文档、后代码**。  
-- 提交信息使用**中文 + emoji + 英文类型前缀**，格式为：`emoji + TYPE: 中文描述`。  
-- 类型统一大写，常用映射：  
-	- `📦 NEW:` 新增功能 / 新模块  
-	- `👌 IMPROVE:` 改进 / 重构 / 样式优化 / 性能优化  
-	- `🐛 FIX:` 缺陷修复 / 回归修复  
-	- `📖 DOC:` 文档 / PRD / 设计说明更新  
-	- `🚀 RELEASE:` 发版 / 版本号 / 发布流程  
-	- `🤖 TEST:` 测试相关  
-	- `‼️ BREAKING:` 破坏性变更  
-- 提交前应有选择地 `git add`，避免直接把无关文件、IDE 私有状态、构建产物、密钥或证书提交进版本库。  
-- 默认**不 push**，除非用户明确要求。
+- 仓库映射与本仓特例：[`docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md`](docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md)
+- 工具私有规则（如更完整）：[`.cursor/rules/git-commit-workflow.mdc`](.cursor/rules/git-commit-workflow.mdc)
 
-推荐主题行示例：
+要点回顾（详见上述文档）：
 
-- `📖 DOC: 更新配色资产与智能配策略文档`  
-- `👌 IMPROVE: 优化今日页三个入口按钮布局`  
-- `🐛 FIX: 修复昨日快照跨多天误判问题`
+- 提交前必看 `git status` / `git diff` / `git diff --cached`，按可独立回滚拆分 commit。
+- 同一轮既改 `docs/` 又改 `entry/`，默认 **先文档、后代码**。
+- 默认**不 push**、**不 amend** 已推送提交。
+- 跨仓变更顺序：assets → workbench → day_palette → daypalette-docs。
 
 ## 需求已确认时的义务
 
