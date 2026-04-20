@@ -1,5 +1,15 @@
 # 配色资产运营统一主文档
 
+## 快速导航
+
+- 目录索引：[`README.md`](./README.md)
+- 资产结构与字段：[`color-asset-library-plan.md`](./color-asset-library-plan.md)
+- 智能配策略与维护：[`conservative-smart-matching-strategy.md`](./conservative-smart-matching-strategy.md)
+- 灵感入口方案：[`inspiration-entry.md`](./inspiration-entry.md)
+- 策展工作台规范：[`palette-curation-workbench.md`](./palette-curation-workbench.md)
+
+已归档的历史方案见 `archive/`。
+
 ## 1. 文档定位
 
 本文是 DayPalette 配色资产运营体系的**统一主文档**。

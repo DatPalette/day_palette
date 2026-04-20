@@ -31,6 +31,7 @@
 ## 与权威文档的关系
 
 - 需求真相源仍以 [`../PRD.md`](../PRD.md) 为准；本目录为**执行与排期视图**。
+- `strategy` 目录当前已完成一轮收口；若任务条目提到资产结构、智能配、灵感入口或策展工作台方案，优先从 [`../strategy/README.md`](../strategy/README.md) 进入，再按索引下钻到对应主文档。
 - 头脑风暴与已拍板方向见 [`../brainstorming/Brainstorming-01.md`](../brainstorming/Brainstorming-01.md)；护城河 / 用户 / 价值与付费讨论见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)；策略文档后续的任务增补草案见 [`./backlog-addendum-brainstorming-02.md`](./backlog-addendum-brainstorming-02.md)；落地任务以 **Backlog 中的 Key** 为准（避免双处改状态）。
 
 ## 当前索引

@@ -5,8 +5,12 @@
 这份文档用于把以下来源中的新增方向，整理成可直接落入 `Backlog.md` 的正式增补清单：
 
 - `docs/product/brainstorming/Brainstorming-02.md`
-- `docs/product/strategy/color-asset-library-plan.md`
-- `docs/product/strategy/conservative-smart-matching-strategy.md`
+- `docs/product/strategy/README.md`
+
+说明：
+
+- `strategy` 目录当前已经完成一轮收口，优先从 `README.md` 进入。
+- 只有在需要继续下钻资产字段或智能配规则细节时，再按索引进入对应主文档。
 
 原则：
 

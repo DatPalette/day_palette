@@ -1,6 +1,10 @@
 # 配色资产运营整体方案
 
-> 本文当前作为业务与流程侧补充说明保留。若需要让 AI 或开发者直接按统一方案推进，请优先阅读 [color-asset-unified-master-plan.md](./color-asset-unified-master-plan.md)。
+> ⚠️ 归档说明：本文为早期资产操作方案，当前只保留作历史背景参考。
+> 当前跨仓共享的资产生命周期请优先阅读 [`../../../../../daypalette-docs/operations/color-asset-lifecycle.md`](../../../../../daypalette-docs/operations/color-asset-lifecycle.md)。
+> `docs/product/strategy/` 目录下的当前主入口请优先阅读 [`../README.md`](../README.md) 与 [`../color-asset-unified-master-plan.md`](../color-asset-unified-master-plan.md)。
+
+> 本文件继续保留为 `day_palette` 仓库内的业务背景与历史规划补充，不再作为跨仓流程真相源。
 
 ## 1. 文档目的
 

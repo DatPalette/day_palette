@@ -86,7 +86,19 @@
 - 当前建议已从“独立 Web 管理端 + GitHub 数据包 + App 导入脚本”进一步收敛为：**先新开独立工作台工程，首版按本地 Web 工具实现，重点解决批量预览、筛选、对比、状态沉淀，再补 bundle 构建与远端资产仓库衔接。**
 - 工作台首版推荐边界已明确：优先做 `总览 / 批量预览 / 对比 / 入选与淘汰管理 / 详情 / 发布前检查` 六类页面；优先沉淀 `reviewStatus / curationScore / rejectionReason / reviewNotes / isSelected` 等运营字段。
 - 技术方案已形成首版建议：建议新开 `daypalette-palette-workbench` 独立工程，采用 `React + Vite + TypeScript + Node.js scripts + pnpm`；远端资产建议单独抽为 `daypalette-color-assets` 仓库，移动端继续只消费 `bundle/current/`。
-- 本轮已补齐以下配套文档，供下一步继续推进时直接接手：`palette-curation-workbench-mvp-plan.md`、`palette-curation-workbench-wireframes.md`、`palette-curation-workbench-fields-and-state-machine.md`、`palette-curation-workbench-technical-implementation.md`。
+- 本轮相关方案文档已完成收口；`strategy` 侧统一入口见 [`../strategy/README.md`](../strategy/README.md)，实现细化见 [`../../architecture/palette-curation-workbench-technical-implementation.md`](../../architecture/palette-curation-workbench-technical-implementation.md)。
+
+## 当前进展（2026-04-17）
+
+- `BL-BR-08 / BL-BR-10` 已从纯规划进入首版代码实现：已在 `/Users/wuxinbo/Documents/Personal/daypalette-palette-workbench` 新建独立本地 Web 工作台工程，采用 `React + Vite + TypeScript + pnpm`。
+- 工作台首版已完成单页骨架：覆盖 `总览 / 批量预览 / 对比池 / 详情侧栏 / 发布前检查` 五块高频工作区，当前重点仍是预览、筛选、对比与状态沉淀，而不是复杂表单后台。
+- 当前样例源已直接接入 App 现有 `rawfile/palette-data` 三份真实 JSON：`base-colors.v1.json`、`palettes.v1.json`、`collections.v1.json`；工作台额外沉淀 `curation-state.v1.json` 作为运营层状态。
+- 已补首版运营字段落地与文件化状态保存：当前界面可直接维护 `reviewStatus / curationScore / isSelected / rejectionReason / reviewNotes / readyForBundle / previewVariant`，除浏览器本地缓存外，也支持把当前策展状态导入 / 导出为 `curation-state.v1.json` 文件。
+- 已补第二阶段仓库骨架：`/Users/wuxinbo/Documents/Personal/daypalette-color-assets` 已创建 `source/current/` 与 `bundle/current/` 两层目录，用于承接独立资产仓库形态。
+- 已补四条首版脚本链路：`pnpm sync-app-source` 用于把 App 仓库 palette-data 同步到资产仓库 `source/current/` 并镜像到工作台，`pnpm validate` 用于 schema 与发布前检查，`pnpm build-bundle` 用于从 source + curation 状态生成工作台与资产仓库的 `bundle/current/`，`pnpm import-bundle-to-app` 用于把消费态 bundle 导回 App `rawfile/palette-data/`。
+- 当前 `build-bundle` 与 `import-bundle-to-app` 已跑通首版输出：按照 `readyForBundle = true`、`isSelected = true`、`reviewStatus != rejected` 的边界生成消费态 bundle，并自动裁剪 palette / collection / base-color 依赖；当前 App 侧 `rawfile/palette-data/manifest.json` 也已随导入脚本进入资源目录。
+- 本轮实现态验证已通过：当前工程 `pnpm lint`、`pnpm sync-app-source`、`pnpm validate`、`pnpm build-bundle`、`pnpm import-bundle-to-app` 均已跑通；当前仅保留 1 条预期内 warning，用于提示 `w5` 仍带人工校验标记 `spring-only`。
+- 当前仍未进入的范围保持不变：尚未接远端 GitHub 资产仓库、多人协作、复杂编辑表单、在线 CMS、桌面端壳；这些继续保留到下一阶段再评估。
 
 ## 明日接手建议（跨设备继续）
 
@@ -152,12 +164,9 @@
 
 - 已确定“代码内规则引擎 + `rawfile` 策略 JSON”作为当前最小可维护方案。
 - 运营当前可直接维护的核心文件为 `entry/src/main/resources/rawfile/smartmatch/strategy.v1.json`。
-- 已补首版运营指导文档：[../strategy/extended-pairing-ops-guide.md](../strategy/extended-pairing-ops-guide.md)，用于说明可修改字段、审核边界与发布动作。
-- 已补配色资产运营整体方案：[../strategy/color-asset-operations-plan.md](../strategy/color-asset-operations-plan.md)，将前期运营载体收敛为“Web 管理端 + GitHub 数据包 + App 导入脚本”。
+- `strategy` 目录已完成一轮收口：当前统一入口见 [../strategy/README.md](../strategy/README.md)；现行主文档优先看 [../strategy/color-asset-unified-master-plan.md](../strategy/color-asset-unified-master-plan.md)、[../strategy/palette-curation-workbench.md](../strategy/palette-curation-workbench.md) 与 [../strategy/conservative-smart-matching-strategy.md](../strategy/conservative-smart-matching-strategy.md)。
+- 早期资产操作方案已归档到 [../strategy/archive/color-asset-operations-plan.md](../strategy/archive/color-asset-operations-plan.md)，仅保留作历史参考。
 - 2026-04-09 新增阶段性收敛：
-  - 已补配色策展工作台 MVP 方案：[../strategy/palette-curation-workbench-mvp-plan.md](../strategy/palette-curation-workbench-mvp-plan.md)。
-  - 已补页面线框与交互草案：[../strategy/palette-curation-workbench-wireframes.md](../strategy/palette-curation-workbench-wireframes.md)。
-  - 已补运营字段与状态机文档：[../strategy/palette-curation-workbench-fields-and-state-machine.md](../strategy/palette-curation-workbench-fields-and-state-machine.md)。
   - 已补技术实现方案：[../../architecture/palette-curation-workbench-technical-implementation.md](../../architecture/palette-curation-workbench-technical-implementation.md)。
 - 后续仍需补齐的落地物已从“传统管理端信息架构”转为：数据 schema 草案、工作台工程初始化方案，以及面向实现的迭代拆分。
 
@@ -193,9 +202,7 @@
 
 **当前进展（2026-04-09）**
 
-- 已补灵感入口产品草稿：[../strategy/inspiration-entry-plan.md](../strategy/inspiration-entry-plan.md)。
-- 已完成 PRD 层回流：明确“今天没安排”由轻量灵感入口承接，不新增正式场景。
-- 已补下一轮可直接承接的 UI 结构草案与最小实现清单：[../strategy/inspiration-entry-ui-draft.md](../strategy/inspiration-entry-ui-draft.md)。
+- 已完成文档侧收口：灵感入口方案、UI 结构与最小实现清单当前统一见 [../strategy/inspiration-entry.md](../strategy/inspiration-entry.md)，并已回流 PRD，明确“今天没安排”由轻量灵感入口承接，不新增正式场景。
 - 已完成首页首版实现：入口位于 Hero 与场景选择之间，采用内联展开方式，选中后回落到现有 palette 主链路。
 - 已完成首版展示池策略收敛：不使用固定白名单，改为基于现有可用 palette 池的“当日稳定轮换”。
 - 已完成入口文案与动效收敛：采用更克制的“今日灵感 / Today's Picks”口径，并补齐展开与收起过渡。

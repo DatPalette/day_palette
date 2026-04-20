@@ -1,5 +1,8 @@
 # 桌面端配色资产工作台可行性方案
 
+> ⚠️ 归档说明：本文为桌面端路线的历史可行性分析，当前只保留作决策备忘。
+> 当前 `strategy` 目录下的正式入口请优先阅读 [`../README.md`](../README.md)、[`../color-asset-unified-master-plan.md`](../color-asset-unified-master-plan.md) 与 [`../palette-curation-workbench.md`](../palette-curation-workbench.md)。
+
 ## 1. 文档目的
 
 本文用于分析 DayPalette 是否应把原先设想中的“本地 Web 管理端 + monorepo”方案，调整为一个**独立维护的桌面端配色资产工作台**。
