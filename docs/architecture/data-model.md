@@ -61,13 +61,12 @@
 
 可整体塞进 `ext`，待功能立项再规范化。
 
-## 4. 结构化配色资产（已进入阶段 0）
+## 4. 结构化配色资产（旧运营方案已归档）
 
-跨仓共享的三层资产结构、字段草表、source / bundle 边界与资产生命周期，当前请优先阅读：
+> 归档提示：自 2026-04-29 起，旧 `source / curation-state / workbench / bundle` 运营方案已整体归档，统一入口见 [`../../../daypalette-docs/archive/color-operations-reset-2026-04.md`](../../../daypalette-docs/archive/color-operations-reset-2026-04.md)。
+> 使用约束：本节只保留 `day_palette` 当前运行时资源的历史兼容事实，不应外推为新的运营链路或仓库边界。
 
-- [`../../../daypalette-docs/product/color-asset-library.md`](../../../daypalette-docs/product/color-asset-library.md)
-- [`../../../daypalette-docs/product/content-system-overview.md`](../../../daypalette-docs/product/content-system-overview.md)
-- [`../../../daypalette-docs/operations/color-asset-lifecycle.md`](../../../daypalette-docs/operations/color-asset-lifecycle.md)
+如需回看旧共享层材料，请从上面的归档说明进入。
 
 本文件只保留 `day_palette` 仓库内仍需要说明的运行时映射与兼容原则。
 
@@ -97,11 +96,11 @@
 
 ### 4.3 App 侧兼容原则
 
-1. 当前 App 运行时默认消费本地 `rawfile` bundle；工作台与资产仓库维护更接近编辑态的 source 数据。
+1. 当前 App 运行时默认消费本地 `rawfile` bundle；旧 workbench / assets 的编辑态链路已归档，不应据此推导新方案。
 2. 即使后续支持远端 JSON 覆盖，运行时结构也应与 App 当前 `rawfile` bundle 兼容，避免维护第二套 mapper。
 3. 当前 UI 仍通过 `ColorCatalogMapper` 映射回 `Occasion / Palette` 旧模型，降低重构风险。
 4. `LocaleData.ets` 当前保留 fallback bundle，用于 catalog 读取失败时回退。
-5. `curation-state.v1.json` 属于工作台运营层状态，不直接参与 App UI 渲染，但会影响 bundle 生成边界与发布候选筛选。
+5. `curation-state.v1.json` 属于已归档旧工作台方案中的运营层状态，不直接参与 App UI 渲染；这里只保留其历史职责说明。
 
 ## 5. 修订
 

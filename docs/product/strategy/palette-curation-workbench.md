@@ -1,10 +1,10 @@
-# 配色策展工作台规范（已迁出）
+# 配色策展工作台规范（已归档）
 
-> 本文档已于 2026-04-20 提升到顶层共享文档仓：
+> 本地 stub 与对应共享层文档已于 2026-04-29 一并归档：
 >
-> **新真相源：[`../../../../daypalette-docs/product/workbench-product-spec.md`](../../../../daypalette-docs/product/workbench-product-spec.md)**
+> **归档入口：[`../../../../daypalette-docs/archive/color-operations-reset-2026-04.md`](../../../../daypalette-docs/archive/color-operations-reset-2026-04.md)**
 
-原因：本文是 `daypalette-palette-workbench` 的产品规格，理应放在共享层，与 [`daypalette-docs/operations/workbench-curation-workflow.md`](../../../../daypalette-docs/operations/workbench-curation-workflow.md) 形成「产品规格 + 操作流程」的成对真相源。
+原因：旧本地 workbench 方案即将重规划。本文与共享层旧文档仅保留历史指针，不再作为新方案真相源。
 
 ## 此处保留的内容
 
@@ -12,4 +12,4 @@
 
 ## 后续更新
 
-直接编辑共享层文件即可。
+先在共享层写新的正式方案，再决定是否恢复本地映射。

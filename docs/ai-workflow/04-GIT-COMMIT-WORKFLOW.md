@@ -2,6 +2,7 @@
 
 > 共享真相源已收口到 [`../../../../daypalette-docs/operations/git-commit-workflow.md`](../../../../daypalette-docs/operations/git-commit-workflow.md)。
 > 本文只保留 `day_palette` 仓库的**特例与指针**，避免与共享版重复维护。
+> 归档提示：自 2026-04-29 起，`daypalette-color-assets` / `daypalette-palette-workbench` 相关跨仓提交流程已归档。若未来重启新的配色运营多仓方案，必须先更新共享层文档，再定义新的提交顺序。
 
 - 面向对象：Cursor、Copilot、Codex、手动命令行提交者。
 - 适用场景：用户明确要求「提交 / commit / 提代码」时。
@@ -41,7 +42,7 @@
 
 ### 2.3 与跨仓发布的衔接
 
-当本仓的 commit 是为了承接 assets / workbench 的资产更新（例如导入 bundle、刷新 catalog），主题里建议带与 source 提交一致的中文短语（例如「春日通勤专题」），方便跨仓串联，详见共享版 §6。
+2026-04-29 起，assets / workbench 的旧跨仓链路已归档。当前默认只处理 `day_palette` 与 `daypalette-docs` 的协作；若未来恢复新的配色运营多仓方案，必须先补共享层文档，再定义新的主题串联与提交顺序。
 
 ---
 

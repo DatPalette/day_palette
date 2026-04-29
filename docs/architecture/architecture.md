@@ -164,7 +164,10 @@ entry/src/main/ets/
 - 若后续引入真正的 Store/EventBus 分层，应在本文中明确替换当前 `Index + ViewModel + Preferences` 的边界描述。  
 - 若导出模板继续扩展，应补一份单独的“导出渲染子系统”说明文档。
 
-## 9. 配色数据文件化演进（规划）
+## 9. 配色数据文件化演进（旧规划，已归档）
+
+> 归档提示：自 2026-04-29 起，本节涉及的 `daypalette-color-assets` / `daypalette-palette-workbench` 旧演进路线已整体归档。统一说明见 [`../../../daypalette-docs/archive/color-operations-reset-2026-04.md`](../../../daypalette-docs/archive/color-operations-reset-2026-04.md)。
+> 使用约束：本节只保留历史规划背景，不得作为新方案真相源。
 
 当前 App 运行时消费的 palette 数据主入口已位于 `entry/src/main/resources/rawfile/palette-data/*.json`，`DayPaletteViewModel` 通过 catalog 加载链路消费；`LocaleData.ets` 当前主要保留 fallback bundle 与兼容回退职责。
 

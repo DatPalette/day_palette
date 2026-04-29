@@ -1,10 +1,10 @@
-# 配色资产运营统一主文档（已迁出）
+# 配色资产运营统一主文档（已归档）
 
-> 本文档已于 2026-04-20 提升到顶层共享文档仓：
+> 本地 stub 与对应共享层文档已于 2026-04-29 一并归档：
 >
-> **新真相源：[`../../../../daypalette-docs/product/color-asset-master-plan.md`](../../../../daypalette-docs/product/color-asset-master-plan.md)**
+> **归档入口：[`../../../../daypalette-docs/archive/color-operations-reset-2026-04.md`](../../../../daypalette-docs/archive/color-operations-reset-2026-04.md)**
 
-原因：本文涵盖产品、技术、执行、AI 协作四层判断，对 `day_palette` / `daypalette-color-assets` / `daypalette-palette-workbench` / `daypalette-docs` 都有指导意义，应作为跨仓战略入口维护。
+原因：旧配色运营多仓方案即将重规划。本文与共享层旧文档仅保留历史指针，不再作为新方案真相源。
 
 ## 此处保留的内容
 
@@ -12,8 +12,8 @@
 
 ## 后续更新
 
-如需修改主计划：
+如需重启该方向：
 
-1. 直接编辑 `daypalette-docs/product/color-asset-master-plan.md`。
-2. 在该仓提交 `📖 DOC:` commit。
-3. 不需要回写本文件，除非出现 App 端专属落地差异，需在 `day_palette/docs/architecture/` 下新建实现说明并相互链接。
+1. 先在 `daypalette-docs` 写新的正式方案文档。
+2. 再决定本仓是否需要新的实现映射。
+3. 不要直接复用本文或共享层旧正文。

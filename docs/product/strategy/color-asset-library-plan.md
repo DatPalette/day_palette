@@ -1,10 +1,10 @@
-# 配色资产库结构与低成本维护方案（已迁出）
+# 配色资产库结构与低成本维护方案（已归档）
 
-> 本文档已于 2026-04-20 提升到顶层共享文档仓：
+> 本地 stub 与对应共享层文档已于 2026-04-29 一并归档：
 >
-> **新真相源：[`../../../../daypalette-docs/product/color-asset-library.md`](../../../../daypalette-docs/product/color-asset-library.md)**
+> **归档入口：[`../../../../daypalette-docs/archive/color-operations-reset-2026-04.md`](../../../../daypalette-docs/archive/color-operations-reset-2026-04.md)**
 
-原因：本文定义的三层资产结构、字段草表、命名规则、JSON 示例由四个仓共同消费（App 读 bundle，工作台编辑 source，资产仓存放真相源，docs 仓承载共识），属于跨仓合同，必须放在共享层。
+原因：旧三层资产合同与多仓配色运营方案即将重规划。本文与共享层旧文档仅保留历史指针，不再作为新方案真相源。
 
 ## 此处保留的内容
 
@@ -12,7 +12,8 @@
 
 ## 后续更新
 
-如需修改：
+如需重启该方向：
 
-1. 直接编辑 `daypalette-docs/product/color-asset-library.md`。
-2. 在该仓提交 `📖 DOC:` commit，并按四仓共享提交规范跨仓主题串联。
+1. 先在 `daypalette-docs` 写新的正式方案文档。
+2. 再决定本仓是否需要新的实现映射。
+3. 不要直接复用本文或共享层旧正文。

@@ -90,6 +90,8 @@
 
 ## 当前进展（2026-04-17）
 
+> 归档提示：本节记录的 `daypalette-palette-workbench` / `daypalette-color-assets` 推进状态已于 2026-04-29 归档，对应仓库与脚本不再属于当前规划。
+
 - `BL-BR-08 / BL-BR-10` 已从纯规划进入首版代码实现：已在 `/Users/wuxinbo/Documents/Personal/daypalette-palette-workbench` 新建独立本地 Web 工作台工程，采用 `React + Vite + TypeScript + pnpm`。
 - 工作台首版已完成单页骨架：覆盖 `总览 / 批量预览 / 对比池 / 详情侧栏 / 发布前检查` 五块高频工作区，当前重点仍是预览、筛选、对比与状态沉淀，而不是复杂表单后台。
 - 当前样例源已直接接入 App 现有 `rawfile/palette-data` 三份真实 JSON：`base-colors.v1.json`、`palettes.v1.json`、`collections.v1.json`；工作台额外沉淀 `curation-state.v1.json` 作为运营层状态。

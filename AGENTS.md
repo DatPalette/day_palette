@@ -2,6 +2,8 @@
 
 本文件供 **Cursor / Codex / 其他编码 Agent** 在参与 DayPalette（鸿蒙 ArkUI）开发时阅读。与 [`docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md`](docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md) 配套使用；**冲突时以 Harness 全文为准**。
 
+> 归档提示：自 2026-04-29 起，旧配色运营多仓方案已整体归档。统一入口见 [`../daypalette-docs/archive/color-operations-reset-2026-04.md`](../daypalette-docs/archive/color-operations-reset-2026-04.md)。`repository-boundaries.md`、`color-asset-lifecycle.md`、`workbench-*` 等旧文档仅可作为历史资料，不得作为新方案真相源。
+
 ## 角色
 
 你是 **HarmonyOS Next + ArkTS + ArkUI** 资深开发者，正在实现「今日配色」应用。禁止凭感觉改 UI/业务；必须服从文档层级。
@@ -11,9 +13,9 @@
 1. [`docs/product/PRD.md`](docs/product/PRD.md) — 功能与业务规则。  
 2. [`../daypalette-docs/design/shared-design-language.md`](../daypalette-docs/design/shared-design-language.md) — **跨移动端与 Web 的共享设计语言**；涉及品牌气质、排版角色、语义层时先看这里。  
 3. [`docs/design/design-system.md`](docs/design/design-system.md) — HarmonyOS 客户端的设计实现映射与像素级补充。  
-4. [`../daypalette-docs/architecture/repository-boundaries.md`](../daypalette-docs/architecture/repository-boundaries.md) 与 [`../daypalette-docs/operations/color-asset-lifecycle.md`](../daypalette-docs/operations/color-asset-lifecycle.md) — 多仓边界、source / bundle 真相源与资产操作链路。  
+4. [`../daypalette-docs/archive/color-operations-reset-2026-04.md`](../daypalette-docs/archive/color-operations-reset-2026-04.md) — 旧配色运营方案归档入口；涉及 `source / bundle / workbench` 时先看这里。  
 5. [`docs/architecture/architecture.md`](docs/architecture/architecture.md) — 模块与 Kit 边界。  
-6. [`docs/architecture/data-model.md`](docs/architecture/data-model.md) — 持久化与字段约束。  
+6. [`docs/architecture/data-model.md`](docs/architecture/data-model.md) — 持久化、运行时资源落点与历史兼容约束。  
 7. [`docs/architecture/knowledge-base.md`](docs/architecture/knowledge-base.md) — **鸿蒙开发避坑指南与知识库**（包含底层 API、权限、状态同步等经验）。
 8. [`docs/mockups/daypalette-premium-mockup.html`](docs/mockups/daypalette-premium-mockup.html) — 仅用于像素级疑难对照；与上两项冲突时先对齐共享设计语言与本仓设计系统，再按需改 HTML/设计文档。
 
@@ -37,7 +39,7 @@
 - 提交前必看 `git status` / `git diff` / `git diff --cached`，按可独立回滚拆分 commit。
 - 同一轮既改 `docs/` 又改 `entry/`，默认 **先文档、后代码**。
 - 默认**不 push**、**不 amend** 已推送提交。
-- 跨仓变更顺序：assets → workbench → day_palette → daypalette-docs。
+- 若仅涉及当前存续仓，默认顺序为 `day_palette → daypalette-docs`；旧 `assets → workbench → day_palette → daypalette-docs` 顺序已归档。
 
 ## 需求已确认时的义务
 
