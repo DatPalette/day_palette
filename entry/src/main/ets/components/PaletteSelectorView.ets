@@ -7,6 +7,7 @@ import { LayoutConstants } from '../common/constants/LayoutConstants';
 export struct PaletteSelectorView {
   @ObjectLink vm: DayPaletteViewModel;
   @Watch('onRevealRequestChanged') @Prop revealRequestToken: number = 0;
+  @Prop bottomPaddingVp: number = LayoutConstants.PALETTE_LIST_BOTTOM_PADDING_VP;
   onRandom: () => void = () => {
   };
   onYesterday: () => void = () => {
@@ -294,7 +295,7 @@ export struct PaletteSelectorView {
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
-    .padding({ bottom: LayoutConstants.PALETTE_LIST_BOTTOM_PADDING_VP })
+    .padding({ bottom: this.bottomPaddingVp })
   }
 
   private paletteList(): Palette[] {

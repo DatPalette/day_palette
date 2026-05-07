@@ -70,13 +70,12 @@ export struct BottomActionsView {
         right: LayoutConstants.PAGE_HORIZONTAL_VP,
         bottom: 32 + this.bottomGestureInsetVp
       })
-      .backgroundColor(DesignTokens.SURFACE_FROSTED)
-      .backdropBlur(20)
-      .borderWidth({ top: 1 })
-      .borderColor(DesignTokens.BORDER_SUBTLE)
     }
     .width('100%')
-    .backgroundColor(DesignTokens.BG_PAGE)
+    .backgroundColor(DesignTokens.SURFACE_FROSTED)
+    .backdropBlur(20)
+    .borderWidth({ top: 1 })
+    .borderColor(DesignTokens.BORDER_SUBTLE)
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
   }
 }

@@ -9,15 +9,18 @@ import { HeroDisplayView } from '../components/HeroDisplayView';
 import { InspirationEntryView } from '../components/InspirationEntryView';
 import { OccasionSelectorView } from '../components/OccasionSelectorView';
 import { PaletteSelectorView } from '../components/PaletteSelectorView';
+import { WallpaperEntryView } from '../components/WallpaperEntryView';
 import { BottomActionsView } from '../components/BottomActionsView';
 import { SettingsPanelView } from '../components/SettingsPanelView';
 import { FineTuneSheet } from '../components/FineTuneSheet';
+import { WallpaperStudioView } from '../components/WallpaperStudioView';
 import { DesignTokens } from '../common/constants/DesignTokens';
 import { LayoutConstants } from '../common/constants/LayoutConstants';
 import {
   saveTodayPaletteToGallery,
   shareTodayPaletteImage
 } from '../export/PaletteShareActions';
+import { saveWallpaperToGallery } from '../export/WallpaperActions';
 import type {
   PaletteExportSnapshot,
   SavePaletteImageFailure,
@@ -25,6 +28,24 @@ import type {
   SharePaletteFailure,
   SharePaletteResult
 } from '../export/PaletteShareActions';
+import type {
+  SaveWallpaperImageFailure,
+  SaveWallpaperImageResult,
+  WallpaperSnapshot
+} from '../export/WallpaperActions';
+
+interface WindowRectLike {
+  width?: number;
+  height?: number;
+}
+
+interface WindowPropertiesLike {
+  windowRect?: WindowRectLike;
+}
+
+interface WindowWithPropertiesLike {
+  getWindowProperties?: () => WindowPropertiesLike;
+}
 
 @Entry
 @Component
@@ -35,8 +56,11 @@ struct Index {
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
   @State fineTuneOpen: boolean = false;
+  @State wallpaperStudioOpen: boolean = false;
   /** 底部导航指示条 / 手势区高度（vp），用于底栏内边距与主列表底部留白 */
   @State bottomGestureInsetVp: number = 0;
+  @State wallpaperViewportWidthPx: number = 1080;
+  @State wallpaperViewportHeightPx: number = 2340;
   private localeEventHandler: (() => void) | undefined = undefined;
   private appForegroundHandler: (() => void) | undefined = undefined;
   private midnightRefreshTimerId: number | null = null;
@@ -113,6 +137,22 @@ struct Index {
       vp = LayoutConstants.BOTTOM_INDICATOR_FALLBACK_VP;
     }
     this.bottomGestureInsetVp = vp;
+    this.updateWallpaperViewportFromWindow(win);
+  }
+
+  private updateWallpaperViewportFromWindow(win: window.Window): void {
+    try {
+      const props: WindowPropertiesLike | undefined =
+        (win as WindowWithPropertiesLike).getWindowProperties?.();
+      const rect: WindowRectLike | undefined = props?.windowRect;
+      const widthPx: number = typeof rect?.width === 'number' ? Math.floor(rect.width) : 0;
+      const heightPx: number = typeof rect?.height === 'number' ? Math.floor(rect.height) : 0;
+      if (widthPx > 0 && heightPx > 0) {
+        this.wallpaperViewportWidthPx = Math.min(widthPx, heightPx);
+        this.wallpaperViewportHeightPx = Math.max(widthPx, heightPx);
+      }
+    } catch {
+    }
   }
 
   private attachBottomGestureInsetListener(ctx: common.UIAbilityContext): void {
@@ -162,6 +202,18 @@ struct Index {
   private closeSettings(): void {
     this.getUIContext()?.animateTo({ duration: this.uiAnimMs(400), curve: Curve.EaseInOut }, () => {
       this.isSettingsOpen = false;
+    });
+  }
+
+  private openWallpaperStudio(): void {
+    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(320), curve: Curve.EaseInOut }, () => {
+      this.wallpaperStudioOpen = true;
+    });
+  }
+
+  private closeWallpaperStudio(): void {
+    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(320), curve: Curve.EaseInOut }, () => {
+      this.wallpaperStudioOpen = false;
     });
   }
 
@@ -238,6 +290,22 @@ struct Index {
     });
   }
 
+  private handleSaveWallpaper(snap: WallpaperSnapshot): void {
+    const ctx = this.getUIContext().getHostContext() as common.UIAbilityContext;
+    void saveWallpaperToGallery(ctx, snap).then((r: SaveWallpaperImageResult) => {
+      if (r.ok) {
+        this.showToastMsg(this.vm.getUiStrings().wallpaperSaveSuccess, false);
+        return;
+      }
+      const fail: SaveWallpaperImageFailure = r as SaveWallpaperImageFailure;
+      if (fail.hint === 'save_dialog_cancelled') {
+        this.showToastMsg(this.vm.getUiStrings().saveCancelled, false);
+        return;
+      }
+      this.showToastMsg(this.vm.getUiStrings().wallpaperSaveFail, true);
+    });
+  }
+
   private fineTuneSyncToken(): string {
     return this.vm.getHeroColorStrings().join('|');
   }
@@ -276,6 +344,7 @@ struct Index {
           PaletteSelectorView({
             vm: this.vm,
             revealRequestToken: this.paletteRevealRequestToken,
+            bottomPaddingVp: 0,
             onRandom: () => {
               this.vm.randomPaletteInActiveOccasion();
               this.paletteRevealRequestToken += 1;
@@ -288,6 +357,12 @@ struct Index {
             },
             onFineTune: () => {
               this.fineTuneOpen = true;
+            }
+          })
+          WallpaperEntryView({
+            vm: this.vm,
+            onOpen: () => {
+              this.openWallpaperStudio();
             }
           })
           Blank()
@@ -349,6 +424,29 @@ struct Index {
           .zIndex(100)
           .transition(TransitionEffect.translate({ x: '100%' }).animation({
             duration: this.uiAnimMs(400),
+            curve: Curve.EaseInOut
+          }))
+      }
+
+      if (this.wallpaperStudioOpen) {
+        WallpaperStudioView({
+          vm: this.vm,
+          deviceWidthPx: this.wallpaperViewportWidthPx,
+          deviceHeightPx: this.wallpaperViewportHeightPx,
+          bottomGestureInsetVp: this.bottomGestureInsetVp,
+          onRequestClose: () => {
+            this.closeWallpaperStudio();
+          },
+          onTapSave: (snap: WallpaperSnapshot) => {
+            this.handleSaveWallpaper(snap);
+          }
+        })
+          .width('100%')
+          .height('100%')
+          .position({ top: 0, left: 0 })
+          .zIndex(90)
+          .transition(TransitionEffect.translate({ x: '100%' }).animation({
+            duration: this.uiAnimMs(320),
             curve: Curve.EaseInOut
           }))
       }
