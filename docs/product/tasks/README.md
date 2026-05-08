@@ -11,7 +11,7 @@
 | `iteration-02.md` | 迭代二（**已完成**）：体验与视觉 — BR-01/02/04/05/06 |
 | `iteration-03.md` | 迭代三（**已完成**）：工程自检、实现收敛、文档回流 |
 | `iteration-04.md` | 迭代四（**已提前收口**）：短链路上架自检与基础文档清理 |
-| `iteration-05.md` | 迭代五（**规划中**）：壁纸工坊、智能配、数据更新机制、内容维护与场景文案收敛 |
+| `iteration-05.md` | 迭代五（**已完成**）：移动端范围内的灵感入口、精调升级、日期修复已收口；运营侧内容维护与数据更新方案已转出到独立项目 |
 | `Backlog.md` | 统一待办池（PRD 缺口、头脑风暴、未来规划等） |
 
 ## Issue 字段（建议）
@@ -23,7 +23,7 @@
 | **Key** | 如 `DP-101`，全库唯一（迭代内可再带子编号） |
 | **Type** | Epic / Story / Task / Bug |
 | **Summary** | 一句话标题 |
-| **Status** | Backlog / Ready / In Progress / Done |
+| **Status** | Backlog / Ready / In Progress / Done / Transferred |
 | **Priority** | P0～P3 或 Highest～Low |
 | **Source** | PRD §x / Brainstorming T-xx / 自由输入 |
 | **Acceptance** | 验收要点（可链接 PRD 验收项） |

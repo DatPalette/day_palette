@@ -24,19 +24,15 @@ entry/src/main/ets/
   ├── components/
   │   ├── TopBarView.ets
   │   ├── HeroDisplayView.ets
-  │   ├── WallpaperEntryView.ets
   │   ├── OccasionSelectorView.ets
   │   ├── PaletteSelectorView.ets
   │   ├── BottomActionsView.ets
   │   ├── FineTuneSheet.ets
-  │   ├── WallpaperStudioView.ets
   │   ├── MiniPalettePreviewView.ets
   │   └── SettingsPanelView.ets
   ├── export/
   │   ├── PaletteImageExporter.ets  # 纯 PixelMap 构图与模板输出
   │   ├── PaletteShareActions.ets   # 保存/分享流程、权限、缓存文件、错误归类
-  │   ├── WallpaperImageExporter.ets # 当前设备尺寸壁纸 PixelMap 渲染
-  │   ├── WallpaperActions.ets      # 壁纸快照、保存流程、错误归类
   │   └── HexColor.ets
   ├── formability/
   │   ├── TodayOutfitFormAbility.ets
@@ -101,12 +97,10 @@ entry/src/main/ets/
 - `HeroDisplayView`：主视觉 Hero 三色卡与标题。  
 - `OccasionSelectorView`：场合切换。  
 - `PaletteSelectorView`：精选套组列表与“随机选 / 沿用昨日 / 精调”入口。  
-- `WallpaperEntryView`：位于 palette 动作区之后的轻量入口卡，负责进入壁纸工坊。  
 - `TopBarView`：顶部日期 / 收缩标题 / 微缩预览 / 设置入口。  
 - `BottomActionsView`：保存与分享。  
 - `SettingsPanelView`：语言、导出版式、微缩预览样式、减少动效、轻微颗粒等设置。  
 - `FineTuneSheet`：三色 hex 精调面板。
-- `WallpaperStudioView`：全屏壁纸工坊，负责设备比例预览、样式切换、变体切换与保存。
 
 ### 4.3 共享渲染规格
 
@@ -144,14 +138,6 @@ entry/src/main/ets/
 4. 保存走图库/资产创建流程；分享走 Share Panel。  
 - 导出链路不再依赖固定 `300ms` 盲等。
 
-### 5.5 壁纸工坊链路（Iteration-05）
-
-1. 首页 `WallpaperEntryView` 点击时先从 VM 生成 `WallpaperSnapshot`，锁定当前三色、标题、当前壁纸样式与变体。  
-2. `Index.ets` 以全屏浮层方式挂载 `WallpaperStudioView`，不新开一级导航。  
-3. `WallpaperStudioView` 内部只维护页面临时状态，如 `wallpaperStyleId / wallpaperVariantId / previewMode`；不直接写入 `TodayOutfitState`。  
-4. 保存时 `WallpaperActions` 使用 snapshot 调 `WallpaperImageExporter` 生成当前设备尺寸 PixelMap，并复用现有相册保存链路。  
-5. 锁屏想象层只参与预览，不进入最终导出文件。
-
 ## 6. 鸿蒙 Kit 映射
 
 | Kit | 当前用途 |
@@ -170,7 +156,6 @@ entry/src/main/ets/
 - **状态单向回收**：组件不各自持久化业务状态，统一回到 `DayPaletteViewModel` 与 `TodayStateStore`。  
 - **Form 与 App 共用同一本地真相源**：不各写一套颜色推导逻辑。  
 - **导出与主视觉共用构图规格**：Hero 预览、微缩 Hero、导出模板尽量复用同一组几何参数。  
-- **壁纸与 1:1 出图并行演进**：壁纸工坊复用当前三色快照、颜色工具与保存能力，但不继续塞入现有 `templateId` 体系。  
 - **低风险优先**：渲染层优化以共享常量、缓存重复计算、减少无意义刷盘为主，不轻易改变用户可感知行为。
 
 ## 8. 后续仍待文档补齐的方向

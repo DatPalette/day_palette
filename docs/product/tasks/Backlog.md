@@ -32,9 +32,8 @@
 | BL-BR-05 | Task | P2 | **Hero 区三色呈现优化** | Brainstorming T-05 | 比例/圆角/动效遵守「减少动效」 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-06 | Task | P2 | **顶栏微缩预览优化** | Brainstorming T-06 | 与主界面配色语言一致、可读 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-07 | Epic | P2 | **预置套组与场合扩容（目标百套+分期）** | Brainstorming T-07 | 首批专题方向、`Collection` 结构映射、内容扩容节奏与 Pro 包边界明确 |
-| BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 | → [**iteration-05**](./iteration-05.md) |
-| BL-BR-09 | Epic | P2 | **壁纸工坊（当前设备尺寸 / 拼合 / 渐变）** | Brainstorming T-09 / PRD §4.7 | 基于当前 palette 生成当前设备尺寸壁纸；首版不改底部保存/分享层级；基础样式与情绪化包装先行，高级渐变 / IAP 暂不进入首版 | → [**iteration-05**](./iteration-05.md) |
-| BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | → [**iteration-05**](./iteration-05.md) |
+| BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 | **已转出移动端**（2026-05-08 起转由独立运营 / 工作台项目继续） |
+| BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | **已转出移动端**（2026-05-08 起转由独立运营 / 数据项目继续） |
 | BL-BR-11 | Task | P2 | **灵感入口与场景文案收敛** | Brainstorming-02 | 收敛“今天没安排”场景的承接方式、入口形态与“今天的故事”文案口径；不新增更重的前置决策层 | → [**iteration-05**](./iteration-05.md) |
 | BL-UX-01 | Task | P1 | **精调能力升级与交互方案设计** | 口头 / 当前体验盘点 | 明确用户可改颜色范围、交互形式、确认/回退逻辑与更友好的操作路径 | → [**iteration-05**](./iteration-05.md) |
 
@@ -48,8 +47,8 @@
 	- UI：智能配主路径入口、结果卡片解释层、可展开完整微调、异常与空状态提示。  
 - `BL-BR-03` 已于 2026-04-07 暂停对外投放：保留已完成的数据与规则底座，但当前搭配质量与 UI 交互未达到上线标准，首页“扩展搭配”入口已先行屏蔽，后续继续留在 Backlog 评估恢复时机。  
 - `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。首批专题方向明确收敛为 `Citywalk 拍照 / 公园出片 / 国风新中式`，不再归入 `BL-BR-03` 的场景策略范围。  
-- `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
-- `BL-BR-09` 当前建议继续细化为：壁纸入口卡、工坊页骨架、独立设备比例渲染、基础样式命名与情绪文案；交互与实现切片见 [`../strategy/wallpaper-studio.md`](../strategy/wallpaper-studio.md)。  
+- `BL-BR-08` 已于 2026-05-08 转出移动端项目：后续由独立运营 / 工作台项目继续推进低成本维护流程、审核口径与工具选型。  
+- `BL-BR-10` 已于 2026-05-08 转出移动端项目：后续由独立运营 / 数据项目继续推进远端覆盖、bundle 构建与发布链路设计。  
 - 以上增补来源见 [`daypalette-docs/product/strategy/moat-and-monetization.md`](../../../../daypalette-docs/product/strategy/moat-and-monetization.md) 与 [`../strategy/README.md`](../strategy/README.md)；如需继续下钻，再按索引进入对应主文档。
 
 ### 2.2 BL-BR-03 实现切片备忘
@@ -143,7 +142,7 @@
 ## 建议捞取顺序（非强制）
 
 1. **BL-BR-03**（精调主路径升级，可作为恢复功能开发后的优先项）  
-2. **iteration-05：BL-BR-08 / 09 / 10 / 11**（在继续推进数据更新机制与内容维护方案的同时，补齐壁纸工坊的产品方案、渲染边界与首版实现切片）  
+2. **BL-BR-11 / BL-UX-01 / BL-BUG-01** 已在移动端 Iteration-05 收口完成；`BL-BR-08 / 10` 已转出到独立项目  
 3. **BL-ADAPT-01 / 02、BL-BRAND-01 / 02**（待主要功能开发告一段落后，再集中处理设备适配与品牌收敛）  
 4. **BL-REL-02**（接近提审前，集中完成最终自检与素材收口）  
 5. **BL-PRD-01～04**（商业化闭环；依赖链路长，待当前发布准备与基础体验收敛后再集中推进）  

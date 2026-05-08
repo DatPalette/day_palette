@@ -18,7 +18,6 @@
 | 文档 | 作用 |
 |------|------|
 | [inspiration-entry.md](./inspiration-entry.md) | 「灵感入口」功能的产品判断、UI 结构与最小实现清单（App 端 UX，留在本仓）。 |
-| [wallpaper-studio.md](./wallpaper-studio.md) | 「壁纸工坊」功能的产品判断、入口放置、样式边界、情绪价值方向与 Iteration-05 最小实现切片。 |
 
 ## 已归档文档
 

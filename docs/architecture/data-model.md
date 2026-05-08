@@ -61,32 +61,6 @@
 
 可整体塞进 `ext`，待功能立项再规范化。
 
-## 3.1 壁纸工坊运行时状态（Iteration-05）
-
-壁纸工坊首版不新增 `TodayOutfitState` 持久化字段。
-
-当前建议把以下状态视为**页面临时状态或导出快照**：
-
-| 字段 | 类型 | 持久化 | 说明 |
-|------|------|--------|------|
-| `wallpaperStyleId` | string | 否 | 当前壁纸样式 id，如 `wallpaper_blocks_v1`。 |
-| `wallpaperVariantId` | string | 否 | 当前样式下的变体 id，如 `soft_diagonal`。 |
-| `previewMode` | `'clean' \| 'lockscreen'` | 否 | 仅影响工坊预览层，不进入导出图。 |
-| `deviceWidthPx` | number | 否 | 当前设备导出宽度。 |
-| `deviceHeightPx` | number | 否 | 当前设备导出高度。 |
-
-推荐单独定义运行时快照：
-
-| 结构 | 作用 |
-|------|------|
-| `WallpaperSnapshot` | 冻结当前三色、标题、壁纸样式、变体与设备尺寸，供异步渲染与保存链路使用。 |
-
-**边界约束**
-
-1. `WallpaperSnapshot` 不回写到 `today_outfit_state_json`。  
-2. 首版不默认记住“上次使用的壁纸样式”，除非后续验证用户确有连续使用需求。  
-3. 壁纸导出以当前设备尺寸为目标，不复用现有 1080x1080 的 1:1 导出尺寸。
-
 ## 4. 结构化配色资产（旧运营方案已归档）
 
 > 归档提示：自 2026-04-29 起，旧 `source / curation-state / workbench / bundle` 运营方案已整体归档，统一入口见 [`../../../daypalette-docs/archive/color-operations-reset-2026-04.md`](../../../daypalette-docs/archive/color-operations-reset-2026-04.md)。
@@ -138,3 +112,4 @@
 - 2026-04-17：补充独立资产仓库 `daypalette-color-assets` 的 `source/current` 与 `bundle/current` 落点，并记录 `manifest.json` 与 `curation-state.v1.json` 的职责边界。
 - 2026-04-20：将跨仓共享的资产结构、source / bundle 边界与生命周期说明上收至 `daypalette-docs`，本文件改为保留 App 运行时落点与兼容原则。
 - 2026-05-07：新增壁纸工坊运行时状态说明；明确 `WallpaperSnapshot` 属于页面临时快照，不进入 `TodayOutfitState` 主持久化结构。
+- 2026-05-08：移除壁纸工坊运行时状态说明；当前版本不再保留壁纸入口、预览或导出链路。
