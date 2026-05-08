@@ -206,13 +206,13 @@ struct Index {
   }
 
   private openWallpaperStudio(): void {
-    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(320), curve: Curve.EaseInOut }, () => {
+    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(220), curve: Curve.EaseInOut }, () => {
       this.wallpaperStudioOpen = true;
     });
   }
 
   private closeWallpaperStudio(): void {
-    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(320), curve: Curve.EaseInOut }, () => {
+    this.getUIContext()?.animateTo({ duration: this.uiAnimMs(220), curve: Curve.EaseInOut }, () => {
       this.wallpaperStudioOpen = false;
     });
   }
@@ -446,7 +446,7 @@ struct Index {
           .position({ top: 0, left: 0 })
           .zIndex(90)
           .transition(TransitionEffect.translate({ x: '100%' }).animation({
-            duration: this.uiAnimMs(320),
+            duration: this.uiAnimMs(220),
             curve: Curve.EaseInOut
           }))
       }

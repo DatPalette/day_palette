@@ -162,6 +162,127 @@ export function wallpaperSnapshotFromVm(
   };
 }
 
+interface ResolvedWallpaperExport {
+  path: string;
+  isPrepared: boolean;
+}
+
+let preparedWallpaperKey: string = '';
+let preparedWallpaperPath: string | null = null;
+let preparedWallpaperPromise: Promise<string | null> | null = null;
+let preparedWallpaperGeneration: number = 0;
+
+function cleanupTempFile(path: string | null): void {
+  if (path === null) {
+    return;
+  }
+  try {
+    fileIo.unlinkSync(path);
+  } catch {
+  }
+}
+
+function wallpaperSnapshotKey(snap: WallpaperSnapshot): string {
+  return [
+    snap.mainHex,
+    snap.secHex,
+    snap.accHex,
+    snap.styleId,
+    snap.variantId,
+    `${snap.widthPx}`,
+    `${snap.heightPx}`
+  ].join('|');
+}
+
+function preparedWallpaperPathForKey(key: string): string | null {
+  if (preparedWallpaperKey !== key || preparedWallpaperPath === null) {
+    return null;
+  }
+  if (hasReadableFileContent(preparedWallpaperPath)) {
+    return preparedWallpaperPath;
+  }
+  cleanupTempFile(preparedWallpaperPath);
+  preparedWallpaperPath = null;
+  return null;
+}
+
+async function prepareWallpaperPngFileInCache(
+  context: common.UIAbilityContext,
+  snap: WallpaperSnapshot
+): Promise<string | null> {
+  const key: string = wallpaperSnapshotKey(snap);
+  const readyPath: string | null = preparedWallpaperPathForKey(key);
+  if (readyPath !== null) {
+    return readyPath;
+  }
+  if (preparedWallpaperKey === key && preparedWallpaperPromise !== null) {
+    return await preparedWallpaperPromise;
+  }
+  const generation: number = preparedWallpaperGeneration + 1;
+  preparedWallpaperGeneration = generation;
+  preparedWallpaperKey = key;
+  cleanupTempFile(preparedWallpaperPath);
+  preparedWallpaperPath = null;
+  const promise: Promise<string | null> = (async (): Promise<string | null> => {
+    const path: string | null = await buildWallpaperPngFileInCache(context, snap);
+    if (preparedWallpaperGeneration !== generation || preparedWallpaperKey !== key) {
+      cleanupTempFile(path);
+      return null;
+    }
+    preparedWallpaperPath = path;
+    preparedWallpaperPromise = null;
+    return path;
+  })();
+  preparedWallpaperPromise = promise;
+  return await promise;
+}
+
+async function resolveWallpaperPngFile(
+  context: common.UIAbilityContext,
+  snap: WallpaperSnapshot
+): Promise<ResolvedWallpaperExport | null> {
+  const key: string = wallpaperSnapshotKey(snap);
+  const preparedPath: string | null = preparedWallpaperPathForKey(key);
+  if (preparedPath !== null) {
+    return { path: preparedPath, isPrepared: true };
+  }
+  const preparedOrPendingPath: string | null = await prepareWallpaperPngFileInCache(context, snap);
+  if (preparedOrPendingPath !== null) {
+    return { path: preparedOrPendingPath, isPrepared: true };
+  }
+  const fallbackPath: string | null = await buildWallpaperPngFileInCache(context, snap);
+  if (fallbackPath === null) {
+    return null;
+  }
+  return { path: fallbackPath, isPrepared: false };
+}
+
+export async function prepareWallpaperExport(
+  context: common.UIAbilityContext,
+  snap: WallpaperSnapshot
+): Promise<void> {
+  await prepareWallpaperPngFileInCache(context, snap);
+}
+
+export async function getPreparedWallpaperPreviewUri(
+  context: common.UIAbilityContext,
+  snap: WallpaperSnapshot
+): Promise<string | null> {
+  const resolved: ResolvedWallpaperExport | null = await resolveWallpaperPngFile(context, snap);
+  if (resolved === null) {
+    return null;
+  }
+  return fileUri.getUriFromPath(resolved.path);
+}
+
+export function releasePreparedWallpaperExport(): void {
+  preparedWallpaperGeneration += 1;
+  preparedWallpaperKey = '';
+  preparedWallpaperPromise = null;
+  cleanupTempFile(preparedWallpaperPath);
+  preparedWallpaperPath = null;
+}
+
 async function buildWallpaperPngFileInCache(
   context: common.UIAbilityContext,
   snap: WallpaperSnapshot
@@ -257,13 +378,13 @@ export async function saveWallpaperToGallery(
   context: common.UIAbilityContext,
   snap: WallpaperSnapshot
 ): Promise<SaveWallpaperImageResult> {
-  const pngPath: string | null = await buildWallpaperPngFileInCache(context, snap);
-  if (pngPath === null) {
+  const resolvedExport: ResolvedWallpaperExport | null = await resolveWallpaperPngFile(context, snap);
+  if (resolvedExport === null) {
     return { ok: false, hint: 'build_image' };
   }
   try {
     const viaDialog: AssetsDialogOutcome =
-      await saveToGalleryViaAssetsCreationDialog(context, pngPath, snap.displayTitle);
+      await saveToGalleryViaAssetsCreationDialog(context, resolvedExport.path, snap.displayTitle);
     if (viaDialog === 'success') {
       return { ok: true };
     }
@@ -272,9 +393,8 @@ export async function saveWallpaperToGallery(
     }
     return { ok: false, hint: 'unknown' };
   } finally {
-    try {
-      fileIo.unlinkSync(pngPath);
-    } catch {
+    if (!resolvedExport.isPrepared) {
+      cleanupTempFile(resolvedExport.path);
     }
   }
 }

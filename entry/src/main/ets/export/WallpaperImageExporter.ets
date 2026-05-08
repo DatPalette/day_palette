@@ -139,6 +139,42 @@ function lerpChannel(start: number, end: number, t: number): number {
   return Math.round(start + (end - start) * t);
 }
 
+function mixRgb(
+  start: [number, number, number],
+  end: [number, number, number],
+  t: number
+): [number, number, number] {
+  return [
+    lerpChannel(start[0], end[0], t),
+    lerpChannel(start[1], end[1], t),
+    lerpChannel(start[2], end[2], t)
+  ];
+}
+
+function lightenRgb(color: [number, number, number], amount: number): [number, number, number] {
+  return mixRgb(color, [255, 255, 255], amount);
+}
+
+function darkenRgb(color: [number, number, number], amount: number): [number, number, number] {
+  return [
+    Math.round(color[0] * (1 - amount)),
+    Math.round(color[1] * (1 - amount)),
+    Math.round(color[2] * (1 - amount))
+  ];
+}
+
+function averageRgb(
+  a: [number, number, number],
+  b: [number, number, number],
+  c: [number, number, number]
+): [number, number, number] {
+  return [
+    Math.round((a[0] + b[0] + c[0]) / 3),
+    Math.round((a[1] + b[1] + c[1]) / 3),
+    Math.round((a[2] + b[2] + c[2]) / 3)
+  ];
+}
+
 function gradientColorAt(
   t: number,
   main: [number, number, number],
@@ -238,28 +274,28 @@ function renderBlocks(
   acc: [number, number, number],
   variantId: string
 ): void {
+  const minSide: number = Math.min(width, height);
+  const base: [number, number, number] = lightenRgb(averageRgb(main, sec, acc), 0.8);
+  const glowMain: [number, number, number] = lightenRgb(main, 0.18);
+  const glowSec: [number, number, number] = lightenRgb(sec, 0.12);
+  const glowAcc: [number, number, number] = lightenRgb(acc, 0.24);
+  fillRect(buf, width, height, 0, 0, width, height, base[0], base[1], base[2]);
+
   if (variantId === WALLPAPER_VARIANT_B_ID) {
-    const h1: number = Math.floor(height * 0.54);
-    const h2: number = Math.floor(height * 0.28);
-    fillRect(buf, width, height, 0, 0, width, h1, main[0], main[1], main[2]);
-    fillRect(buf, width, height, 0, h1, width, h1 + h2, sec[0], sec[1], sec[2]);
-    fillRect(buf, width, height, 0, h1 + h2, width, height, acc[0], acc[1], acc[2]);
-    return;
+    drawSoftBlob(buf, width, height, width * 0.24, height * 0.22, minSide * 0.54, glowMain[0], glowMain[1], glowMain[2], 96);
+    drawSoftBlob(buf, width, height, width * 0.78, height * 0.34, minSide * 0.5, glowSec[0], glowSec[1], glowSec[2], 82);
+    drawSoftBlob(buf, width, height, width * 0.4, height * 0.84, minSide * 0.72, glowAcc[0], glowAcc[1], glowAcc[2], 78);
+  } else if (variantId === WALLPAPER_VARIANT_C_ID) {
+    drawSoftBlob(buf, width, height, width * 0.8, height * 0.18, minSide * 0.48, glowMain[0], glowMain[1], glowMain[2], 88);
+    drawSoftBlob(buf, width, height, width * 0.22, height * 0.52, minSide * 0.62, glowSec[0], glowSec[1], glowSec[2], 84);
+    drawSoftBlob(buf, width, height, width * 0.7, height * 0.82, minSide * 0.64, glowAcc[0], glowAcc[1], glowAcc[2], 74);
+  } else {
+    drawSoftBlob(buf, width, height, width * 0.28, height * 0.2, minSide * 0.5, glowMain[0], glowMain[1], glowMain[2], 90);
+    drawSoftBlob(buf, width, height, width * 0.74, height * 0.5, minSide * 0.58, glowSec[0], glowSec[1], glowSec[2], 82);
+    drawSoftBlob(buf, width, height, width * 0.24, height * 0.88, minSide * 0.68, glowAcc[0], glowAcc[1], glowAcc[2], 70);
   }
-  if (variantId === WALLPAPER_VARIANT_C_ID) {
-    const topHeight: number = Math.floor(height * 0.64);
-    const bottomHeight: number = height - topHeight;
-    const leftWidth: number = Math.floor(width * 0.62);
-    fillRect(buf, width, height, 0, 0, width, topHeight, main[0], main[1], main[2]);
-    fillRect(buf, width, height, 0, topHeight, leftWidth, height, sec[0], sec[1], sec[2]);
-    fillRect(buf, width, height, leftWidth, topHeight, width, height, acc[0], acc[1], acc[2]);
-    return;
-  }
-  const w1: number = Math.floor((width * 3) / 6);
-  const w2: number = Math.floor((width * 2) / 6);
-  fillRect(buf, width, height, 0, 0, w1, height, main[0], main[1], main[2]);
-  fillRect(buf, width, height, w1, 0, w1 + w2, height, sec[0], sec[1], sec[2]);
-  fillRect(buf, width, height, w1 + w2, 0, width, height, acc[0], acc[1], acc[2]);
+
+  drawSoftBlob(buf, width, height, width * 0.58, height * 0.14, minSide * 0.34, 255, 255, 255, 54);
 }
 
 function renderCollage(
@@ -271,43 +307,27 @@ function renderCollage(
   acc: [number, number, number],
   variantId: string
 ): void {
-  fillRect(buf, width, height, 0, 0, width, height, main[0], main[1], main[2]);
-  const radius: number = Math.max(16, Math.floor(Math.min(width, height) * 0.04));
+  const minSide: number = Math.min(width, height);
+  const base: [number, number, number] = lightenRgb(main, 0.82);
+  const orbMain: [number, number, number] = lightenRgb(main, 0.06);
+  const orbSec: [number, number, number] = lightenRgb(sec, 0.08);
+  const orbAcc: [number, number, number] = lightenRgb(acc, 0.18);
+  fillRect(buf, width, height, 0, 0, width, height, base[0], base[1], base[2]);
+  drawSoftBlob(buf, width, height, width * 0.76, height * 0.16, minSide * 0.42, 255, 255, 255, 52);
+
   if (variantId === WALLPAPER_VARIANT_B_ID) {
-    const secWidth: number = Math.floor(width * 0.58);
-    const secHeight: number = Math.floor(height * 0.3);
-    const accWidth: number = Math.floor(width * 0.42);
-    const accHeight: number = Math.floor(height * 0.22);
-    drawSoftShadow(buf, width, height, Math.floor(width * 0.12), Math.floor(height * 0.18), secWidth, secHeight, radius, 28);
-    fillRoundedRect(buf, width, height, Math.floor(width * 0.12), Math.floor(height * 0.18), secWidth, secHeight, radius,
-      sec[0], sec[1], sec[2]);
-    drawSoftShadow(buf, width, height, Math.floor(width * 0.46), Math.floor(height * 0.56), accWidth, accHeight, radius, 24);
-    fillRoundedRect(buf, width, height, Math.floor(width * 0.46), Math.floor(height * 0.56), accWidth, accHeight, radius,
-      acc[0], acc[1], acc[2]);
-    return;
+    drawSoftBlob(buf, width, height, width * 0.34, height * 0.26, minSide * 0.34, orbMain[0], orbMain[1], orbMain[2], 164);
+    drawSoftBlob(buf, width, height, width * 0.72, height * 0.54, minSide * 0.46, orbSec[0], orbSec[1], orbSec[2], 146);
+    drawSoftBlob(buf, width, height, width * 0.28, height * 0.82, minSide * 0.28, orbAcc[0], orbAcc[1], orbAcc[2], 82);
+  } else if (variantId === WALLPAPER_VARIANT_C_ID) {
+    drawSoftBlob(buf, width, height, width * 0.62, height * 0.26, minSide * 0.38, orbMain[0], orbMain[1], orbMain[2], 152);
+    drawSoftBlob(buf, width, height, width * 0.42, height * 0.64, minSide * 0.48, orbSec[0], orbSec[1], orbSec[2], 138);
+    drawSoftBlob(buf, width, height, width * 0.82, height * 0.74, minSide * 0.28, orbAcc[0], orbAcc[1], orbAcc[2], 84);
+  } else {
+    drawSoftBlob(buf, width, height, width * 0.44, height * 0.24, minSide * 0.4, orbMain[0], orbMain[1], orbMain[2], 156);
+    drawSoftBlob(buf, width, height, width * 0.56, height * 0.68, minSide * 0.44, orbSec[0], orbSec[1], orbSec[2], 142);
+    drawSoftBlob(buf, width, height, width * 0.84, height * 0.52, minSide * 0.2, orbAcc[0], orbAcc[1], orbAcc[2], 76);
   }
-  if (variantId === WALLPAPER_VARIANT_C_ID) {
-    const cardWidth: number = Math.floor(width * 0.72);
-    const secHeight: number = Math.floor(height * 0.24);
-    const accHeight: number = Math.floor(height * 0.18);
-    drawSoftShadow(buf, width, height, Math.floor(width * 0.14), Math.floor(height * 0.12), cardWidth, secHeight, radius, 28);
-    fillRoundedRect(buf, width, height, Math.floor(width * 0.14), Math.floor(height * 0.12), cardWidth, secHeight, radius,
-      sec[0], sec[1], sec[2]);
-    drawSoftShadow(buf, width, height, Math.floor(width * 0.08), Math.floor(height * 0.54), cardWidth, accHeight, radius, 24);
-    fillRoundedRect(buf, width, height, Math.floor(width * 0.08), Math.floor(height * 0.54), cardWidth, accHeight, radius,
-      acc[0], acc[1], acc[2]);
-    return;
-  }
-  const secWidth: number = Math.floor(width * 0.54);
-  const secHeight: number = Math.floor(height * 0.28);
-  const accWidth: number = Math.floor(width * 0.38);
-  const accHeight: number = Math.floor(height * 0.18);
-  drawSoftShadow(buf, width, height, Math.floor(width * 0.32), Math.floor(height * 0.24), secWidth, secHeight, radius, 28);
-  fillRoundedRect(buf, width, height, Math.floor(width * 0.32), Math.floor(height * 0.24), secWidth, secHeight, radius,
-    sec[0], sec[1], sec[2]);
-  drawSoftShadow(buf, width, height, Math.floor(width * 0.16), Math.floor(height * 0.62), accWidth, accHeight, radius, 24);
-  fillRoundedRect(buf, width, height, Math.floor(width * 0.16), Math.floor(height * 0.62), accWidth, accHeight, radius,
-    acc[0], acc[1], acc[2]);
 }
 
 function renderGradient(
@@ -319,15 +339,32 @@ function renderGradient(
   acc: [number, number, number],
   variantId: string
 ): void {
+  const minSide: number = Math.min(width, height);
+  const darkMain: [number, number, number] = darkenRgb(main, 0.68);
+  const darkSec: [number, number, number] = darkenRgb(sec, 0.58);
+  const darkAcc: [number, number, number] = darkenRgb(acc, 0.78);
+  const glowMain: [number, number, number] = lightenRgb(main, 0.06);
+  const glowSec: [number, number, number] = lightenRgb(sec, 0.04);
+  const glowAcc: [number, number, number] = lightenRgb(acc, 0.1);
+
   if (variantId === WALLPAPER_VARIANT_B_ID) {
-    fillLinearGradient(buf, width, height, 0, 0, width, height, main, sec, acc);
+    fillLinearGradient(buf, width, height, width, 0, 0, height, darkSec, darkMain, darkAcc);
+    drawSoftBlob(buf, width, height, width * 0.22, height * 0.22, minSide * 0.26, glowMain[0], glowMain[1], glowMain[2], 122);
+    drawSoftBlob(buf, width, height, width * 0.64, height * 0.5, minSide * 0.42, glowSec[0], glowSec[1], glowSec[2], 142);
+    drawSoftBlob(buf, width, height, width * 0.84, height * 0.16, minSide * 0.24, glowAcc[0], glowAcc[1], glowAcc[2], 96);
     return;
   }
   if (variantId === WALLPAPER_VARIANT_C_ID) {
-    fillLinearGradient(buf, width, height, 0, Math.floor(height * 0.45), width, Math.floor(height * 0.55), main, sec, acc);
+    fillLinearGradient(buf, width, height, 0, height * 0.18, width, height * 0.82, darkAcc, darkSec, darkMain);
+    drawSoftBlob(buf, width, height, width * 0.78, height * 0.18, minSide * 0.28, glowAcc[0], glowAcc[1], glowAcc[2], 104);
+    drawSoftBlob(buf, width, height, width * 0.34, height * 0.56, minSide * 0.5, glowMain[0], glowMain[1], glowMain[2], 132);
+    drawSoftBlob(buf, width, height, width * 0.72, height * 0.78, minSide * 0.3, glowSec[0], glowSec[1], glowSec[2], 92);
     return;
   }
-  fillLinearGradient(buf, width, height, 0, 0, 0, height, main, sec, acc);
+  fillLinearGradient(buf, width, height, width * 0.88, 0, width * 0.12, height, darkAcc, darkSec, darkMain);
+  drawSoftBlob(buf, width, height, width * 0.26, height * 0.24, minSide * 0.34, glowMain[0], glowMain[1], glowMain[2], 126);
+  drawSoftBlob(buf, width, height, width * 0.54, height * 0.6, minSide * 0.44, glowSec[0], glowSec[1], glowSec[2], 148);
+  drawSoftBlob(buf, width, height, width * 0.84, height * 0.18, minSide * 0.22, glowAcc[0], glowAcc[1], glowAcc[2], 94);
 }
 
 function renderMist(
@@ -339,22 +376,28 @@ function renderMist(
   acc: [number, number, number],
   variantId: string
 ): void {
-  fillRect(buf, width, height, 0, 0, width, height, main[0], main[1], main[2]);
+  const maxSide: number = Math.max(width, height);
+  const base: [number, number, number] = lightenRgb(mixRgb(main, sec, 0.3), 0.84);
+  const tideSec: [number, number, number] = lightenRgb(sec, 0.16);
+  const tideAcc: [number, number, number] = lightenRgb(acc, 0.18);
+  const tideMain: [number, number, number] = lightenRgb(main, 0.12);
+  fillRect(buf, width, height, 0, 0, width, height, base[0], base[1], base[2]);
+
   if (variantId === WALLPAPER_VARIANT_B_ID) {
-    drawSoftBlob(buf, width, height, width * 0.32, height * 0.28, Math.min(width, height) * 0.44, sec[0], sec[1], sec[2], 150);
-    drawSoftBlob(buf, width, height, width * 0.74, height * 0.66, Math.min(width, height) * 0.36, acc[0], acc[1], acc[2], 132);
-    drawSoftBlob(buf, width, height, width * 0.18, height * 0.82, Math.min(width, height) * 0.22, sec[0], sec[1], sec[2], 72);
+    drawSoftBlob(buf, width, height, -width * 0.08, height * 0.18, maxSide * 0.84, tideSec[0], tideSec[1], tideSec[2], 118);
+    drawSoftBlob(buf, width, height, width * 0.92, height * 0.76, maxSide * 0.8, tideAcc[0], tideAcc[1], tideAcc[2], 112);
+    drawSoftBlob(buf, width, height, width * 0.52, -height * 0.08, maxSide * 0.7, tideMain[0], tideMain[1], tideMain[2], 64);
     return;
   }
   if (variantId === WALLPAPER_VARIANT_C_ID) {
-    drawSoftBlob(buf, width, height, width * 0.22, height * 0.18, Math.min(width, height) * 0.28, sec[0], sec[1], sec[2], 84);
-    drawSoftBlob(buf, width, height, width * 0.54, height * 0.52, Math.min(width, height) * 0.5, sec[0], sec[1], sec[2], 138);
-    drawSoftBlob(buf, width, height, width * 0.78, height * 0.32, Math.min(width, height) * 0.34, acc[0], acc[1], acc[2], 116);
+    drawSoftBlob(buf, width, height, width * 0.16, -height * 0.04, maxSide * 0.78, tideMain[0], tideMain[1], tideMain[2], 74);
+    drawSoftBlob(buf, width, height, width * 1.04, height * 0.34, maxSide * 0.86, tideSec[0], tideSec[1], tideSec[2], 122);
+    drawSoftBlob(buf, width, height, width * 0.28, height * 0.92, maxSide * 0.72, tideAcc[0], tideAcc[1], tideAcc[2], 104);
     return;
   }
-  drawSoftBlob(buf, width, height, width * 0.22, height * 0.2, Math.min(width, height) * 0.26, sec[0], sec[1], sec[2], 82);
-  drawSoftBlob(buf, width, height, width * 0.74, height * 0.42, Math.min(width, height) * 0.34, sec[0], sec[1], sec[2], 112);
-  drawSoftBlob(buf, width, height, width * 0.46, height * 0.74, Math.min(width, height) * 0.42, acc[0], acc[1], acc[2], 134);
+  drawSoftBlob(buf, width, height, -width * 0.12, height * 0.36, maxSide * 0.82, tideSec[0], tideSec[1], tideSec[2], 116);
+  drawSoftBlob(buf, width, height, width * 0.84, height * 0.02, maxSide * 0.72, tideMain[0], tideMain[1], tideMain[2], 68);
+  drawSoftBlob(buf, width, height, width * 0.9, height * 0.86, maxSide * 0.84, tideAcc[0], tideAcc[1], tideAcc[2], 110);
 }
 
 export function createWallpaperExportPixelMap(
