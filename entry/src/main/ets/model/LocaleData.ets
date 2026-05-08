@@ -1,5 +1,7 @@
+import type { common } from '@kit.AbilityKit';
 import { AppLanguage } from './AppLanguage';
-import type { LocaleBundle } from './LocaleTypes';
+import { loadLocaleBundleFromCatalog } from './catalog/ColorCatalogRepository';
+import type { LocaleBundle, UiStrings } from './LocaleTypes';
 import type { Occasion } from './Occasion';
 import type { Palette } from './Palette';
 
@@ -137,12 +139,33 @@ const EN_BUNDLE: LocaleBundle = {
     shareFailOther: 'Share failed. Check that a share target is available.',
     randomPalette: 'Random pick',
     randomPaletteHint: 'From this occasion’s curated sets',
+    inspirationEntryEyebrow: 'Not sure yet?',
+    inspirationEntryTitle: 'Today\'s Picks',
+    inspirationEntryHint: 'Start with these few',
+    inspirationSectionTitle: 'A few picks for today',
+    inspirationSectionHint: 'Refreshes daily. No need to pick an occasion yet.',
+    inspirationCollapse: 'Close',
+    smartMatch: 'More Pairings',
+    smartMatchTitle: 'Extended Pairings',
+    smartMatchHint: 'Based on the current main color, show a few safer pairing extensions.',
+    smartMatchApply: 'Apply this set',
+    smartMatchApplied: 'Applied',
+    smartMatchEmpty: 'No safe extended pairing is available for this main color yet.',
+    smartMatchSource: 'From',
     yesterdayOutfit: 'Use yesterday',
     fineTune: 'Tune',
     fineTuneTitle: 'Fine-tune colors',
     fineTuneApply: 'Apply',
     fineTuneReset: 'Reset to palette',
     fineTuneInvalid: 'Use valid #RGB or #RRGGBB',
+    fineTuneSuggested: 'Suggested colors',
+    fineTuneManual: 'Manual HEX',
+    fineTuneUndo: 'Undo last step',
+    fineTuneAdvanced: 'Advanced input',
+    fineTuneAdvancedHint: 'Only if you already know the HEX color value',
+    fineTuneEdited: 'Tweaked',
+    fineTuneAppliedToast: 'Fine-tune applied',
+    fineTuneResetToast: 'Reset to palette colors',
     yesterdayEmpty: 'No yesterday palette yet',
     exportTemplateLabel: 'Export layout',
     templateEditorial: 'Editorial',
@@ -159,6 +182,7 @@ const EN_BUNDLE: LocaleBundle = {
     themeLight: 'Light',
     themeDark: 'Dark'
   },
+  collections: [],
   occasions: EN_OCCASIONS
 };
 
@@ -193,12 +217,33 @@ const ZH_BUNDLE: LocaleBundle = {
     shareFailOther: '分享失败，请确认系统有可用的分享目标。',
     randomPalette: '随机选',
     randomPaletteHint: '从当前场合推荐套组中选一套',
+    inspirationEntryEyebrow: '今天没安排？',
+    inspirationEntryTitle: '今日灵感',
+    inspirationEntryHint: '先从这几组开始',
+    inspirationSectionTitle: '今天先看这几组',
+    inspirationSectionHint: '每天会换一组新的推荐，不必先决定场景',
+    inspirationCollapse: '收起',
+    smartMatch: '扩展搭配',
+    smartMatchTitle: '扩展搭配结果',
+    smartMatchHint: '基于当前主色，给你几套更稳妥的延展方案。',
+    smartMatchApply: '应用这套',
+    smartMatchApplied: '已应用',
+    smartMatchEmpty: '当前主色暂时没有可延展的稳妥搭配。',
+    smartMatchSource: '参考套组',
     yesterdayOutfit: '沿用昨日',
     fineTune: '精调',
     fineTuneTitle: '微调三色',
     fineTuneApply: '应用',
     fineTuneReset: '恢复套组色',
     fineTuneInvalid: '请使用 #RGB 或 #RRGGBB',
+    fineTuneSuggested: '推荐色',
+    fineTuneManual: '手动 HEX',
+    fineTuneUndo: '撤销上一步',
+    fineTuneAdvanced: '高级输入',
+    fineTuneAdvancedHint: '仅适合已经知道 HEX 色值时使用',
+    fineTuneEdited: '已微调',
+    fineTuneAppliedToast: '已应用微调',
+    fineTuneResetToast: '已恢复套组色',
     yesterdayEmpty: '暂无昨日配色',
     exportTemplateLabel: '导出版式',
     templateEditorial: '横条',
@@ -215,12 +260,117 @@ const ZH_BUNDLE: LocaleBundle = {
     themeLight: '浅色',
     themeDark: '深色'
   },
+  collections: [],
   occasions: ZH_OCCASIONS
 };
 
-export function getLocaleBundle(lang: AppLanguage): LocaleBundle {
-  if (lang === AppLanguage.ZH) {
-    return ZH_BUNDLE;
+const loadedBundles: Map<AppLanguage, LocaleBundle> = new Map<AppLanguage, LocaleBundle>();
+
+export async function preloadLocaleBundles(context: common.UIAbilityContext): Promise<void> {
+  const results = await Promise.all([
+    loadLocaleBundleFromCatalog(context, AppLanguage.ZH),
+    loadLocaleBundleFromCatalog(context, AppLanguage.EN)
+  ]);
+  const zh: LocaleBundle | null = results[0];
+  const en: LocaleBundle | null = results[1];
+  if (zh !== null) {
+    loadedBundles.set(AppLanguage.ZH, zh);
   }
-  return EN_BUNDLE;
+  if (en !== null) {
+    loadedBundles.set(AppLanguage.EN, en);
+  }
+}
+
+function pickUiString(baseValue: string, overrideValue: string | undefined): string {
+  if (overrideValue === undefined || overrideValue.length === 0) {
+    return baseValue;
+  }
+  return overrideValue;
+}
+
+function mergeUiStrings(base: UiStrings, override: UiStrings | undefined): UiStrings {
+  const source: UiStrings = override === undefined ? base : override;
+  return {
+    date: pickUiString(base.date, source.date),
+    storyTitle: pickUiString(base.storyTitle, source.storyTitle),
+    curatedTitle: pickUiString(base.curatedTitle, source.curatedTitle),
+    save: pickUiString(base.save, source.save),
+    share: pickUiString(base.share, source.share),
+    main: pickUiString(base.main, source.main),
+    sec: pickUiString(base.sec, source.sec),
+    acc: pickUiString(base.acc, source.acc),
+    settingsTitle: pickUiString(base.settingsTitle, source.settingsTitle),
+    langLabel: pickUiString(base.langLabel, source.langLabel),
+    langFollowSystem: pickUiString(base.langFollowSystem, source.langFollowSystem),
+    themeLabel: pickUiString(base.themeLabel, source.themeLabel),
+    aboutLabel: pickUiString(base.aboutLabel, source.aboutLabel),
+    saveSuccess: pickUiString(base.saveSuccess, source.saveSuccess),
+    saveFailAlbumPermission: pickUiString(base.saveFailAlbumPermission, source.saveFailAlbumPermission),
+    saveFailPermissionRequest: pickUiString(base.saveFailPermissionRequest, source.saveFailPermissionRequest),
+    saveFailBuildImage: pickUiString(base.saveFailBuildImage, source.saveFailBuildImage),
+    saveFailEncodeImage: pickUiString(base.saveFailEncodeImage, source.saveFailEncodeImage),
+    saveFailGalleryApi: pickUiString(base.saveFailGalleryApi, source.saveFailGalleryApi),
+    saveFailGalleryWrite: pickUiString(base.saveFailGalleryWrite, source.saveFailGalleryWrite),
+    saveFailUnknown: pickUiString(base.saveFailUnknown, source.saveFailUnknown),
+    saveCancelled: pickUiString(base.saveCancelled, source.saveCancelled),
+    shareFailBuildImage: pickUiString(base.shareFailBuildImage, source.shareFailBuildImage),
+    shareFailOther: pickUiString(base.shareFailOther, source.shareFailOther),
+    randomPalette: pickUiString(base.randomPalette, source.randomPalette),
+    randomPaletteHint: pickUiString(base.randomPaletteHint, source.randomPaletteHint),
+    inspirationEntryEyebrow: pickUiString(base.inspirationEntryEyebrow, source.inspirationEntryEyebrow),
+    inspirationEntryTitle: pickUiString(base.inspirationEntryTitle, source.inspirationEntryTitle),
+    inspirationEntryHint: pickUiString(base.inspirationEntryHint, source.inspirationEntryHint),
+    inspirationSectionTitle: pickUiString(base.inspirationSectionTitle, source.inspirationSectionTitle),
+    inspirationSectionHint: pickUiString(base.inspirationSectionHint, source.inspirationSectionHint),
+    inspirationCollapse: pickUiString(base.inspirationCollapse, source.inspirationCollapse),
+    smartMatch: pickUiString(base.smartMatch, source.smartMatch),
+    smartMatchTitle: pickUiString(base.smartMatchTitle, source.smartMatchTitle),
+    smartMatchHint: pickUiString(base.smartMatchHint, source.smartMatchHint),
+    smartMatchApply: pickUiString(base.smartMatchApply, source.smartMatchApply),
+    smartMatchApplied: pickUiString(base.smartMatchApplied, source.smartMatchApplied),
+    smartMatchEmpty: pickUiString(base.smartMatchEmpty, source.smartMatchEmpty),
+    smartMatchSource: pickUiString(base.smartMatchSource, source.smartMatchSource),
+    yesterdayOutfit: pickUiString(base.yesterdayOutfit, source.yesterdayOutfit),
+    fineTune: pickUiString(base.fineTune, source.fineTune),
+    fineTuneTitle: pickUiString(base.fineTuneTitle, source.fineTuneTitle),
+    fineTuneApply: pickUiString(base.fineTuneApply, source.fineTuneApply),
+    fineTuneReset: pickUiString(base.fineTuneReset, source.fineTuneReset),
+    fineTuneInvalid: pickUiString(base.fineTuneInvalid, source.fineTuneInvalid),
+    fineTuneSuggested: pickUiString(base.fineTuneSuggested, source.fineTuneSuggested),
+    fineTuneManual: pickUiString(base.fineTuneManual, source.fineTuneManual),
+    fineTuneUndo: pickUiString(base.fineTuneUndo, source.fineTuneUndo),
+    fineTuneAdvanced: pickUiString(base.fineTuneAdvanced, source.fineTuneAdvanced),
+    fineTuneAdvancedHint: pickUiString(base.fineTuneAdvancedHint, source.fineTuneAdvancedHint),
+    fineTuneEdited: pickUiString(base.fineTuneEdited, source.fineTuneEdited),
+    fineTuneAppliedToast: pickUiString(base.fineTuneAppliedToast, source.fineTuneAppliedToast),
+    fineTuneResetToast: pickUiString(base.fineTuneResetToast, source.fineTuneResetToast),
+    yesterdayEmpty: pickUiString(base.yesterdayEmpty, source.yesterdayEmpty),
+    exportTemplateLabel: pickUiString(base.exportTemplateLabel, source.exportTemplateLabel),
+    templateEditorial: pickUiString(base.templateEditorial, source.templateEditorial),
+    templateColumns: pickUiString(base.templateColumns, source.templateColumns),
+    templateThirds: pickUiString(base.templateThirds, source.templateThirds),
+    templateBento: pickUiString(base.templateBento, source.templateBento),
+    templateStack: pickUiString(base.templateStack, source.templateStack),
+    miniPreviewStyleLabel: pickUiString(base.miniPreviewStyleLabel, source.miniPreviewStyleLabel),
+    miniPreviewStyleCapsule: pickUiString(base.miniPreviewStyleCapsule, source.miniPreviewStyleCapsule),
+    miniPreviewStyleHero: pickUiString(base.miniPreviewStyleHero, source.miniPreviewStyleHero),
+    reduceMotionLabel: pickUiString(base.reduceMotionLabel, source.reduceMotionLabel),
+    noiseLabel: pickUiString(base.noiseLabel, source.noiseLabel),
+    themeFollowSystem: pickUiString(base.themeFollowSystem, source.themeFollowSystem),
+    themeLight: pickUiString(base.themeLight, source.themeLight),
+    themeDark: pickUiString(base.themeDark, source.themeDark)
+  };
+}
+
+export function getLocaleBundle(lang: AppLanguage): LocaleBundle {
+  const fallback: LocaleBundle = lang === AppLanguage.ZH ? ZH_BUNDLE : EN_BUNDLE;
+  const loaded: LocaleBundle | undefined = loadedBundles.get(lang);
+  if (loaded !== undefined) {
+    return {
+      ui: mergeUiStrings(fallback.ui, loaded.ui),
+      collections: loaded.collections,
+      occasions: loaded.occasions
+    };
+  }
+  return fallback;
 }

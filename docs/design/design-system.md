@@ -1,6 +1,11 @@
 # DayPalette 设计系统（Design System）
 
-本文档从 [`../mockups/daypalette-premium-mockup.html`](../mockups/daypalette-premium-mockup.html) 抽取**可复用的设计语言与工程令牌**。后续开发新界面、新模块时，应以本文件为规范；HTML 原型仅作像素级对照与疑难细节参考，不必每次改 HTML。
+> 跨移动端与 Web 的共享设计语言，当前已收口到 [`../../../daypalette-docs/design/shared-design-language.md`](../../../daypalette-docs/design/shared-design-language.md)。
+> 本文件从当前起主要记录 **HarmonyOS 客户端实现映射**：ArkUI 页面、尺寸、组件形态与像素级补充；若要修改共享品牌气质、排版角色、语义色层或动效节奏，应优先更新顶层共享文档，再回写本文件。
+
+> 自 2026-04-20 起，跨端共享核心 token 的**默认基线值**也以上游共享文档 §3 为准；本文件中的固定语义色、默认占位色与 ArkUI 常量应与其保持一致。若发生偏离，应先修正文档分层，再决定是否接受平台特例。
+
+本文档在 [`../mockups/daypalette-premium-mockup.html`](../mockups/daypalette-premium-mockup.html) 与共享设计语言文档的基础上，补充 DayPalette App 的工程令牌与实现细节。HTML 原型仅作像素级对照与疑难细节参考，不必每次改 HTML。
 
 ---
 
@@ -20,6 +25,8 @@
 
 ### 2.1 语义色（固定，不随配色盘变化）
 
+以下为 HarmonyOS 客户端对共享核心 token 的实现映射；默认值必须与上游共享设计语言保持一致。
+
 | Token | 值 | 用途 |
 |-------|-----|------|
 | `bg.page` | `#f9f8f6` | 应用主背景（设备内画布）。 |
@@ -35,6 +42,8 @@
 | `text.on-inverse` | `#ffffff` | 主按钮上的字与图标。 |
 
 ### 2.2 动态配色（随当前 Palette 变化）
+
+以下三色正常由数据驱动；若处于默认态或占位态，其默认值应与上游共享设计语言中的默认占位值保持一致。
 
 由数据驱动三个 CSS 变量（原生侧应对应 `main / sec / acc` 三色）：
 

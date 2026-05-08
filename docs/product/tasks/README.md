@@ -11,7 +11,7 @@
 | `iteration-02.md` | 迭代二（**已完成**）：体验与视觉 — BR-01/02/04/05/06 |
 | `iteration-03.md` | 迭代三（**已完成**）：工程自检、实现收敛、文档回流 |
 | `iteration-04.md` | 迭代四（**已提前收口**）：短链路上架自检与基础文档清理 |
-| `iteration-05.md` | 迭代五（**规划中**）：智能配、数据更新机制、内容维护与场景文案收敛 |
+| `iteration-05.md` | 迭代五（**已完成**）：移动端范围内的灵感入口、精调升级、日期修复已收口；运营侧内容维护与数据更新方案已转出到独立项目 |
 | `Backlog.md` | 统一待办池（PRD 缺口、头脑风暴、未来规划等） |
 
 ## Issue 字段（建议）
@@ -23,7 +23,7 @@
 | **Key** | 如 `DP-101`，全库唯一（迭代内可再带子编号） |
 | **Type** | Epic / Story / Task / Bug |
 | **Summary** | 一句话标题 |
-| **Status** | Backlog / Ready / In Progress / Done |
+| **Status** | Backlog / Ready / In Progress / Done / Transferred |
 | **Priority** | P0～P3 或 Highest～Low |
 | **Source** | PRD §x / Brainstorming T-xx / 自由输入 |
 | **Acceptance** | 验收要点（可链接 PRD 验收项） |
@@ -31,7 +31,8 @@
 ## 与权威文档的关系
 
 - 需求真相源仍以 [`../PRD.md`](../PRD.md) 为准；本目录为**执行与排期视图**。
-- 头脑风暴与已拍板方向见 [`../brainstorming/Brainstorming-01.md`](../brainstorming/Brainstorming-01.md)；护城河 / 用户 / 价值与付费讨论见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)；策略文档后续的任务增补草案见 [`./backlog-addendum-brainstorming-02.md`](./backlog-addendum-brainstorming-02.md)；落地任务以 **Backlog 中的 Key** 为准（避免双处改状态）。
+- `strategy` 目录当前已完成一轮收口；若任务条目提到资产结构、智能配、灵感入口或策展工作台方案，优先从 [`../strategy/README.md`](../strategy/README.md) 进入，再按索引下钻到对应主文档。
+- 头脑风暴与已拍板方向见 [`../brainstorming/Brainstorming-01.md`](../brainstorming/Brainstorming-01.md)；护城河 / 用户 / 价值与付费讨论见 [`daypalette-docs/product/strategy/moat-and-monetization.md`](../../../../daypalette-docs/product/strategy/moat-and-monetization.md)；策略文档后续的任务增补草案见 [`./backlog-addendum-brainstorming-02.md`](./backlog-addendum-brainstorming-02.md)；落地任务以 **Backlog 中的 Key** 为准（避免双处改状态）。
 
 ## 当前索引
 

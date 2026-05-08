@@ -1,0 +1,274 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-30T00:00:00Z",
+  "dictionaries": {
+    "occasion": {
+      "key": "occasion",
+      "labelZh": "场合",
+      "labelEn": "Occasion",
+      "descriptionZh": "跨基础色、配色盘和合集复用的场合口径。",
+      "descriptionEn": "Shared occasion vocabulary across base colors, palettes, and collections.",
+      "entityScopes": ["baseColor", "palette", "collection"],
+      "selectionMode": "mixed",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "occasionTags", "selectionMode": "multi" },
+        { "entity": "palette", "field": "occasionId", "selectionMode": "single" },
+        { "entity": "collection", "field": "occasionTags", "selectionMode": "multi" }
+      ],
+      "items": [
+        { "id": "dinner", "labelZh": "晚宴", "labelEn": "Dinner", "aliases": [], "descriptionZh": "晚餐、派对与夜间场合。", "descriptionEn": "Dinner, party, and evening scenarios.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "outdoor", "labelZh": "户外", "labelEn": "Outdoor", "aliases": [], "descriptionZh": "公园、步道与轻运动场合。", "descriptionEn": "Outdoor, park, trail, and light activity scenarios.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "weekend", "labelZh": "周末", "labelEn": "Weekend", "aliases": [], "descriptionZh": "周末、约会与轻松出门场合。", "descriptionEn": "Weekend, date, and casual outing scenarios.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "workday", "labelZh": "工作日", "labelEn": "Workday", "aliases": [], "descriptionZh": "通勤与正式日常场合。", "descriptionEn": "Commute and formal everyday scenarios.", "sortOrder": 400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "styleTag": {
+      "key": "styleTag",
+      "labelZh": "风格标签",
+      "labelEn": "Style Tag",
+      "descriptionZh": "描述基础色、配色盘与合集风格倾向的标签。",
+      "descriptionEn": "Style vocabulary shared across base colors, palettes, and collections.",
+      "entityScopes": ["baseColor", "palette", "collection"],
+      "selectionMode": "multi",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "styleTags", "selectionMode": "multi" },
+        { "entity": "palette", "field": "styleTags", "selectionMode": "multi" },
+        { "entity": "collection", "field": "styleTags", "selectionMode": "multi" }
+      ],
+      "items": [
+        { "id": "clean", "labelZh": "清爽", "labelEn": "Clean", "aliases": [], "descriptionZh": "干净、低噪声的视觉气质。", "descriptionEn": "Clean and low-noise styling.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "commute", "labelZh": "通勤", "labelEn": "Commute", "aliases": [], "descriptionZh": "适合工作日与城市通勤。", "descriptionEn": "Suitable for workdays and commute scenarios.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "earthy", "labelZh": "大地", "labelEn": "Earthy", "aliases": [], "descriptionZh": "偏土壤、矿物、自然材质感。", "descriptionEn": "Earthy, mineral, and natural-material styling.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "elegant", "labelZh": "优雅", "labelEn": "Elegant", "aliases": [], "descriptionZh": "克制、细腻且稍带正式感。", "descriptionEn": "Restrained and elegant styling.", "sortOrder": 400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "fresh", "labelZh": "清新", "labelEn": "Fresh", "aliases": [], "descriptionZh": "轻盈、透气、偏明亮。", "descriptionEn": "Fresh, airy, and light styling.", "sortOrder": 500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "grounded", "labelZh": "沉稳", "labelEn": "Grounded", "aliases": [], "descriptionZh": "稳定、踏实、不过分跳脱。", "descriptionEn": "Grounded and stable styling.", "sortOrder": 600, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "minimal", "labelZh": "极简", "labelEn": "Minimal", "aliases": [], "descriptionZh": "低装饰、偏结构化。", "descriptionEn": "Minimal and low-decoration styling.", "sortOrder": 700, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "nature", "labelZh": "自然", "labelEn": "Nature", "aliases": [], "descriptionZh": "贴近植物、草地与户外气息。", "descriptionEn": "Nature-inspired styling.", "sortOrder": 800, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "playful", "labelZh": "轻快", "labelEn": "Playful", "aliases": [], "descriptionZh": "明快、有活力、稍带跳跃感。", "descriptionEn": "Playful and lively styling.", "sortOrder": 900, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "romantic", "labelZh": "浪漫", "labelEn": "Romantic", "aliases": [], "descriptionZh": "偏柔美、约会感与情绪表达。", "descriptionEn": "Romantic and date-friendly styling.", "sortOrder": 1000, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "soft", "labelZh": "柔和", "labelEn": "Soft", "aliases": [], "descriptionZh": "低对比、偏粉雾感。", "descriptionEn": "Soft and low-contrast styling.", "sortOrder": 1100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "sport", "labelZh": "运动", "labelEn": "Sport", "aliases": [], "descriptionZh": "适合轻运动与户外活动。", "descriptionEn": "Sporty and activity-oriented styling.", "sortOrder": 1200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "urban", "labelZh": "都市", "labelEn": "Urban", "aliases": [], "descriptionZh": "偏城市、利落与通勤场景。", "descriptionEn": "Urban and city-oriented styling.", "sortOrder": 1300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "seasonTag": {
+      "key": "seasonTag",
+      "labelZh": "季节标签",
+      "labelEn": "Season Tag",
+      "descriptionZh": "描述适配季节的标签。",
+      "descriptionEn": "Seasonal suitability labels.",
+      "entityScopes": ["baseColor", "palette"],
+      "selectionMode": "multi",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "seasonTags", "selectionMode": "multi" },
+        { "entity": "palette", "field": "seasonTags", "selectionMode": "multi" }
+      ],
+      "items": [
+        { "id": "all", "labelZh": "全年", "labelEn": "All Seasons", "aliases": [], "descriptionZh": "不受明显季节限制。", "descriptionEn": "Suitable across all seasons.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "autumn", "labelZh": "秋", "labelEn": "Autumn", "aliases": [], "descriptionZh": "偏秋季氛围。", "descriptionEn": "Suitable for autumn scenarios.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "spring", "labelZh": "春", "labelEn": "Spring", "aliases": [], "descriptionZh": "偏春季氛围。", "descriptionEn": "Suitable for spring scenarios.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "summer", "labelZh": "夏", "labelEn": "Summer", "aliases": [], "descriptionZh": "偏夏季氛围。", "descriptionEn": "Suitable for summer scenarios.", "sortOrder": 400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "winter", "labelZh": "冬", "labelEn": "Winter", "aliases": [], "descriptionZh": "偏冬季氛围。", "descriptionEn": "Suitable for winter scenarios.", "sortOrder": 500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "moodTag": {
+      "key": "moodTag",
+      "labelZh": "心情标签",
+      "labelEn": "Mood Tag",
+      "descriptionZh": "描述配色盘整体氛围与情绪表达。",
+      "descriptionEn": "Mood vocabulary for palette-level emotional tone.",
+      "entityScopes": ["palette"],
+      "selectionMode": "multi",
+      "fieldMappings": [
+        { "entity": "palette", "field": "moodTags", "selectionMode": "multi" }
+      ],
+      "items": [
+        { "id": "balanced", "labelZh": "均衡", "labelEn": "Balanced", "aliases": [], "descriptionZh": "整体感稳定且无明显偏科。", "descriptionEn": "Balanced and even overall tone.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "blush", "labelZh": "绯红", "labelEn": "Blush", "aliases": [], "descriptionZh": "偏脸红、轻甜的情绪感。", "descriptionEn": "Blush-toned emotional expression.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "breathable", "labelZh": "轻透", "labelEn": "Breathable", "aliases": [], "descriptionZh": "透气、呼吸感较强。", "descriptionEn": "Airy and breathable mood.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "bright", "labelZh": "明快", "labelEn": "Bright", "aliases": [], "descriptionZh": "偏明亮、有精神。", "descriptionEn": "Bright and energetic mood.", "sortOrder": 400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "calm", "labelZh": "平静", "labelEn": "Calm", "aliases": [], "descriptionZh": "平静、放松、低刺激。", "descriptionEn": "Calm and low-stimulation mood.", "sortOrder": 500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "clean", "labelZh": "干净", "labelEn": "Clean", "aliases": [], "descriptionZh": "视觉干净清楚。", "descriptionEn": "Clean visual mood.", "sortOrder": 600, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "cool", "labelZh": "冷感", "labelEn": "Cool", "aliases": [], "descriptionZh": "偏冷色与冷静气质。", "descriptionEn": "Cool-toned emotional mood.", "sortOrder": 700, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "earthy", "labelZh": "大地", "labelEn": "Earthy", "aliases": [], "descriptionZh": "偏土壤与天然材质感。", "descriptionEn": "Earthy mood expression.", "sortOrder": 800, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "elegant", "labelZh": "优雅", "labelEn": "Elegant", "aliases": [], "descriptionZh": "成熟、克制、细腻。", "descriptionEn": "Elegant and refined mood.", "sortOrder": 900, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "fresh", "labelZh": "清新", "labelEn": "Fresh", "aliases": [], "descriptionZh": "新鲜、通透、轻快。", "descriptionEn": "Fresh and airy mood.", "sortOrder": 1000, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "gentle", "labelZh": "温柔", "labelEn": "Gentle", "aliases": [], "descriptionZh": "柔和且不具攻击性。", "descriptionEn": "Gentle and soft mood.", "sortOrder": 1100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "glass", "labelZh": "玻璃感", "labelEn": "Glass", "aliases": [], "descriptionZh": "偏透明、冰冷、清亮。", "descriptionEn": "Glass-like crisp mood.", "sortOrder": 1200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "grounded", "labelZh": "沉稳", "labelEn": "Grounded", "aliases": [], "descriptionZh": "稳定、可靠。", "descriptionEn": "Grounded and stable mood.", "sortOrder": 1300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "metallic", "labelZh": "金属感", "labelEn": "Metallic", "aliases": [], "descriptionZh": "有金属、器物或反光感。", "descriptionEn": "Metallic mood expression.", "sortOrder": 1400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "mineral", "labelZh": "矿物感", "labelEn": "Mineral", "aliases": [], "descriptionZh": "带石材、矿物与土质感。", "descriptionEn": "Mineral and clay-like mood.", "sortOrder": 1500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "minimal", "labelZh": "极简", "labelEn": "Minimal", "aliases": [], "descriptionZh": "偏克制与极简氛围。", "descriptionEn": "Minimal and restrained mood.", "sortOrder": 1600, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "moody", "labelZh": "情绪感", "labelEn": "Moody", "aliases": [], "descriptionZh": "更浓郁、更有情绪张力。", "descriptionEn": "Moody and emotionally rich tone.", "sortOrder": 1700, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "quiet", "labelZh": "安静", "labelEn": "Quiet", "aliases": [], "descriptionZh": "低声量、安静、内敛。", "descriptionEn": "Quiet and subtle mood.", "sortOrder": 1800, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "relaxed", "labelZh": "松弛", "labelEn": "Relaxed", "aliases": [], "descriptionZh": "放松、不紧绷。", "descriptionEn": "Relaxed and easy-going mood.", "sortOrder": 1900, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "romantic", "labelZh": "浪漫", "labelEn": "Romantic", "aliases": [], "descriptionZh": "偏感性、甜度和约会感。", "descriptionEn": "Romantic emotional tone.", "sortOrder": 2000, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "sharp", "labelZh": "利落", "labelEn": "Sharp", "aliases": [], "descriptionZh": "有棱角、偏明确。", "descriptionEn": "Sharp and defined mood.", "sortOrder": 2100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "soft", "labelZh": "柔和", "labelEn": "Soft", "aliases": [], "descriptionZh": "低对比、偏雾感。", "descriptionEn": "Soft and low-contrast mood.", "sortOrder": 2200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "steady", "labelZh": "稳定", "labelEn": "Steady", "aliases": [], "descriptionZh": "稳定、结实、不飘忽。", "descriptionEn": "Steady and dependable mood.", "sortOrder": 2300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "sunny", "labelZh": "晴朗", "labelEn": "Sunny", "aliases": [], "descriptionZh": "带阳光感、积极。", "descriptionEn": "Sunny and optimistic mood.", "sortOrder": 2400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "warm", "labelZh": "暖感", "labelEn": "Warm", "aliases": [], "descriptionZh": "整体偏暖、亲和。", "descriptionEn": "Warm and approachable mood.", "sortOrder": 2500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "wild", "labelZh": "野趣", "labelEn": "Wild", "aliases": [], "descriptionZh": "带一点天然与野外气息。", "descriptionEn": "Wild and natural mood.", "sortOrder": 2600, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "colorFamily": {
+      "key": "colorFamily",
+      "labelZh": "色系",
+      "labelEn": "Color Family",
+      "descriptionZh": "基础色的主色系分类。",
+      "descriptionEn": "Primary color-family classification for base colors.",
+      "entityScopes": ["baseColor"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "colorFamily", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "beige", "labelZh": "米色", "labelEn": "Beige", "aliases": [], "descriptionZh": "米白、奶油与浅驼色系。", "descriptionEn": "Beige, cream, and light camel family.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "blue", "labelZh": "蓝色", "labelEn": "Blue", "aliases": [], "descriptionZh": "蓝系与蓝灰系。", "descriptionEn": "Blue and blue-grey family.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "brown", "labelZh": "棕色", "labelEn": "Brown", "aliases": [], "descriptionZh": "棕系与咖啡系。", "descriptionEn": "Brown and coffee family.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "green", "labelZh": "绿色", "labelEn": "Green", "aliases": [], "descriptionZh": "绿色与苔绿系。", "descriptionEn": "Green and moss-green family.", "sortOrder": 400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "grey", "labelZh": "灰色", "labelEn": "Grey", "aliases": [], "descriptionZh": "灰系与灰蓝系。", "descriptionEn": "Grey and grey-blue family.", "sortOrder": 500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "orange", "labelZh": "橙色", "labelEn": "Orange", "aliases": [], "descriptionZh": "橙系与暖橘系。", "descriptionEn": "Orange family.", "sortOrder": 600, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "pink", "labelZh": "粉色", "labelEn": "Pink", "aliases": [], "descriptionZh": "粉系与裸粉系。", "descriptionEn": "Pink family.", "sortOrder": 700, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "purple", "labelZh": "紫色", "labelEn": "Purple", "aliases": [], "descriptionZh": "紫系与雾紫系。", "descriptionEn": "Purple family.", "sortOrder": 800, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "red", "labelZh": "红色", "labelEn": "Red", "aliases": [], "descriptionZh": "红系与酒红系。", "descriptionEn": "Red family.", "sortOrder": 900, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "yellow", "labelZh": "黄色", "labelEn": "Yellow", "aliases": [], "descriptionZh": "黄系与香槟色系。", "descriptionEn": "Yellow family.", "sortOrder": 1000, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "tone": {
+      "key": "tone",
+      "labelZh": "冷暖",
+      "labelEn": "Tone",
+      "descriptionZh": "描述基础色的冷暖倾向。",
+      "descriptionEn": "Warm-cool tendency for base colors.",
+      "entityScopes": ["baseColor"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "tone", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "cool", "labelZh": "冷调", "labelEn": "Cool", "aliases": [], "descriptionZh": "偏冷色方向。", "descriptionEn": "Cool-toned direction.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "neutral", "labelZh": "中性", "labelEn": "Neutral", "aliases": [], "descriptionZh": "中间态，不明显偏冷或偏暖。", "descriptionEn": "Neutral tone direction.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "warm", "labelZh": "暖调", "labelEn": "Warm", "aliases": [], "descriptionZh": "偏暖色方向。", "descriptionEn": "Warm-toned direction.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "lightnessLevel": {
+      "key": "lightnessLevel",
+      "labelZh": "明度等级",
+      "labelEn": "Lightness Level",
+      "descriptionZh": "描述颜色深浅层级。",
+      "descriptionEn": "Lightness classification for colors.",
+      "entityScopes": ["baseColor"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "lightnessLevel", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "deep", "labelZh": "深", "labelEn": "Deep", "aliases": [], "descriptionZh": "较深色。", "descriptionEn": "Deeper lightness value.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "light", "labelZh": "浅", "labelEn": "Light", "aliases": [], "descriptionZh": "较浅色。", "descriptionEn": "Lighter lightness value.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "mid", "labelZh": "中", "labelEn": "Mid", "aliases": [], "descriptionZh": "中等明度。", "descriptionEn": "Mid lightness value.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "saturationLevel": {
+      "key": "saturationLevel",
+      "labelZh": "饱和度等级",
+      "labelEn": "Saturation Level",
+      "descriptionZh": "描述颜色的饱和度层级。",
+      "descriptionEn": "Saturation classification for colors.",
+      "entityScopes": ["baseColor"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "saturationLevel", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "high", "labelZh": "高", "labelEn": "High", "aliases": [], "descriptionZh": "较高饱和度。", "descriptionEn": "High saturation level.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "low", "labelZh": "低", "labelEn": "Low", "aliases": [], "descriptionZh": "较低饱和度。", "descriptionEn": "Low saturation level.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "mid", "labelZh": "中", "labelEn": "Mid", "aliases": [], "descriptionZh": "中等饱和度。", "descriptionEn": "Mid saturation level.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "safetyLevel": {
+      "key": "safetyLevel",
+      "labelZh": "安全等级",
+      "labelEn": "Safety Level",
+      "descriptionZh": "描述配色盘的穿搭风险等级。",
+      "descriptionEn": "Risk level for wearable palettes.",
+      "entityScopes": ["palette"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "palette", "field": "safetyLevel", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "expressive", "labelZh": "表达型", "labelEn": "Expressive", "aliases": [], "descriptionZh": "更强调个性和表达。", "descriptionEn": "More expressive and personality-driven.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" },
+        { "id": "safe", "labelZh": "安全", "labelEn": "Safe", "aliases": [], "descriptionZh": "更稳定、低风险。", "descriptionEn": "Safer and lower-risk palette.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "themeType": {
+      "key": "themeType",
+      "labelZh": "合集主题",
+      "labelEn": "Theme Type",
+      "descriptionZh": "描述合集的组织主题类型。",
+      "descriptionEn": "Theme type for collections.",
+      "entityScopes": ["collection"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "collection", "field": "themeType", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "scene", "labelZh": "场景", "labelEn": "Scene", "aliases": [], "descriptionZh": "按场景组织的合集。", "descriptionEn": "Scene-based collection theme.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "releaseMode": {
+      "key": "releaseMode",
+      "labelZh": "发布模式",
+      "labelEn": "Release Mode",
+      "descriptionZh": "描述合集的发布模式。",
+      "descriptionEn": "Release mode for collections.",
+      "entityScopes": ["collection"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "collection", "field": "releaseMode", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "permanent", "labelZh": "常驻", "labelEn": "Permanent", "aliases": [], "descriptionZh": "长期保留的发布模式。", "descriptionEn": "Permanent release mode.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "sourceType": {
+      "key": "sourceType",
+      "labelZh": "来源类型",
+      "labelEn": "Source Type",
+      "descriptionZh": "描述配色盘的来源方式。",
+      "descriptionEn": "Source classification for palettes.",
+      "entityScopes": ["palette"],
+      "selectionMode": "single",
+      "fieldMappings": [
+        { "entity": "palette", "field": "sourceType", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "curated", "labelZh": "人工策展", "labelEn": "Curated", "aliases": [], "descriptionZh": "由人工筛选和策展产生。", "descriptionEn": "Curated by manual editorial selection.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "" }
+      ]
+    },
+    "status": {
+      "key": "status",
+      "labelZh": "状态",
+      "labelEn": "Status",
+      "descriptionZh": "主数据生命周期状态字典。",
+      "descriptionEn": "Lifecycle status vocabulary for primary resources.",
+      "entityScopes": ["baseColor", "palette", "collection"],
+      "selectionMode": "mixed",
+      "fieldMappings": [
+        { "entity": "baseColor", "field": "status", "selectionMode": "single" },
+        { "entity": "palette", "field": "status", "selectionMode": "single" },
+        { "entity": "collection", "field": "status", "selectionMode": "single" }
+      ],
+      "items": [
+        { "id": "draft", "labelZh": "草稿", "labelEn": "Draft", "aliases": [], "descriptionZh": "尚未确认的草稿状态。", "descriptionEn": "Draft lifecycle state.", "sortOrder": 100, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["baseColor.status", "palette.status"] },
+        { "id": "approved", "labelZh": "已通过", "labelEn": "Approved", "aliases": [], "descriptionZh": "已确认可用，但不一定已发布。", "descriptionEn": "Validated and ready, but not necessarily published.", "sortOrder": 200, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["baseColor.status", "palette.status"] },
+        { "id": "published", "labelZh": "已发布", "labelEn": "Published", "aliases": [], "descriptionZh": "已对消费端生效。", "descriptionEn": "Published to the consumer-facing dataset.", "sortOrder": 300, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["palette.status", "collection.status"] },
+        { "id": "archived", "labelZh": "已归档", "labelEn": "Archived", "aliases": [], "descriptionZh": "保留但不作为当前主展示。", "descriptionEn": "Archived but retained for history.", "sortOrder": 400, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["baseColor.status", "palette.status", "collection.status"] },
+        { "id": "planning", "labelZh": "规划中", "labelEn": "Planning", "aliases": [], "descriptionZh": "合集仍处于策划阶段。", "descriptionEn": "Collection is in planning state.", "sortOrder": 500, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["collection.status"] },
+        { "id": "ready", "labelZh": "待发布", "labelEn": "Ready", "aliases": [], "descriptionZh": "合集已准备好进入发布。", "descriptionEn": "Collection is ready for release.", "sortOrder": 600, "isActive": true, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["collection.status"] },
+        { "id": "deleted", "labelZh": "已删除", "labelEn": "Deleted", "aliases": [], "descriptionZh": "系统保留的软删除状态。", "descriptionEn": "System-reserved soft delete state.", "sortOrder": 9999, "isActive": false, "isDeleted": false, "deletedAt": "", "deleteReason": "", "appliesTo": ["baseColor.status", "palette.status", "collection.status"] }
+      ]
+    }
+  }
+}

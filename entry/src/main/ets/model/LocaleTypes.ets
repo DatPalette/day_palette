@@ -1,3 +1,4 @@
+import type { Collection } from './Collection';
 import type { Occasion } from './Occasion';
 
 /** 与 HTML `i18n[lang]` 中除 data 外的静态文案一致。 */
@@ -38,12 +39,33 @@ export interface UiStrings {
   randomPalette: string;
   /** 副文案：说明行为边界，字号更小，与主文案同列展示。 */
   randomPaletteHint: string;
+  inspirationEntryEyebrow: string;
+  inspirationEntryTitle: string;
+  inspirationEntryHint: string;
+  inspirationSectionTitle: string;
+  inspirationSectionHint: string;
+  inspirationCollapse: string;
+  smartMatch: string;
+  smartMatchTitle: string;
+  smartMatchHint: string;
+  smartMatchApply: string;
+  smartMatchApplied: string;
+  smartMatchEmpty: string;
+  smartMatchSource: string;
   yesterdayOutfit: string;
   fineTune: string;
   fineTuneTitle: string;
   fineTuneApply: string;
   fineTuneReset: string;
   fineTuneInvalid: string;
+  fineTuneSuggested: string;
+  fineTuneManual: string;
+  fineTuneUndo: string;
+  fineTuneAdvanced: string;
+  fineTuneAdvancedHint: string;
+  fineTuneEdited: string;
+  fineTuneAppliedToast: string;
+  fineTuneResetToast: string;
   yesterdayEmpty: string;
   exportTemplateLabel: string;
   templateEditorial: string;
@@ -64,5 +86,6 @@ export interface UiStrings {
 /** 某一语言下的 UI 文案 + 场合树（含本地化后的 palette 名称与描述）。 */
 export interface LocaleBundle {
   ui: UiStrings;
+  collections: Collection[];
   occasions: Occasion[];
 }

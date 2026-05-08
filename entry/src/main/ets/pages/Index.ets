@@ -1,10 +1,12 @@
 import { common } from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
+import { LengthMetrics } from '@kit.ArkUI';
 import { APP_FOREGROUND_EVENT, LOCALE_CONFIG_CHANGED_EVENT } from '../common/constants/AppEventHub';
 import { getBottomGestureBarHeightPx } from '../common/window/NavigationIndicatorInset';
 import { DayPaletteViewModel } from '../viewmodel/DayPaletteViewModel';
 import { TopBarView } from '../components/TopBarView';
 import { HeroDisplayView } from '../components/HeroDisplayView';
+import { InspirationEntryView } from '../components/InspirationEntryView';
 import { OccasionSelectorView } from '../components/OccasionSelectorView';
 import { PaletteSelectorView } from '../components/PaletteSelectorView';
 import { BottomActionsView } from '../components/BottomActionsView';
@@ -29,6 +31,7 @@ import type {
 struct Index {
   @State vm: DayPaletteViewModel = new DayPaletteViewModel();
   private scroller: Scroller = new Scroller();
+  @State paletteRevealRequestToken: number = 0;
   @State mainScrollY: number = 0;
   @State isSettingsOpen: boolean = false;
   @State fineTuneOpen: boolean = false;
@@ -36,6 +39,7 @@ struct Index {
   @State bottomGestureInsetVp: number = 0;
   private localeEventHandler: (() => void) | undefined = undefined;
   private appForegroundHandler: (() => void) | undefined = undefined;
+  private midnightRefreshTimerId: number | null = null;
   private bottomWindowRef: window.Window | undefined = undefined;
   private avoidAreaChangeHandler = (data: window.AvoidAreaOptions): void => {
     if (data.type === window.AvoidAreaType.TYPE_SYSTEM ||
@@ -53,16 +57,19 @@ struct Index {
     this.vm.loadLanguageFromStorage(ctx);
     this.vm.loadAccessibilityFromStorage(ctx);
     this.vm.loadTodayOutfitFromStorage();
+    void this.vm.preloadLocaleCatalog(ctx);
     this.localeEventHandler = (): void => {
       const host = this.getUIContext().getHostContext() as common.UIAbilityContext;
       this.vm.refreshLocaleIfFollowingSystem(host);
     };
     this.appForegroundHandler = (): void => {
       this.vm.refreshCalendarDayBoundary();
+      this.scheduleMidnightRefresh();
     };
     ctx.eventHub.on(LOCALE_CONFIG_CHANGED_EVENT, this.localeEventHandler);
     ctx.eventHub.on(APP_FOREGROUND_EVENT, this.appForegroundHandler);
     this.attachBottomGestureInsetListener(ctx);
+    this.scheduleMidnightRefresh();
   }
 
   aboutToDisappear(): void {
@@ -76,6 +83,27 @@ struct Index {
       this.appForegroundHandler = undefined;
     }
     this.detachBottomGestureInsetListener();
+    this.clearMidnightRefreshTimer();
+  }
+
+  private clearMidnightRefreshTimer(): void {
+    if (this.midnightRefreshTimerId !== null) {
+      clearTimeout(this.midnightRefreshTimerId);
+      this.midnightRefreshTimerId = null;
+    }
+  }
+
+  private scheduleMidnightRefresh(): void {
+    this.clearMidnightRefreshTimer();
+    const now: Date = new Date();
+    const nextMidnight: Date = new Date(now.getTime());
+    nextMidnight.setHours(24, 0, 0, 0);
+    const delayMs: number = Math.max(1000, nextMidnight.getTime() - now.getTime() + 50);
+    this.midnightRefreshTimerId = setTimeout((): void => {
+      this.midnightRefreshTimerId = null;
+      this.vm.refreshCalendarDayBoundary();
+      this.scheduleMidnightRefresh();
+    }, delayMs);
   }
 
   private applyBottomGestureInsetFromWindow(win: window.Window): void {
@@ -214,6 +242,19 @@ struct Index {
     return this.vm.getHeroColorStrings().join('|');
   }
 
+  @Builder
+  private fineTuneSheetBuilder() {
+    FineTuneSheet({
+      vm: this.vm,
+      syncToken: this.fineTuneSyncToken(),
+      bottomGestureInsetVp: this.bottomGestureInsetVp,
+      onRequestClose: () => {
+        this.fineTuneOpen = false;
+      }
+    })
+      .width('100%')
+  }
+
   build() {
     Stack({ alignContent: Alignment.TopStart }) {
       Scroll(this.scroller) {
@@ -221,11 +262,24 @@ struct Index {
           Blank()
             .height(LayoutConstants.SCROLL_TOP_INSET_VP)
           HeroDisplayView({ vm: this.vm })
-          OccasionSelectorView({ vm: this.vm })
+          InspirationEntryView({
+            vm: this.vm,
+            onApplied: () => {
+              this.paletteRevealRequestToken += 1;
+            }
+          })
+          OccasionSelectorView({
+            vm: this.vm,
+            topMarginVp: 20,
+            bottomMarginVp: 26
+          })
           PaletteSelectorView({
             vm: this.vm,
+            revealRequestToken: this.paletteRevealRequestToken,
+            bottomPaddingVp: 0,
             onRandom: () => {
               this.vm.randomPaletteInActiveOccasion();
+              this.paletteRevealRequestToken += 1;
             },
             onYesterday: () => {
               const ok: boolean = this.vm.applyYesterdayOutfitFromStorage();
@@ -300,24 +354,23 @@ struct Index {
           }))
       }
 
-      if (this.fineTuneOpen) {
-        FineTuneSheet({
-          vm: this.vm,
-          syncToken: this.fineTuneSyncToken(),
-          bottomGestureInsetVp: this.bottomGestureInsetVp,
-          onRequestClose: () => {
-            this.fineTuneOpen = false;
-          }
-        })
-          .width('100%')
-          .height('100%')
-          .position({ top: 0, left: 0 })
-          .zIndex(120)
-      }
     }
     .width('100%')
     .height('100%')
     .backgroundColor(DesignTokens.BG_PAGE)
     .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
+    .bindSheet($$this.fineTuneOpen, this.fineTuneSheetBuilder(), {
+      height: SheetSize.FIT_CONTENT,
+      preferType: SheetType.BOTTOM,
+      dragBar: true,
+      showClose: false,
+      backgroundColor: DesignTokens.SURFACE_CARD,
+      maskColor: 'rgba(0, 0, 0, 0.30)',
+      keyboardAvoidMode: SheetKeyboardAvoidMode.TRANSLATE_AND_SCROLL,
+      radius: LengthMetrics.vp(28),
+      onDisappear: () => {
+        this.fineTuneOpen = false;
+      }
+    })
   }
 }

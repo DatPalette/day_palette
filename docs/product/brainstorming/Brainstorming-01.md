@@ -40,12 +40,12 @@
 | **T-06** | 顶栏微缩预览优化 | **Done** | `BL-BR-06` → `iteration-02` | 形态与主界面配色盘一致；解决「一坨」、提升辨识度。 |
 | **T-07** | 预置套组与场合数据扩容 | **Backlog** | `BL-BR-07` | 更贴近可穿场景；分期达到百套量级；与 JSON/数据模型及 Pro 包边界对齐架构文档。 |
 | **T-08** | 运营侧内容管理方案 | **Backlog** | `BL-BR-08` | 调研 + 选型纪要；与发布/灰度流程衔接（可不阻塞客户端功能）。 |
-| **T-09** | 壁纸类周边（远期） | **Backlog** | `BL-BR-09` | 非渐变 / 渐变 / 高级渐变 IAP；需求冻结前与 PRD 商业边界复核。 |
+| **T-09** | 壁纸工坊（当前设备尺寸壁纸） | **In Progress** | `BL-BR-09` → `iteration-05` | 基于当前 palette 生成当前设备尺寸壁纸；首版聚焦基础拼合 / 渐变样式与保存链路，不改底部保存 / 分享层级。 |
 
 **核对结论**
 
 - `T-01` 到 `T-09` 均已落入 Backlog 或已完成迭代映射，没有遗漏项。
-- 当前未完成项为 `T-03 / 07 / 08 / 09`，都已在 [Backlog.md](../tasks/Backlog.md) 中登记，无需额外补录。
+- 当前未完成项为 `T-03 / 07 / 08 / 09`；其中 `T-09` 已进入 [iteration-05.md](../tasks/iteration-05.md)，其余仍在 [Backlog.md](../tasks/Backlog.md) 中登记。
 
 **排期与状态**：以 [Backlog.md](../tasks/Backlog.md) 为唯一待办池（Key `BL-BR-xx` 与上表 T-xx 对应）；已完成范围见 [iteration-01.md](../tasks/iteration-01.md)、[iteration-02.md](../tasks/iteration-02.md)。新任务请追加到 Backlog，迭代文档从 Backlog 捞取。
 

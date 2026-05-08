@@ -6,12 +6,17 @@ import { LayoutConstants } from '../common/constants/LayoutConstants';
 @Component
 export struct PaletteSelectorView {
   @ObjectLink vm: DayPaletteViewModel;
+  @Watch('onRevealRequestChanged') @Prop revealRequestToken: number = 0;
+  @Prop bottomPaddingVp: number = LayoutConstants.PALETTE_LIST_BOTTOM_PADDING_VP;
   onRandom: () => void = () => {
   };
   onYesterday: () => void = () => {
   };
   onFineTune: () => void = () => {
   };
+  private paletteScroller: Scroller = new Scroller();
+  @State private emphasizedPaletteId: string = '';
+  private emphasizedTimerId: number | null = null;
 
   private actionPreviewColors(): string[] {
     return this.vm.getHeroColorStrings();
@@ -19,6 +24,39 @@ export struct PaletteSelectorView {
 
   private yesterdayEnabled(): boolean {
     return this.vm.canApplyYesterdayOutfit();
+  }
+
+  private fineTuneActive(): boolean {
+    return this.vm.hasActivePaletteFineTune();
+  }
+
+  private onRevealRequestChanged(): void {
+    this.revealActivePalette();
+  }
+
+  private revealActivePalette(): void {
+    const palettes: Palette[] = this.paletteList();
+    const activeIndex: number = palettes.findIndex((pal: Palette) => pal.id === this.vm.activePaletteId);
+    if (activeIndex < 0) {
+      return;
+    }
+    this.paletteScroller.scrollTo({
+      xOffset: activeIndex * 156,
+      yOffset: 0,
+      animation: { duration: this.vm.reduceMotion ? 1 : 420, curve: Curve.EaseInOut }
+    });
+    this.emphasizePalette(this.vm.activePaletteId);
+  }
+
+  private emphasizePalette(paletteId: string): void {
+    this.emphasizedPaletteId = paletteId;
+    if (this.emphasizedTimerId !== null) {
+      clearTimeout(this.emphasizedTimerId);
+    }
+    this.emphasizedTimerId = setTimeout((): void => {
+      this.emphasizedPaletteId = '';
+      this.emphasizedTimerId = null;
+    }, this.vm.reduceMotion ? 40 : 820);
   }
 
   build() {
@@ -33,7 +71,7 @@ export struct PaletteSelectorView {
         .textAlign(TextAlign.Start)
         .padding({ left: LayoutConstants.PAGE_HORIZONTAL_VP })
 
-      Scroll() {
+      Scroll(this.paletteScroller) {
         Row({ space: 16 }) {
           ForEach(this.paletteList(), (pal: Palette) => {
             Column() {
@@ -42,19 +80,28 @@ export struct PaletteSelectorView {
                   .layoutWeight(3)
                   .height(8)
                   .backgroundColor(pal.colors[0])
+                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.78)
                 Row()
                   .layoutWeight(2)
                   .height(8)
                   .backgroundColor(pal.colors[1])
+                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.78)
                 Row()
                   .layoutWeight(1)
                   .height(8)
                   .backgroundColor(pal.colors[2])
+                  .opacity(pal.id === this.vm.activePaletteId ? 1 : 0.78)
               }
               .width('100%')
               .borderRadius(2)
               .clip(true)
- 
+              .shadow({
+                radius: pal.id === this.vm.activePaletteId ? 8 : 0,
+                color: pal.id === this.vm.activePaletteId ? 'rgba(0, 0, 0, 0.04)' : 'rgba(0, 0, 0, 0)',
+                offsetX: 0,
+                offsetY: pal.id === this.vm.activePaletteId ? 3 : 0
+              })
+
               Column({ space: 4 }) {
                 Text(pal.name)
                   .fontSize(13)
@@ -74,18 +121,25 @@ export struct PaletteSelectorView {
             .alignItems(HorizontalAlign.Start)
             .justifyContent(FlexAlign.SpaceBetween)
             .padding(16)
-            .backgroundColor(DesignTokens.SURFACE_CARD)
+            .backgroundColor(pal.id === this.vm.activePaletteId
+              ? (pal.id === this.emphasizedPaletteId ? '#ffffff' : '#fcfcfb')
+              : DesignTokens.SURFACE_CARD)
             .borderRadius(2)
             .border({
               width: 1,
-              color: pal.id === this.vm.activePaletteId ? DesignTokens.TEXT_MAIN : DesignTokens.BORDER_COLOR
+              color: pal.id === this.vm.activePaletteId
+                ? (pal.id === this.emphasizedPaletteId ? 'rgba(26, 26, 26, 0.26)' : 'rgba(26, 26, 26, 0.18)')
+                : DesignTokens.BORDER_COLOR
             })
             .shadow({
-              radius: pal.id === this.vm.activePaletteId ? 20 : 0,
-              color: pal.id === this.vm.activePaletteId ? 'rgba(0, 0, 0, 0.03)' : 'rgba(0, 0, 0, 0)',
+              radius: pal.id === this.vm.activePaletteId ? (pal.id === this.emphasizedPaletteId ? 18 : 14) : 6,
+              color: pal.id === this.vm.activePaletteId
+                ? (pal.id === this.emphasizedPaletteId ? 'rgba(0, 0, 0, 0.06)' : 'rgba(0, 0, 0, 0.04)')
+                : 'rgba(0, 0, 0, 0.015)',
               offsetX: 0,
-              offsetY: pal.id === this.vm.activePaletteId ? 10 : 0
+              offsetY: pal.id === this.vm.activePaletteId ? (pal.id === this.emphasizedPaletteId ? 8 : 6) : 3
             })
+            .animation({ duration: this.vm.reduceMotion ? 1 : 520, curve: Curve.EaseInOut })
             .onClick(() => {
               this.vm.selectPalette(pal.id);
             })
@@ -187,22 +241,53 @@ export struct PaletteSelectorView {
           })
 
           Button({ type: ButtonType.Normal, stateEffect: true }) {
-            Text(this.vm.getUiStrings().fineTune)
-              .fontSize(13)
-              .fontWeight(FontWeight.Medium)
-              .fontColor(DesignTokens.TEXT_MAIN)
-              .maxLines(1)
-              .textOverflow({ overflow: TextOverflow.Ellipsis })
+            if (this.fineTuneActive()) {
+              Row({ space: 8 }) {
+                Text(this.vm.getUiStrings().fineTune)
+                  .layoutWeight(1)
+                  .fontSize(13)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor(DesignTokens.TEXT_MAIN)
+                  .maxLines(1)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+                  .textAlign(TextAlign.Start)
+
+                Text(this.vm.getUiStrings().fineTuneEdited)
+                  .fontSize(9)
+                  .fontWeight(FontWeight.Medium)
+                  .fontColor('rgba(0, 0, 0, 0.62)')
+                  .padding({ left: 6, right: 6, top: 2, bottom: 2 })
+                  .backgroundColor('rgba(255, 255, 255, 0.72)')
+                  .borderRadius(999)
+                  .border({ width: 1, color: 'rgba(0, 0, 0, 0.05)' })
+              }
+              .width('100%')
+              .alignItems(VerticalAlign.Center)
+            } else {
+              Text(this.vm.getUiStrings().fineTune)
+                .fontSize(13)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(DesignTokens.TEXT_MAIN)
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                .width('100%')
+                .textAlign(TextAlign.Center)
+            }
           }
           .layoutWeight(1)
           .height(42)
-          .backgroundColor(DesignTokens.SURFACE_CARD)
+          .padding({ left: 12, right: 12 })
+          .backgroundColor(this.fineTuneActive() ? 'rgba(0, 0, 0, 0.025)' : DesignTokens.SURFACE_CARD)
           .borderRadius(2)
-          .border({ width: 1, color: DesignTokens.BORDER_COLOR })
+          .border({
+            width: 1,
+            color: this.fineTuneActive() ? 'rgba(26, 26, 26, 0.12)' : DesignTokens.BORDER_COLOR
+          })
           .onClick(() => {
             this.onFineTune();
           })
         }
+
       }
       .width('100%')
       .alignItems(HorizontalAlign.Start)
@@ -210,11 +295,10 @@ export struct PaletteSelectorView {
     }
     .width('100%')
     .alignItems(HorizontalAlign.Start)
-    .padding({ bottom: LayoutConstants.PALETTE_LIST_BOTTOM_PADDING_VP })
+    .padding({ bottom: this.bottomPaddingVp })
   }
 
   private paletteList(): Palette[] {
-    const occ = this.vm.getActiveOccasion();
-    return occ !== undefined ? occ.palettes : [];
+    return this.vm.getRecommendedPalettesForActiveOccasion();
   }
 }

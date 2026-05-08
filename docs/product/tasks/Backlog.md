@@ -27,22 +27,69 @@
 |-----|------|----------|---------|--------|-------------------|------|
 | BL-BR-01 | Task | P1 | **提升「随机、精调、昨日」入口视觉权重** | Brainstorming T-01 | 保存/分享不动；更易发现与点击；对齐设计系统 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-02 | Task | P1 | **「随机」文案改为「随机选」等** | Brainstorming T-02 | 中英文案与真实行为一致；`LocaleData` 等 | → [**iteration-02**](./iteration-02.md) · **Done** |
-| BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | → [**iteration-05**](./iteration-05.md) |
+| BL-BR-03 | Story | P2 | **精调：「智能配」主路径 + 可展开完整微调** | Brainstorming T-03 | 主色驱动补全 + 保留现有精调；无脏色 | Backlog（2026-04-07 回退：当前搭配质量与 UI 交互未达标，用户侧入口已屏蔽） |
 | BL-BR-04 | Task | P2 | **出图/分享色卡版式升级** | Brainstorming T-04 | 免费模板边界遵守 PRD | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-05 | Task | P2 | **Hero 区三色呈现优化** | Brainstorming T-05 | 比例/圆角/动效遵守「减少动效」 | → [**iteration-02**](./iteration-02.md) · **Done** |
 | BL-BR-06 | Task | P2 | **顶栏微缩预览优化** | Brainstorming T-06 | 与主界面配色语言一致、可读 | → [**iteration-02**](./iteration-02.md) · **Done** |
-| BL-BR-07 | Epic | P2 | **预置套组与场合扩容（目标百套+分期）** | Brainstorming T-07 | 内容生产节奏与 Pro 包边界 |
-| BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 | → [**iteration-05**](./iteration-05.md) |
-| BL-BR-09 | Epic | P3 | **壁纸周边（非渐变/渐变/高级渐变 IAP）** | Brainstorming T-09 | 与 PRD 商业边界复核后立项 |
-| BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | → [**iteration-05**](./iteration-05.md) |
-| BL-BR-11 | Task | P2 | **场景命名与“今天的故事”文案收敛** | Brainstorming-02 | 收敛“随便走走的一天”等场景标题与情绪语义，不新增前置决策层 | → [**iteration-05**](./iteration-05.md) |
+| BL-BR-07 | Epic | P2 | **预置套组与场合扩容（目标百套+分期）** | Brainstorming T-07 | 首批专题方向、`Collection` 结构映射、内容扩容节奏与 Pro 包边界明确 |
+| BL-BR-08 | Task | P3 | **运营侧内容管理方案调研与选型** | Brainstorming T-08 | 纪要 + 与架构对齐 | **已转出移动端**（2026-05-08 起转由独立运营 / 工作台项目继续） |
+| BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 | **已转出移动端**（2026-05-08 起转由独立运营 / 数据项目继续） |
+| BL-BR-11 | Task | P2 | **灵感入口与场景文案收敛** | Brainstorming-02 | 收敛“今天没安排”场景的承接方式、入口形态与“今天的故事”文案口径；不新增更重的前置决策层 | → [**iteration-05**](./iteration-05.md) |
+| BL-UX-01 | Task | P1 | **精调能力升级与交互方案设计** | 口头 / 当前体验盘点 | 明确用户可改颜色范围、交互形式、确认/回退逻辑与更友好的操作路径 | → [**iteration-05**](./iteration-05.md) |
 
 ### 2.1 Brainstorming-02 / 策略文档增补备注
 
-- `BL-BR-03` 当前建议继续细化为：智能配候选池建设、第一版硬/软规则引擎、`Citywalk 拍照 / 公园出片 / 国风新中式` 三类场景策略、结果解释文案模板。  
-- `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。  
-- `BL-BR-08` 当前建议继续细化为：配色资产低成本维护流程设计、审核口径与重复性检查规则、CMS / 数据管理工具轻量选型。  
-- 以上增补来源见 [`../brainstorming/Brainstorming-02.md`](../brainstorming/Brainstorming-02.md)、[`../strategy/color-asset-library-plan.md`](../strategy/color-asset-library-plan.md)、[`../strategy/conservative-smart-matching-strategy.md`](../strategy/conservative-smart-matching-strategy.md)。
+`strategy` 侧当前统一入口见 [`../strategy/README.md`](../strategy/README.md)；本节只在需要精确字段或结构出处时，再保留具体文档链接。
+
+- `BL-BR-03` 当前继续细化为三组实现任务：  
+	- 数据：主色候选池分层、场景标签与安全等级字段、`LocaleData.ets -> JSON / catalog` 读取过渡。  
+	- 规则：第一版硬规则、软规则、排序与兜底，以及围绕现有 app 场景的解释模板与口径收敛。  
+	- UI：智能配主路径入口、结果卡片解释层、可展开完整微调、异常与空状态提示。  
+- `BL-BR-03` 已于 2026-04-07 暂停对外投放：保留已完成的数据与规则底座，但当前搭配质量与 UI 交互未达到上线标准，首页“扩展搭配”入口已先行屏蔽，后续继续留在 Backlog 评估恢复时机。  
+- `BL-BR-07` 当前建议继续细化为：配色资产三层模型定义（Base Color / Palette / Collection）、命名与标签规范、基础单色高复用池整理、首批专题策展落地。首批专题方向明确收敛为 `Citywalk 拍照 / 公园出片 / 国风新中式`，不再归入 `BL-BR-03` 的场景策略范围。  
+- `BL-BR-08` 已于 2026-05-08 转出移动端项目：后续由独立运营 / 工作台项目继续推进低成本维护流程、审核口径与工具选型。  
+- `BL-BR-10` 已于 2026-05-08 转出移动端项目：后续由独立运营 / 数据项目继续推进远端覆盖、bundle 构建与发布链路设计。  
+- 以上增补来源见 [`daypalette-docs/product/strategy/moat-and-monetization.md`](../../../../daypalette-docs/product/strategy/moat-and-monetization.md) 与 [`../strategy/README.md`](../strategy/README.md)；如需继续下钻，再按索引进入对应主文档。
+
+### 2.2 BL-BR-03 实现切片备忘
+
+| 子项 | 分类 | 目标 | 交付摘要 |
+|-----|------|------|---------|
+| BL-BR-03A | Data | 建立智能配输入数据骨架 | 补齐主色候选池结构、色彩安全等级、场景与专题标签字段 |
+| BL-BR-03B | Data | 建立数据加载过渡层 | 设计 `LocaleData.ets` 到 `rawfile/palette-data/*.json` / `catalog` 的兼容读取路径 |
+| BL-BR-03C | Rules | 实现第一版硬规则 | 明确禁配、低饱和保护、亮度跨度、场景黑白名单与兜底策略 |
+| BL-BR-03D | Rules | 实现第一版软规则与排序 | 定义 tone 权重、场景偏好、主题加分、结果排序与去重 |
+| BL-BR-03E | Rules | 建立场景策略模板 | 围绕现有 app 场景建立策略配置与解释模板，不承接专题策展方向 |
+| BL-BR-03F | UI | 接入智能配主路径 | 在精调主流程中提供“选主色 -> 智能补全”的低负担入口 |
+| BL-BR-03G | UI | 设计结果解释层 | 为推荐结果提供短解释、原因标签、失败兜底与空状态提示 |
+| BL-BR-03H | UI | 保留完整微调能力 | 智能配结果可继续手动微调，且不打断现有精调链路 |
+
+### 2.3 BL-BR-07 首批专题方向备忘
+
+| 子项 | 分类 | 目标 | 交付摘要 |
+|-----|------|------|---------|
+| BL-BR-07A | Collection | 首批专题策展落地 | 完成 `Citywalk 拍照 / 公园出片 / 国风新中式` 三个专题的基调、封面、palette 清单与说明文案 |
+| BL-BR-07B | Asset | 专题与 palette 关联规则 | 明确专题标签、排序、封面与复用边界，确保可映射到 `Collection` 数据结构 |
+
+建议验收：
+
+- 三个首批专题都具备可落库的 `Collection` 定义，而不是只停留在命名或方向描述。
+- 每个专题都至少明确：`nameZh/nameEn`、`themeType`、`descriptionZh`、`paletteIds`、`coverPaletteId`、`isPro`、`releaseMode`、`status`。
+- 每个专题都要补齐用于检索与复用的 `occasionTags/styleTags`，并与对应 `Palette` 的标签体系保持一致。
+- 允许一个 `Palette` 复用到多个专题，但同一发布周期内要控制重复曝光，避免三个专题看起来只是换标题。
+
+建议的 `Collection` 映射：
+
+| 专题方向 | 建议 `themeType` | 关键标签方向 | 最低落库要求 |
+|-----|------|------|---------|
+| `Citywalk 拍照` | `scene` | `occasionTags` 以城市漫游 / 轻拍照语义为主，`styleTags` 偏都市、清爽 | 至少有 1 个封面 palette 和 1 组可发布 `paletteIds` |
+| `公园出片` | `scene` | `occasionTags` 以户外 / 公园语义为主，`styleTags` 偏自然、轻盈 | 至少有 1 个封面 palette 和 1 组可发布 `paletteIds` |
+| `国风新中式` | `style` | `styleTags` 以东方、克制、新中式语义为主，必要时再补 `occasionTags` | 至少有 1 个封面 palette 和 1 组可发布 `paletteIds` |
+
+字段参考：
+
+- `Collection` 字段草表见 [`daypalette-docs/product/color-asset-library.md`](../../../../daypalette-docs/product/color-asset-library.md) §10.3。
+- 三层资产与 `CollectionItem` 结构示意见 [`../../architecture/data-model.md`](../../architecture/data-model.md) §4。
 
 ---
 
@@ -62,6 +109,7 @@
 
 | Key | Type | Priority | Summary | Source | Notes |
 |-----|------|----------|---------|--------|-------|
+| BL-BUG-01 | Task | P1 | TopBar 日期与系统日期不同步修复 | 口头 | 保证顶栏日期与系统日期、时区、前后台切换和跨天刷新一致 | → [**iteration-05**](./iteration-05.md) |
 | BL-XXX-1 | Task | P1 | 随机选交互优化 | 口头 | 目前的随机选，当配色盘很多的时候，看不到随机选中的配色盘 |
 
 ---
@@ -94,7 +142,7 @@
 ## 建议捞取顺序（非强制）
 
 1. **BL-BR-03**（精调主路径升级，可作为恢复功能开发后的优先项）  
-2. **iteration-05：BL-BR-08 / 10 / 11**（先把数据更新机制、内容维护流程和场景文案收敛清楚，再进入更大规模内容扩展）  
+2. **BL-BR-11 / BL-UX-01 / BL-BUG-01** 已在移动端 Iteration-05 收口完成；`BL-BR-08 / 10` 已转出到独立项目  
 3. **BL-ADAPT-01 / 02、BL-BRAND-01 / 02**（待主要功能开发告一段落后，再集中处理设备适配与品牌收敛）  
 4. **BL-REL-02**（接近提审前，集中完成最终自检与素材收口）  
 5. **BL-PRD-01～04**（商业化闭环；依赖链路长，待当前发布准备与基础体验收敛后再集中推进）  

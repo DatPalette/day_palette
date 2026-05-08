@@ -5,8 +5,12 @@
 这份文档用于把以下来源中的新增方向，整理成可直接落入 `Backlog.md` 的正式增补清单：
 
 - `docs/product/brainstorming/Brainstorming-02.md`
-- `docs/product/strategy/color-asset-library-plan.md`
-- `docs/product/strategy/conservative-smart-matching-strategy.md`
+- `docs/product/strategy/README.md`
+
+说明：
+
+- `strategy` 目录当前已经完成一轮收口，优先从 `README.md` 进入。
+- 只有在需要继续下钻资产字段或智能配规则细节时，再按索引进入对应主文档。
 
 原则：
 
@@ -41,7 +45,7 @@
 |-----|------|----------|---------|--------|-------------------|
 | BL-BR-03 | Story | P2 | **智能配候选池建设（core safe / occasion safe / accent expressive）** | Strategy / Smart Matching | 建立三层候选池；来源于已审核色彩资产 |
 | BL-BR-03 | Story | P2 | **智能配第一版规则引擎** | Strategy / Smart Matching | 明确硬规则、软规则、排序流程与禁用组合列表 |
-| BL-BR-03 | Task | P2 | **按场景的智能配策略 v1** | Brainstorming-02 / Smart Matching | 完成 Citywalk / 公园 / 新中式三类场景规则与解释文案模板 |
+| BL-BR-03 | Task | P2 | **按现有场景的智能配策略 v1** | Brainstorming-02 / Smart Matching | 围绕当前 app 既有场景补齐规则与解释模板，不承接专题策展方向 |
 | BL-BR-03 | Task | P2 | **智能配结果解释层文案模板** | Strategy / Smart Matching | 每套结果有简短可解释说明，增强用户信任 |
 
 ### 2.3 并入 `BL-BR-08`：运营侧内容管理方案调研与选型
@@ -77,12 +81,12 @@
 
 | Key | Type | Priority | Summary | Source | Acceptance（摘要） |
 |-----|------|----------|---------|--------|-------------------|
-| BL-BR-11 | Task | P2 | **场景命名与“今天的故事”文案收敛** | Brainstorming-02 | 收敛“随便走走的一天”等场景标题与情绪语义，不新增前置决策层 |
+| BL-BR-11 | Task | P2 | **灵感入口与场景文案收敛** | Brainstorming-02 | 收敛“今天没安排”场景的承接方式、入口形态与“今天的故事”文案口径；不新增更重的前置决策层 |
 
 建议说明：
 
-- 该任务用于承接 Brainstorming-02 中关于“有安排 / 随便走走”不拆双入口、继续收束进场景体系的结论。  
-- 重点不是新增信息架构，而是优化场景文案与情绪表达。
+- 该任务用于承接 Brainstorming-02 中关于“有安排 / 随便走走”不拆双入口、继续通过现有主路径承接灵感态的结论。  
+- 重点不是新增更重的信息架构，而是明确灵感入口形态，并同步优化场景文案与情绪表达。
 
 ---
 
@@ -92,7 +96,7 @@
 
 ```markdown
 | BL-BR-10 | Story | P2 | **配色数据更新机制设计（内置 / 远端覆盖 / CMS）** | Brainstorming-02 / Architecture | 明确方案选型、缓存、回滚、离线降级、版本兼容与发布边界 |
-| BL-BR-11 | Task | P2 | **场景命名与“今天的故事”文案收敛** | Brainstorming-02 | 收敛“随便走走的一天”等场景标题与情绪语义，不新增前置决策层 |
+| BL-BR-11 | Task | P2 | **灵感入口与场景文案收敛** | Brainstorming-02 | 收敛“今天没安排”场景的承接方式、入口形态与“今天的故事”文案口径；不新增更重的前置决策层 |
 ```
 
 若希望把子任务也记录进 `Backlog.md`，建议采用“Notes / 子项备忘”的形式，而不是一次性把表格膨胀过大。
@@ -117,6 +121,6 @@
 - 智能配第一版规则化  
 - 内容维护低成本化  
 - 配色数据更新机制单独立项  
-- 场景命名与故事文案收敛
+- 灵感入口与场景文案收敛
 
 这五类任务已经足够支持后续迭代拆解。

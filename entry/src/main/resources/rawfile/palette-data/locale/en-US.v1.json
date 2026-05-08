@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-07T00:00:00Z",
+  "occasions": [
+    { "id": "workday", "label": "Workday", "title": "Gentle<br>Commute", "paletteIds": ["w1", "w2", "w3", "w4", "w5"] },
+    { "id": "weekend", "label": "Weekend Date", "title": "Sweet<br>Escape", "paletteIds": ["we1", "we2", "we3", "we4"] },
+    { "id": "outdoor", "label": "Outdoor", "title": "Breathe<br>Deeply", "paletteIds": ["o1", "o2", "o3", "o4"] },
+    { "id": "dinner", "label": "Dinner Party", "title": "Evening<br>Glow", "paletteIds": ["d1", "d2", "d3", "d4"] }
+  ],
+  "palettes": [
+    { "id": "w1", "name": "Morning Mist", "desc": "Low saturation, versatile" },
+    { "id": "w2", "name": "Coffee Break", "desc": "Warm & grounded" },
+    { "id": "w3", "name": "City Slate", "desc": "Professional & sharp" },
+    { "id": "w4", "name": "Paper Ink", "desc": "Calm contrast" },
+    { "id": "w5", "name": "Dawn Line", "desc": "Soft structure" },
+    { "id": "we1", "name": "Peach Weekend", "desc": "Gentle highlights" },
+    { "id": "we2", "name": "Picnic Day", "desc": "Sunny & bright" },
+    { "id": "we3", "name": "Sea Glass", "desc": "Cool relax" },
+    { "id": "we4", "name": "Rose Lane", "desc": "Warm blush" },
+    { "id": "o1", "name": "Breeze Outdoor", "desc": "Fresh & breathable" },
+    { "id": "o2", "name": "Forest Trail", "desc": "Earthy tones" },
+    { "id": "o3", "name": "Highland", "desc": "Windy moor" },
+    { "id": "o4", "name": "Clay Path", "desc": "Mineral warm" },
+    { "id": "d1", "name": "Velvet Night", "desc": "Elegant & moody" },
+    { "id": "d2", "name": "Silver Noir", "desc": "Minimalist chic" },
+    { "id": "d3", "name": "Copper Bar", "desc": "Warm metal" },
+    { "id": "d4", "name": "Ice Riesling", "desc": "Cool glass" }
+  ]
+}

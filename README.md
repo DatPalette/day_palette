@@ -2,6 +2,8 @@
 
 鸿蒙应用 **今日配色（DayPalette）** 的工程与文档目录。
 
+> 归档提示：自 2026-04-29 起，旧配色运营多仓方案已整体归档，`daypalette-color-assets` 与 `daypalette-palette-workbench` 已删除。统一说明见 [`../daypalette-docs/archive/color-operations-reset-2026-04.md`](../daypalette-docs/archive/color-operations-reset-2026-04.md)。在新方案落盘前，不要依据旧 `source / bundle / workbench` 文档扩展实现。
+
 ## AI / Agent 开发（Vibe coding 入口）
 
 | 路径 | 说明 |

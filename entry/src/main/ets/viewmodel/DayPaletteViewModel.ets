@@ -3,12 +3,17 @@ import { DesignTokens } from '../common/constants/DesignTokens';
 import { refreshTrackedTodayOutfitForms } from '../formability/TodayOutfitFormSync';
 import { hexToRgb888 } from '../export/HexColor';
 import { AppLanguage } from '../model/AppLanguage';
+import type { Collection } from '../model/Collection';
 import { readLanguageOverride, writeLanguageOverride } from '../model/LanguagePreferenceStore';
-import { getLocaleBundle } from '../model/LocaleData';
+import { getLocaleBundle, preloadLocaleBundles } from '../model/LocaleData';
 import type { LocaleBundle, UiStrings } from '../model/LocaleTypes';
 import type { Occasion } from '../model/Occasion';
 import type { Palette } from '../model/Palette';
+import type { PaletteColorProfile } from '../model/Palette';
 import { getSystemAppLanguage } from '../model/SystemLanguageResolver';
+import { buildSmartMatchCandidates, recommendSmartMatches } from '../model/smartmatch/SmartMatchEngine';
+import { preloadSmartMatchStrategy } from '../model/smartmatch/SmartMatchStrategyLoader';
+import type { SmartMatchCandidate, SmartMatchRecommendation } from '../model/smartmatch/SmartMatchTypes';
 import { DEFAULT_MINI_PREVIEW_STYLE, MiniPreviewStyle, parseMiniPreviewStyle } from '../model/MiniPreviewStyle';
 import type { TodayOutfitState } from '../model/TodayOutfitState';
 import { DEFAULT_TEMPLATE_ID } from '../model/TodayOutfitState';
@@ -53,11 +58,26 @@ export class DayPaletteViewModel {
   noiseOverlay: boolean = false;
   /** 顶栏微缩预览样式。 */
   miniPreviewStyle: MiniPreviewStyle = DEFAULT_MINI_PREVIEW_STYLE;
+  /** 本地 catalog 资源加载完成后递增，用于触发 UI 刷新。 */
+  catalogRefreshTick: number = 0;
+  /** 当前系统日历日（YYYY-MM-DD），用于驱动 TopBar 日期展示。 */
+  currentCalendarDay: string = todayLocalYmd();
+  /** 首页灵感入口展开状态。 */
+  inspirationExpanded: boolean = false;
 
   private persistContext: common.UIAbilityContext | null = null;
 
   setPersistContext(ctx: common.UIAbilityContext): void {
     this.persistContext = ctx;
+  }
+
+  async preloadLocaleCatalog(context: common.UIAbilityContext): Promise<void> {
+    await Promise.all([
+      preloadLocaleBundles(context),
+      preloadSmartMatchStrategy(context)
+    ]);
+    this.catalogRefreshTick += 1;
+    this.applyResolvedLocale(this.currentLang, true);
   }
 
   getLocaleBundle(): LocaleBundle {
@@ -68,6 +88,45 @@ export class DayPaletteViewModel {
     return this.getLocaleBundle().ui;
   }
 
+  getTopBarDateLabel(): string {
+    const parts: string[] = this.currentCalendarDay.split('-');
+    if (parts.length !== 3) {
+      return this.getUiStrings().date;
+    }
+    const year: number = Number(parts[0]);
+    const month: number = Number(parts[1]);
+    const day: number = Number(parts[2]);
+    if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+      return this.getUiStrings().date;
+    }
+    if (this.currentLang === AppLanguage.ZH) {
+      return `${year}年${month}月${day}日`;
+    }
+    const monthLabels: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const monthLabel: string = monthLabels[month - 1] ?? month.toString().padStart(2, '0');
+    return `${monthLabel} ${day.toString().padStart(2, '0')}, ${year}`;
+  }
+
+  getCollections(): Collection[] {
+    return this.getLocaleBundle().collections;
+  }
+
+  getCollectionsForOccasion(occasionId: string): Collection[] {
+    const collections: Collection[] = this.getCollections();
+    const result: Collection[] = [];
+    for (let i = 0; i < collections.length; i++) {
+      const item: Collection = collections[i];
+      if (item.occasionTags.includes(occasionId)) {
+        result.push(item);
+      }
+    }
+    return result;
+  }
+
+  getCollectionsForActiveOccasion(): Collection[] {
+    return this.getCollectionsForOccasion(this.activeOccasionId);
+  }
+
   getOccasions(): Occasion[] {
     return this.getLocaleBundle().occasions;
   }
@@ -76,12 +135,188 @@ export class DayPaletteViewModel {
     return this.getOccasions().find((o: Occasion) => o.id === this.activeOccasionId);
   }
 
-  getActivePalette(): Palette | undefined {
-    const occ = this.getActiveOccasion();
-    if (!occ) {
-      return undefined;
+  getRecommendedPalettesForOccasion(occasionId: string): Palette[] {
+    const occ: Occasion | undefined = this.getOccasions().find((item: Occasion) => item.id === occasionId);
+    if (occ === undefined) {
+      return [];
     }
-    return occ.palettes.find((p: Palette) => p.id === this.activePaletteId);
+    const collections: Collection[] = this.getCollectionsForOccasion(occasionId);
+    if (collections.length === 0) {
+      return occ.palettes;
+    }
+
+    const recommended: Palette[] = [];
+    const seenPaletteIds: string[] = [];
+    for (let i = 0; i < collections.length; i++) {
+      const collection: Collection = collections[i];
+      for (let j = 0; j < collection.palettes.length; j++) {
+        const palette: Palette = collection.palettes[j];
+        if (seenPaletteIds.includes(palette.id)) {
+          continue;
+        }
+        seenPaletteIds.push(palette.id);
+        recommended.push(palette);
+      }
+    }
+
+    for (let i = 0; i < occ.palettes.length; i++) {
+      const palette: Palette = occ.palettes[i];
+      if (seenPaletteIds.includes(palette.id)) {
+        continue;
+      }
+      seenPaletteIds.push(palette.id);
+      recommended.push(palette);
+    }
+
+    return recommended;
+  }
+
+  getRecommendedPalettesForActiveOccasion(): Palette[] {
+    return this.getRecommendedPalettesForOccasion(this.activeOccasionId);
+  }
+
+  private getOccasionForPaletteId(paletteId: string): Occasion | undefined {
+    const occasions: Occasion[] = this.getOccasions();
+    for (let i = 0; i < occasions.length; i++) {
+      const occasion: Occasion = occasions[i];
+      const palettes: Palette[] = this.getRecommendedPalettesForOccasion(occasion.id);
+      for (let j = 0; j < palettes.length; j++) {
+        if (palettes[j].id === paletteId) {
+          return occasion;
+        }
+      }
+    }
+    return undefined;
+  }
+
+  private getPaletteByIdAcrossOccasions(paletteId: string): Palette | undefined {
+    const occasions: Occasion[] = this.getOccasions();
+    for (let i = 0; i < occasions.length; i++) {
+      const palettes: Palette[] = this.getRecommendedPalettesForOccasion(occasions[i].id);
+      for (let j = 0; j < palettes.length; j++) {
+        if (palettes[j].id === paletteId) {
+          return palettes[j];
+        }
+      }
+    }
+    return undefined;
+  }
+
+  toggleInspirationExpanded(): void {
+    this.inspirationExpanded = !this.inspirationExpanded;
+  }
+
+  collapseInspirationExpanded(): void {
+    if (!this.inspirationExpanded) {
+      return;
+    }
+    this.inspirationExpanded = false;
+  }
+
+  getInspirationPalettes(maxResults: number = 4): Palette[] {
+    const result: Palette[] = [];
+    const seenIds: string[] = [];
+    const pushUnique = (palette: Palette | undefined): void => {
+      if (palette === undefined || seenIds.includes(palette.id)) {
+        return;
+      }
+      seenIds.push(palette.id);
+      result.push(palette);
+    };
+
+    const occasions: Occasion[] = this.getOccasions();
+    for (let i = 0; i < occasions.length; i++) {
+      const palettes: Palette[] = this.getRecommendedPalettesForOccasion(occasions[i].id);
+      for (let j = 0; j < palettes.length; j++) {
+        const palette: Palette = palettes[j];
+        if (palette.safetyLevel !== undefined && palette.safetyLevel === 'experimental') {
+          continue;
+        }
+        pushUnique(palette);
+        if (result.length >= maxResults) {
+          break;
+        }
+      }
+    }
+
+    if (result.length <= maxResults) {
+      return result;
+    }
+
+    const daySeed: string = this.currentCalendarDay;
+    const ranked: Palette[] = result.slice().sort((left: Palette, right: Palette): number => {
+      const leftScore: number = this.hashInspirationKey(`${daySeed}:${left.id}`);
+      const rightScore: number = this.hashInspirationKey(`${daySeed}:${right.id}`);
+      if (leftScore !== rightScore) {
+        return leftScore - rightScore;
+      }
+      return left.id.localeCompare(right.id);
+    });
+    return ranked.slice(0, maxResults);
+  }
+
+  private hashInspirationKey(input: string): number {
+    let hash: number = 0;
+    for (let i = 0; i < input.length; i++) {
+      hash = (hash * 131 + input.charCodeAt(i)) >>> 0;
+    }
+    return hash;
+  }
+
+  applyInspirationPalette(paletteId: string): boolean {
+    const occasion: Occasion | undefined = this.getOccasionForPaletteId(paletteId);
+    const palette: Palette | undefined = this.getPaletteByIdAcrossOccasions(paletteId);
+    if (occasion === undefined || palette === undefined) {
+      return false;
+    }
+    const changed: boolean = this.activeOccasionId !== occasion.id || this.activePaletteId !== palette.id || this.customHex !== null;
+    this.activeOccasionId = occasion.id;
+    this.activePaletteId = palette.id;
+    this.customHex = null;
+    this.inspirationExpanded = false;
+    if (changed) {
+      this.flushTodayOutfitToStorage();
+    }
+    return true;
+  }
+
+  getActivePalette(): Palette | undefined {
+    return this.getRecommendedPalettesForActiveOccasion().find((p: Palette) => p.id === this.activePaletteId);
+  }
+
+  getSmartMatchCandidatesForActiveOccasion(): SmartMatchCandidate[] {
+    return buildSmartMatchCandidates(this.getRecommendedPalettesForActiveOccasion(), this.getCollectionsForActiveOccasion());
+  }
+
+  getSmartMatchRecommendationsForActivePalette(maxResults: number = 3): SmartMatchRecommendation[] {
+    const activePalette: Palette | undefined = this.getActivePalette();
+    const activeOccasion: Occasion | undefined = this.getActiveOccasion();
+    const primary: PaletteColorProfile | undefined = activePalette?.primaryProfile;
+    if (activePalette === undefined || activeOccasion === undefined || primary === undefined) {
+      return [];
+    }
+    const candidates: SmartMatchCandidate[] = this.getSmartMatchCandidatesForActiveOccasion();
+    let recommendations: SmartMatchRecommendation[] = recommendSmartMatches({
+      lang: this.currentLang,
+      occasionId: activeOccasion.id,
+      occasionLabel: activeOccasion.label,
+      primary: primary,
+      safetyPreference: 'balanced',
+      styleHint: activePalette.styleTags !== undefined && activePalette.styleTags.length > 0 ? activePalette.styleTags[0] : undefined,
+      excludedPaletteId: activePalette.id
+    }, candidates, maxResults);
+    if (recommendations.length === 0) {
+      recommendations = recommendSmartMatches({
+        lang: this.currentLang,
+        occasionId: activeOccasion.id,
+        occasionLabel: activeOccasion.label,
+        primary: primary,
+        safetyPreference: 'balanced',
+        styleHint: activePalette.styleTags !== undefined && activePalette.styleTags.length > 0 ? activePalette.styleTags[0] : undefined,
+        excludedPaletteId: undefined
+      }, candidates, maxResults);
+    }
+    return recommendations;
   }
 
   /**
@@ -127,13 +362,14 @@ export class DayPaletteViewModel {
     if (this.activeOccasionId === occasionId) {
       return;
     }
-    const occ = this.getOccasions().find((o: Occasion) => o.id === occasionId);
-    if (!occ || occ.palettes.length === 0) {
+    const recommended: Palette[] = this.getRecommendedPalettesForOccasion(occasionId);
+    if (recommended.length === 0) {
       return;
     }
     this.activeOccasionId = occasionId;
-    this.activePaletteId = occ.palettes[0].id;
+    this.activePaletteId = recommended[0].id;
     this.customHex = null;
+    this.inspirationExpanded = false;
     this.flushTodayOutfitToStorage();
   }
 
@@ -141,16 +377,17 @@ export class DayPaletteViewModel {
     if (this.activePaletteId === paletteId) {
       return;
     }
-    const occ = this.getActiveOccasion();
-    if (!occ) {
+    const recommended: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+    if (recommended.length === 0) {
       return;
     }
-    const exists = occ.palettes.some((p: Palette) => p.id === paletteId);
+    const exists = recommended.some((p: Palette) => p.id === paletteId);
     if (!exists) {
       return;
     }
     this.activePaletteId = paletteId;
     this.customHex = null;
+    this.inspirationExpanded = false;
     this.flushTodayOutfitToStorage();
   }
 
@@ -182,10 +419,11 @@ export class DayPaletteViewModel {
   }
 
   refreshCalendarDayBoundary(): void {
+    this.currentCalendarDay = todayLocalYmd();
     if (this.persistContext === null) {
       return;
     }
-    rollCalendarDayAndMaybeSnapshotYesterday(this.persistContext, todayLocalYmd());
+    rollCalendarDayAndMaybeSnapshotYesterday(this.persistContext, this.currentCalendarDay);
   }
 
   loadAccessibilityFromStorage(context: common.UIAbilityContext): void {
@@ -214,13 +452,14 @@ export class DayPaletteViewModel {
 
   /** 当前场合下从预置套组中随机选一套（不生成裸 RGB）。 */
   randomPaletteInActiveOccasion(): void {
-    const occ: Occasion | undefined = this.getActiveOccasion();
-    if (occ === undefined || occ.palettes.length === 0) {
+    const recommended: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+    if (recommended.length === 0) {
       return;
     }
-    const idx: number = Math.floor(Math.random() * occ.palettes.length);
-    this.activePaletteId = occ.palettes[idx].id;
+    const idx: number = Math.floor(Math.random() * recommended.length);
+    this.activePaletteId = recommended[idx].id;
     this.customHex = null;
+    this.inspirationExpanded = false;
     this.flushTodayOutfitToStorage();
   }
 
@@ -263,11 +502,74 @@ export class DayPaletteViewModel {
     return [DesignTokens.DEFAULT_MAIN, DesignTokens.DEFAULT_SEC, DesignTokens.DEFAULT_ACC];
   }
 
+  getActivePaletteBaseColors(): string[] {
+    const pal: Palette | undefined = this.getActivePalette();
+    if (pal !== undefined && pal.colors.length >= 3) {
+      return pal.colors;
+    }
+    return [DesignTokens.DEFAULT_MAIN, DesignTokens.DEFAULT_SEC, DesignTokens.DEFAULT_ACC];
+  }
+
+  getFineTuneCandidateHexes(roleIndex: number, maxResults: number = 12): string[] {
+    const result: string[] = [];
+    const pushUnique = (hex: string): void => {
+      const normalized: string = hex.trim().toLowerCase();
+      if (normalized.length === 0) {
+        return;
+      }
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].toLowerCase() === normalized) {
+          return;
+        }
+      }
+      result.push(hex.trim());
+    };
+
+    const currentColors: string[] = this.getHeroColorStrings();
+    if (roleIndex >= 0 && roleIndex < currentColors.length) {
+      pushUnique(currentColors[roleIndex]);
+    }
+
+    const baseColors: string[] = this.getActivePaletteBaseColors();
+    if (roleIndex >= 0 && roleIndex < baseColors.length) {
+      pushUnique(baseColors[roleIndex]);
+    }
+
+    const palettes: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+    for (let i = 0; i < palettes.length; i++) {
+      const colors: string[] = palettes[i].colors;
+      if (roleIndex >= 0 && roleIndex < colors.length) {
+        pushUnique(colors[roleIndex]);
+      }
+      if (result.length >= maxResults) {
+        break;
+      }
+    }
+
+    return result.slice(0, maxResults);
+  }
+
+  hasActivePaletteFineTune(): boolean {
+    if (this.customHex === null || this.customHex.length < 3) {
+      return false;
+    }
+    const baseColors: string[] = this.getActivePaletteBaseColors();
+    return this.customHex[0].trim().toLowerCase() !== baseColors[0].trim().toLowerCase() ||
+      this.customHex[1].trim().toLowerCase() !== baseColors[1].trim().toLowerCase() ||
+      this.customHex[2].trim().toLowerCase() !== baseColors[2].trim().toLowerCase();
+  }
+
   setFineTuneHex(mainHex: string, secHex: string, accHex: string): boolean {
     if (hexToRgb888(mainHex) === null || hexToRgb888(secHex) === null || hexToRgb888(accHex) === null) {
       return false;
     }
-    this.customHex = [mainHex.trim(), secHex.trim(), accHex.trim()];
+    const nextColors: string[] = [mainHex.trim(), secHex.trim(), accHex.trim()];
+    const baseColors: string[] = this.getActivePaletteBaseColors();
+    const sameAsBase: boolean =
+      nextColors[0].toLowerCase() === baseColors[0].trim().toLowerCase() &&
+      nextColors[1].toLowerCase() === baseColors[1].trim().toLowerCase() &&
+      nextColors[2].toLowerCase() === baseColors[2].trim().toLowerCase();
+    this.customHex = sameAsBase ? null : nextColors;
     this.flushTodayOutfitToStorage();
     return true;
   }
@@ -324,15 +626,16 @@ export class DayPaletteViewModel {
     const occ: Occasion | undefined = this.getOccasions().find((o: Occasion) => o.id === this.activeOccasionId);
     if (occ === undefined) {
       this.activeOccasionId = 'workday';
-      const o2: Occasion | undefined = this.getActiveOccasion();
-      if (o2 !== undefined && o2.palettes.length > 0) {
-        this.activePaletteId = o2.palettes[0].id;
+      const fallbackPalettes: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+      if (fallbackPalettes.length > 0) {
+        this.activePaletteId = fallbackPalettes[0].id;
       }
       return;
     }
-    const pal: Palette | undefined = occ.palettes.find((p: Palette) => p.id === this.activePaletteId);
-    if (pal === undefined && occ.palettes.length > 0) {
-      this.activePaletteId = occ.palettes[0].id;
+    const recommended: Palette[] = this.getRecommendedPalettesForOccasion(occ.id);
+    const pal: Palette | undefined = recommended.find((p: Palette) => p.id === this.activePaletteId);
+    if (pal === undefined && recommended.length > 0) {
+      this.activePaletteId = recommended[0].id;
     }
     const resolved: Palette | undefined = this.getActivePalette();
     if (resolved !== undefined && resolved.colors.length >= 3) {
@@ -353,6 +656,7 @@ export class DayPaletteViewModel {
   /** 从本地恢复手动覆盖并应用当前有效语言（应在首屏 build 前调用）。 */
   loadLanguageFromStorage(context: common.UIAbilityContext): void {
     this.manualLanguage = readLanguageOverride(context);
+    this.currentCalendarDay = todayLocalYmd();
     const effective: AppLanguage = this.manualLanguage ?? getSystemAppLanguage();
     this.applyResolvedLocale(effective);
   }
@@ -382,23 +686,26 @@ export class DayPaletteViewModel {
     return this.manualLanguage === null;
   }
 
-  private applyResolvedLocale(lang: AppLanguage): void {
-    if (this.currentLang === lang) {
+  private applyResolvedLocale(lang: AppLanguage, force: boolean = false): void {
+    if (this.currentLang === lang && !force) {
       return;
     }
-    this.currentLang = lang;
+    if (this.currentLang !== lang) {
+      this.currentLang = lang;
+    }
     const occ = this.getActiveOccasion();
     if (occ === undefined) {
       this.activeOccasionId = 'workday';
-      const o = this.getActiveOccasion();
-      if (o !== undefined && o.palettes.length > 0) {
-        this.activePaletteId = o.palettes[0].id;
+      const fallbackPalettes: Palette[] = this.getRecommendedPalettesForActiveOccasion();
+      if (fallbackPalettes.length > 0) {
+        this.activePaletteId = fallbackPalettes[0].id;
       }
       return;
     }
-    const pal = occ.palettes.find((p: Palette) => p.id === this.activePaletteId);
-    if (pal === undefined && occ.palettes.length > 0) {
-      this.activePaletteId = occ.palettes[0].id;
+    const recommended: Palette[] = this.getRecommendedPalettesForOccasion(occ.id);
+    const pal = recommended.find((p: Palette) => p.id === this.activePaletteId);
+    if (pal === undefined && recommended.length > 0) {
+      this.activePaletteId = recommended[0].id;
     }
   }
 }

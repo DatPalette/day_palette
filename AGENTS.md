@@ -2,6 +2,8 @@
 
 本文件供 **Cursor / Codex / 其他编码 Agent** 在参与 DayPalette（鸿蒙 ArkUI）开发时阅读。与 [`docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md`](docs/ai-workflow/00-AI-DEVELOPMENT-HARNESS.md) 配套使用；**冲突时以 Harness 全文为准**。
 
+> 归档提示：自 2026-04-29 起，旧配色运营多仓方案已整体归档。统一入口见 [`../daypalette-docs/archive/color-operations-reset-2026-04.md`](../daypalette-docs/archive/color-operations-reset-2026-04.md)。`repository-boundaries.md`、`color-asset-lifecycle.md`、`workbench-*` 等旧文档仅可作为历史资料，不得作为新方案真相源。
+
 ## 角色
 
 你是 **HarmonyOS Next + ArkTS + ArkUI** 资深开发者，正在实现「今日配色」应用。禁止凭感觉改 UI/业务；必须服从文档层级。
@@ -9,11 +11,13 @@
 ## 文档真相源（按优先级）
 
 1. [`docs/product/PRD.md`](docs/product/PRD.md) — 功能与业务规则。  
-2. [`docs/design/design-system.md`](docs/design/design-system.md) — **长期视觉与交互令牌**；日常实现以此为准。  
-3. [`docs/architecture/architecture.md`](docs/architecture/architecture.md) — 模块与 Kit 边界。  
-4. [`docs/architecture/data-model.md`](docs/architecture/data-model.md) — 持久化与字段约束。  
-5. [`docs/architecture/knowledge-base.md`](docs/architecture/knowledge-base.md) — **鸿蒙开发避坑指南与知识库**（包含底层 API、权限、状态同步等经验）。
-6. [`docs/mockups/daypalette-premium-mockup.html`](docs/mockups/daypalette-premium-mockup.html) — 仅用于像素级疑难对照；与上两项冲突时先对齐设计系统，再按需改 HTML/设计文档。
+2. [`../daypalette-docs/design/shared-design-language.md`](../daypalette-docs/design/shared-design-language.md) — **跨移动端与 Web 的共享设计语言**；涉及品牌气质、排版角色、语义层时先看这里。  
+3. [`docs/design/design-system.md`](docs/design/design-system.md) — HarmonyOS 客户端的设计实现映射与像素级补充。  
+4. [`../daypalette-docs/archive/color-operations-reset-2026-04.md`](../daypalette-docs/archive/color-operations-reset-2026-04.md) — 旧配色运营方案归档入口；涉及 `source / bundle / workbench` 时先看这里。  
+5. [`docs/architecture/architecture.md`](docs/architecture/architecture.md) — 模块与 Kit 边界。  
+6. [`docs/architecture/data-model.md`](docs/architecture/data-model.md) — 持久化、运行时资源落点与历史兼容约束。  
+7. [`docs/architecture/knowledge-base.md`](docs/architecture/knowledge-base.md) — **鸿蒙开发避坑指南与知识库**（包含底层 API、权限、状态同步等经验）。
+8. [`docs/mockups/daypalette-premium-mockup.html`](docs/mockups/daypalette-premium-mockup.html) — 仅用于像素级疑难对照；与上两项冲突时先对齐共享设计语言与本仓设计系统，再按需改 HTML/设计文档。
 
 ## 工程约束
 
@@ -25,27 +29,17 @@
 
 ## Git 提交规范
 
-为方便 **Cursor / Copilot / Codex / 其他 Agent** 统一遵守，本仓库约定提交时遵循以下规则；若 `.cursor/rules/git-commit-workflow.mdc` 存在更完整版本，以该文件为细则来源。
+跨仓共享真相源：[`../daypalette-docs/operations/git-commit-workflow.md`](../daypalette-docs/operations/git-commit-workflow.md)。本仓使用其中**默认风格**（`emoji + TYPE: 中文描述`）。
 
-- 用户明确要求“提交 / commit”后，先看 `git status`、`git diff` 与 `git diff --cached`，确认范围、无意外文件、无调试残留。  
-- 按**可独立回滚**拆分 commit；若同一轮同时改 `docs/` 与 `entry/`，默认优先 **先文档、后代码**。  
-- 提交信息使用**中文 + emoji + 英文类型前缀**，格式为：`emoji + TYPE: 中文描述`。  
-- 类型统一大写，常用映射：  
-	- `📦 NEW:` 新增功能 / 新模块  
-	- `👌 IMPROVE:` 改进 / 重构 / 样式优化 / 性能优化  
-	- `🐛 FIX:` 缺陷修复 / 回归修复  
-	- `📖 DOC:` 文档 / PRD / 设计说明更新  
-	- `🚀 RELEASE:` 发版 / 版本号 / 发布流程  
-	- `🤖 TEST:` 测试相关  
-	- `‼️ BREAKING:` 破坏性变更  
-- 提交前应有选择地 `git add`，避免直接把无关文件、IDE 私有状态、构建产物、密钥或证书提交进版本库。  
-- 默认**不 push**，除非用户明确要求。
+- 仓库映射与本仓特例：[`docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md`](docs/ai-workflow/04-GIT-COMMIT-WORKFLOW.md)
+- 工具私有规则（如更完整）：[`.cursor/rules/git-commit-workflow.mdc`](.cursor/rules/git-commit-workflow.mdc)
 
-推荐主题行示例：
+要点回顾（详见上述文档）：
 
-- `📖 DOC: 更新配色资产与智能配策略文档`  
-- `👌 IMPROVE: 优化今日页三个入口按钮布局`  
-- `🐛 FIX: 修复昨日快照跨多天误判问题`
+- 提交前必看 `git status` / `git diff` / `git diff --cached`，按可独立回滚拆分 commit。
+- 同一轮既改 `docs/` 又改 `entry/`，默认 **先文档、后代码**。
+- 默认**不 push**、**不 amend** 已推送提交。
+- 若仅涉及当前存续仓，默认顺序为 `day_palette → daypalette-docs`；旧 `assets → workbench → day_palette → daypalette-docs` 顺序已归档。
 
 ## 需求已确认时的义务
 
