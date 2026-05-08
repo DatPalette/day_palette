@@ -39,24 +39,6 @@ export interface UiStrings {
   randomPalette: string;
   /** 副文案：说明行为边界，字号更小，与主文案同列展示。 */
   randomPaletteHint: string;
-  wallpaperEntryEyebrow: string;
-  wallpaperEntryTitle: string;
-  wallpaperEntryHint: string;
-  wallpaperStudioTitle: string;
-  wallpaperPreviewClean: string;
-  wallpaperPreviewLockscreen: string;
-  wallpaperVariantSwitch: string;
-  wallpaperSave: string;
-  wallpaperSaveSuccess: string;
-  wallpaperSaveFail: string;
-  wallpaperStyleBlocks: string;
-  wallpaperStyleCollage: string;
-  wallpaperStyleGradient: string;
-  wallpaperStyleMist: string;
-  wallpaperStyleBlocksMood: string;
-  wallpaperStyleCollageMood: string;
-  wallpaperStyleGradientMood: string;
-  wallpaperStyleMistMood: string;
   inspirationEntryEyebrow: string;
   inspirationEntryTitle: string;
   inspirationEntryHint: string;
